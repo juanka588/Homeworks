@@ -56,7 +56,7 @@ public class TransCypherEncriptor {
         rotateByNinetyToRight(mat);
     }
 
-    public static void rotateByNinetyToRight(char[][] m) {
+     public static void rotateByNinetyToLeft(char[][] m) {
         int e = m.length - 1;
         int c = e / 2;
         int b = e % 2;
@@ -67,6 +67,29 @@ public class TransCypherEncriptor {
                 m[d][e - c + r] = m[e - c + r][e - d];
                 m[e - c + r][e - d] = m[e - d][c - r];
                 m[e - d][c - r] = t;
+            }
+        }
+    }
+     
+    public static void rotateByNinetyToRight(char[][] m) {
+        int n = m.length;
+        int x1, y1, x2, y2, x3, y3, x4, y4;
+        char temp;
+        for (int i = 0; i < n / 2; i++) {
+            for (int j = i; j < n - 1 - i; j++) {
+                x1 = i;
+                y1 = j;
+                x2 = j;
+                y2 = n - i - 1;
+                x3 = n - i - 1;
+                y3 = n - j - 1;
+                x4 = y3;
+                y4 = i;
+                temp = m[x1][y1];
+                m[x1][y1] = m[x4][y4];
+                m[x4][y4] = m[x3][y3];
+                m[x3][y3] = m[x2][y2];
+                m[x2][y2] = temp;
             }
         }
     }
@@ -82,4 +105,3 @@ public class TransCypherEncriptor {
     }
 
 }
-
