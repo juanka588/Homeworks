@@ -10,5 +10,8 @@ package lenguajes;
  * @author JuanCamilo
  */
 public class LexicalAnalyser {
-    
+
+    public static void main(String[] args) {
+
+    }
 }
