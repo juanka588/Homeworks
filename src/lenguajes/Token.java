@@ -15,6 +15,7 @@ public class Token {
             INTEGER = 2,
             CADENA = 3,
             REAL = 4,
+            RESERVED = 1,
             NEG = 5;
 
     private String lexema;

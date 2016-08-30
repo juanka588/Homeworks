@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -28,8 +29,9 @@ public class LexicalAnalyser {
     private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9]");
 
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        BufferedReader in = new BufferedReader(new FileReader("7.in"));
-        String text = null;
+        String fileName = "7.in";
+        BufferedReader in = new BufferedReader(new FileReader(fileName));
+        String text;
         List<Token> tokenList = new ArrayList<>();
         int row = 0, column = 0;
         while ((text = in.readLine()) != null) {
@@ -59,6 +61,8 @@ public class LexicalAnalyser {
                             i += readString(i, text, tokenList);
                         } else if (isNumber(c)) {
                             i += readNumber(i, text, tokenList);
+                        } else {
+                            throw new IllegalArgumentException("error caracter invalido");
                         }
                         break;
                 }
@@ -68,6 +72,7 @@ public class LexicalAnalyser {
             column = 0;
             System.out.println(text);
         }
+        writeResponse(tokenList, fileName);
     }
 
     private static boolean isString(char c) {
@@ -96,5 +101,12 @@ public class LexicalAnalyser {
 
     private static int readStringDef(int i, String text, List<Token> tokenList) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    private static void writeResponse(List<Token> tokenList, String fileName) throws FileNotFoundException {
+        PrintWriter pw = new PrintWriter(new File(fileName));
+        for (Token token : tokenList) {
+            pw.println(token.toString());
+        }
     }
 }

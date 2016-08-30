@@ -19,28 +19,23 @@ public class SimbolsTable {
 
     static {
         RESERVED_WORDS = new HashMap<>();
-        RESERVED_WORDS.put("proceso", Token.PROCESS);
-        RESERVED_WORDS.put("entero", Token.INTEGER);
-        RESERVED_WORDS.put("definir", Token.DEFINITION);
-        RESERVED_WORDS.put("real", Token.REAL);
-        RESERVED_WORDS.put("finproceso", Token.END_PROCESS);
-        RESERVED_WORDS.put("mod", Token.END_PROCESS);
-        RESERVED_WORDS.put("no", Token.ID);
-        RESERVED_WORDS.put("o", Token.END_PROCESS);
-        RESERVED_WORDS.put("y", Token.END_PROCESS);
-        RESERVED_WORDS.put("no", Token.ID);
+        RESERVED_WORDS.put("proceso", Token.RESERVED);
+        RESERVED_WORDS.put("entero", Token.RESERVED);
+        RESERVED_WORDS.put("definir", Token.RESERVED);
+        RESERVED_WORDS.put("real", Token.RESERVED);
+        RESERVED_WORDS.put("finproceso", Token.RESERVED);
+        //operadores
+        RESERVED_WORDS.put("mod", Token.RESERVED);
+        RESERVED_WORDS.put("no", Token.RESERVED);
+        RESERVED_WORDS.put("o", Token.RESERVED);
+        RESERVED_WORDS.put("y", Token.RESERVED);
+        RESERVED_WORDS.put("no", Token.RESERVED);
     }
 
     static {
         SIMBOLS_MAP = new HashMap<>();
         SIMBOLS_MAP.put("~", Token.NEG);
         SIMBOLS_MAP.put("=", Token.PROCESS);
-        SIMBOLS_MAP.put("<-", Token.INTEGER);
-        SIMBOLS_MAP.put("<>", Token.DEFINITION);
-        SIMBOLS_MAP.put("<", Token.REAL);
-        SIMBOLS_MAP.put(">", Token.END_PROCESS);
-        SIMBOLS_MAP.put("<=", Token.END_PROCESS);
-        SIMBOLS_MAP.put(">=", Token.END_PROCESS);
         SIMBOLS_MAP.put("+", Token.END_PROCESS);
         SIMBOLS_MAP.put("-", Token.END_PROCESS);
         SIMBOLS_MAP.put("/", Token.END_PROCESS);
