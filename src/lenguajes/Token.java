@@ -28,8 +28,6 @@ public class Token {
         this.type = type;
     }
 
-    
-    
     public String getLexema() {
         return lexema;
     }
