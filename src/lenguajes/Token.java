@@ -12,16 +12,24 @@ package lenguajes;
 public class Token {
 
     public static final int ID = 0,
-            PROCESS = 1,
             INTEGER = 2,
-            DEFINITION = 3,
+            CADENA = 3,
             REAL = 4,
-            END_PROCESS = 5;
+            NEG = 5;
 
     private String lexema;
     private int row, column;
     private String type;
 
+    public Token(String lexema, int row, int column, String type) {
+        this.lexema = lexema;
+        this.row = row;
+        this.column = column;
+        this.type = type;
+    }
+
+    
+    
     public String getLexema() {
         return lexema;
     }
@@ -71,4 +79,12 @@ public class Token {
         return sb.toString();
     }
 
+    public static String getTypeFromInt(int type) {
+        switch (type) {
+            case ID:
+                return "token_id";
+            default:
+                return "";
+        }
+    }
 }
