@@ -53,6 +53,8 @@ public class LexicalAnalyser {
                     case '\"':
                         i += readStringDef(i, text, tokenList);
                         break;
+                    case '/':
+                        break;
                     default:
                         Integer tokenIden = SimbolsTable.SIMBOLS_MAP.get(String.valueOf(c));
                         if (tokenIden != null) {

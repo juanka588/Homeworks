@@ -38,7 +38,6 @@ public class SimbolsTable {
         SIMBOLS_MAP.put("=", Token.PROCESS);
         SIMBOLS_MAP.put("+", Token.END_PROCESS);
         SIMBOLS_MAP.put("-", Token.END_PROCESS);
-        SIMBOLS_MAP.put("/", Token.END_PROCESS);
         SIMBOLS_MAP.put("*", Token.END_PROCESS);
         SIMBOLS_MAP.put("%", Token.END_PROCESS);
         SIMBOLS_MAP.put(";", Token.END_PROCESS);

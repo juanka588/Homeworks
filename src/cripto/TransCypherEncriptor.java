@@ -5,37 +5,32 @@
  */
 package cripto;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 public class TransCypherEncriptor {
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        if (args.length != 2) {
-            System.out.println("bad arguments number");
-            System.out.println("usage message filler char");
-            return;
-        }
-        String message = args[0];
-        String fillString = args[1];
-        int size = (int) Math.sqrt(message.length());
-        System.out.println("size " + size);
-        if (size % 2 != 0) {
-            size += 1;
-            System.out.println("fixed size  " + size);
-        }
-        while (message.length() < size * size) {
-            //fill the message
-            message += fillString;
-
-        }
-        char[][] mat = new char[size][size];
-        int[][] key = getRandomKey(size);
-        int blockSize = size * size / 4;
-        for (int i = 0; i < 4; i++) {
-            fillMatrix(message.substring(i * blockSize, blockSize + i * blockSize), key, mat);
-            rotateMatrix(mat);
-        }
+        /*if (args.length != 2) {
+         System.out.println("bad arguments number");
+         System.out.println("usage message filler_char");
+         return;
+         }*/
+        String message = "unapruebagrande";//args[0];
+        String fillString = "X";//args[1];
+        List<Coordinate> key = new ArrayList<>();
+        char[][] mat = encodeMessage(message, key, fillString);
+        showMatrix(mat);
+        System.out.println("encoding finish");
+        String original = decodeMessage(mat, key, fillString);
+        System.out.println("decoded message: " + original);
 
     }
 
@@ -44,8 +39,14 @@ public class TransCypherEncriptor {
      * @param size numbers of rows in a square matrix
      * @return the couple order row, column of the used position for the key
      */
-    private static int[][] getRandomKey(int size) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private static List<Coordinate> getRandomKey(int size) {
+        Map<Integer, List<Coordinate>> posibilities = fillPosibilities(size * size / 4, size);
+        List<Coordinate> key = new ArrayList<>();
+        for (Entry e : posibilities.entrySet()) {
+            key.add(getRandomElement((List<Coordinate>) e.getValue()));
+        }
+        Collections.sort(key);
+        return key;
     }
 
     /**
@@ -53,10 +54,10 @@ public class TransCypherEncriptor {
      * @param mat matrix to be rotated 90 degrees to the right
      */
     private static void rotateMatrix(char[][] mat) {
-        rotateByNinetyToRight(mat);
+        rotateByNinetyToLeft(mat);
     }
 
-     public static void rotateByNinetyToLeft(char[][] m) {
+    public static void rotateByNinetyToLeft(char[][] m) {
         int e = m.length - 1;
         int c = e / 2;
         int b = e % 2;
@@ -70,7 +71,7 @@ public class TransCypherEncriptor {
             }
         }
     }
-     
+
     public static void rotateByNinetyToRight(char[][] m) {
         int n = m.length;
         int x1, y1, x2, y2, x3, y3, x4, y4;
@@ -94,14 +95,88 @@ public class TransCypherEncriptor {
         }
     }
 
-    private static void fillMatrix(String block, int[][] key, char[][] mat) {
-        if (block.length() != key.length) {
+    private static void fillMatrix(String block, List<Coordinate> key, char[][] mat) {
+        if (block.length() != key.size()) {
             throw new IllegalStateException("bad block or key differents sizes \nblock "
-                    + block + " s: " + block.length() + " key size: " + key.length);
+                    + block + " s: " + block.length() + " key size: " + key.size());
         }
-        for (int i = 0; i < key.length; i++) {
-            mat[key[i][0]][key[i][1]] = block.charAt(i);
+        for (int i = 0; i < key.size(); i++) {
+            mat[key.get(i).getX()][key.get(i).getY()] = block.charAt(i);
         }
+    }
+
+    private static String clearMatrix(List<Coordinate> key, char[][] mat) {
+        StringBuilder fragment = new StringBuilder();
+        for (int i = 0; i < key.size(); i++) {
+            fragment.append(mat[key.get(i).getX()][key.get(i).getY()]);
+        }
+        return fragment.toString();
+    }
+
+    private static Map<Integer, List<Coordinate>> fillPosibilities(int blockSize, int n) {
+        Map<Integer, List<Coordinate>> posMap = new HashMap<>();
+        for (int i = 0; i < blockSize; i++) {
+            posMap.put(i, new ArrayList<>());
+        }
+        
+        return posMap;
+    }
+
+    private static Coordinate getRandomElement(List<Coordinate> list) {
+        int pos = (int) (Math.random() * list.size());
+        return list.get(pos);
+    }
+
+    private static void showMatrix(char[][] mat) {
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[i].length; j++) {
+                System.out.print(mat[i][j] + " ");
+            }
+            System.out.println("");
+        }
+    }
+
+    private static char[][] encodeMessage(String message, List<Coordinate> key, String fillString) {
+        int size = (int) Math.sqrt(message.length());
+        System.out.println("size " + size);
+        if (size % 2 != 0) {
+            size += 1;
+            System.out.println("fixed size  " + size);
+        }
+        while (message.length() < size * size) {
+            //fill the message
+            message += fillString;
+
+        }
+        System.out.println("new message " + message);
+        char[][] mat = new char[size][size];
+        int blockSize = size * size / 4;
+        System.out.println("block size " + blockSize);
+        key = new ArrayList<>();//getRandomKey(size);
+        key.removeAll(key);
+        key.add(new Coordinate(size - 1, 0));
+        key.add(new Coordinate(size - 2, 0));
+        key.add(new Coordinate(size - 1, 1));
+        key.add(new Coordinate(size - 2, 1));
+        Collections.sort(key);
+        for (Coordinate c : key) {
+            System.out.println(c);
+        }
+        System.out.println("");
+        for (int i = 0; i < 4; i++) {
+            fillMatrix(message.substring(i * blockSize, blockSize + i * blockSize), key, mat);
+            rotateMatrix(mat);
+        }
+        return mat;
+    }
+
+    private static String decodeMessage(char[][] mat, List<Coordinate> key, String fillString) {
+        StringBuilder original = new StringBuilder();
+        for (int i = 0; i < 4; i++) {
+            original.append(clearMatrix(key, mat));
+            rotateByNinetyToRight(mat);
+        }
+        return original.toString();
     }
 
 }

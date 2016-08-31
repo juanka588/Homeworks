@@ -18,22 +18,22 @@ import static org.junit.Assert.*;
  * @author JuanCamilo
  */
 public class TransCypherEncriptorTest {
-    
+
     public TransCypherEncriptorTest() {
     }
-    
+
     @BeforeClass
     public static void setUpClass() {
     }
-    
+
     @AfterClass
     public static void tearDownClass() {
     }
-    
+
     @Before
     public void setUp() {
     }
-    
+
     @After
     public void tearDown() {
     }
@@ -54,11 +54,11 @@ public class TransCypherEncriptorTest {
     @Test
     public void testRotateByNinetyToRight() {
         System.out.println("rotateByNinetyToRight");
-        char[][] m = new char[][]{{'1','2'},{'3','4'}};
+        char[][] m = new char[][]{{'1', '2'}, {'3', '4'}};
         TransCypherEncriptor.rotateByNinetyToRight(m);
-        assertArrayEquals(m, new char[][]{{'3','1'},{'4','2'}});
+        assertArrayEquals(m, new char[][]{{'3', '1'}, {'4', '2'}});
         TransCypherEncriptor.rotateByNinetyToLeft(m);
-        assertArrayEquals(m, new char[][]{{'1','2'},{'3','4'}});
+        assertArrayEquals(m, new char[][]{{'1', '2'}, {'3', '4'}});
     }
-    
+
 }

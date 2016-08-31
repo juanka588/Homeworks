@@ -5,7 +5,6 @@ package cripto;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,5 +35,5 @@ public class criptoSuitTest {
     @After
     public void tearDown() throws Exception {
     }
-    
+
 }
