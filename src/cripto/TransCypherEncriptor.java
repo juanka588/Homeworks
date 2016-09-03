@@ -14,6 +14,8 @@ import java.util.Map.Entry;
 
 public class TransCypherEncriptor {
 
+    private static List<Coordinate> key = new ArrayList<>();
+
     /**
      * @param args the command line arguments
      */
@@ -25,8 +27,7 @@ public class TransCypherEncriptor {
          }*/
         String message = "unapruebagrande";//args[0];
         String fillString = "X";//args[1];
-        List<Coordinate> key = new ArrayList<>();
-        char[][] mat = encodeMessage(message, key, fillString);
+        char[][] mat = encodeMessage(message, fillString);
         showMatrix(mat);
         System.out.println("encoding finish");
         String original = decodeMessage(mat, key, fillString);
@@ -118,7 +119,7 @@ public class TransCypherEncriptor {
         for (int i = 0; i < blockSize; i++) {
             posMap.put(i, new ArrayList<>());
         }
-        
+
         return posMap;
     }
 
@@ -136,7 +137,7 @@ public class TransCypherEncriptor {
         }
     }
 
-    private static char[][] encodeMessage(String message, List<Coordinate> key, String fillString) {
+    private static char[][] encodeMessage(String message, String fillString) {
         int size = (int) Math.sqrt(message.length());
         System.out.println("size " + size);
         if (size % 2 != 0) {
@@ -171,12 +172,16 @@ public class TransCypherEncriptor {
     }
 
     private static String decodeMessage(char[][] mat, List<Coordinate> key, String fillString) {
+        List<String> message = new ArrayList<>();
         StringBuilder original = new StringBuilder();
         for (int i = 0; i < 4; i++) {
-            original.append(clearMatrix(key, mat));
             rotateByNinetyToRight(mat);
+            message.add(0,clearMatrix(key, mat));
         }
-        return original.toString();
+        for (String m : message) {
+            original.append(m);
+        }
+        return original.toString().replaceAll(fillString, "");
     }
 
 }
