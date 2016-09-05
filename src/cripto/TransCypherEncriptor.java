@@ -20,15 +20,14 @@ public class TransCypherEncriptor {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        /*if (args.length != 2) {
+        /*  if (args.length != 2) {
          System.out.println("bad arguments number");
          System.out.println("usage message filler_char");
          return;
          }*/
-        String message = "unapruebagrande";//args[0];
-        String fillString = "X";//args[1];
+        String message = "profeponganosuncinco";//args[0];
+        String fillString = "#";//args[1];
         char[][] mat = encodeMessage(message, fillString);
-        showMatrix(mat);
         System.out.println("encoding finish");
         String original = decodeMessage(mat, key, fillString);
         System.out.println("decoded message: " + original);
@@ -119,8 +118,25 @@ public class TransCypherEncriptor {
         for (int i = 0; i < blockSize; i++) {
             posMap.put(i, new ArrayList<>());
         }
-
+        char[][] mat = initMat(n);
+        generatePossibleKeys(posMap, n);
         return posMap;
+    }
+
+    private static void generatePossibleKeys(Map<Integer, List<Coordinate>> posMap, int n) {
+        int t = 0;
+        List<Coordinate> tempList;
+        for (int k = 0; k < n / 2; k++) {
+            for (int i = 0; i < n - (2 * k) - 1; i++) {
+                tempList = posMap.get(t);
+                tempList.add(new Coordinate(k, i + k));//mat[k][i + k] = (char) t;
+                tempList.add(new Coordinate(i + k, n - k - 1));// mat[i + k][n - k - 1] = (char) t;
+                tempList.add(new Coordinate(n - k - 1, n - (i + k) - 1));// mat[n - k - 1][n - (i + k) - 1] = (char) t;
+                tempList.add(new Coordinate(n - (i + k) - 1, k));//mat[n - (i + k) - 1][k] = (char) t;
+                posMap.put(t, tempList);
+                t++;
+            }
+        }
     }
 
     private static Coordinate getRandomElement(List<Coordinate> list) {
@@ -135,10 +151,11 @@ public class TransCypherEncriptor {
             }
             System.out.println("");
         }
+        System.out.println("");
     }
 
     private static char[][] encodeMessage(String message, String fillString) {
-        int size = (int) Math.sqrt(message.length());
+        int size = (int) Math.ceil(Math.sqrt(message.length()));
         System.out.println("size " + size);
         if (size % 2 != 0) {
             size += 1;
@@ -150,23 +167,27 @@ public class TransCypherEncriptor {
 
         }
         System.out.println("new message " + message);
-        char[][] mat = new char[size][size];
+        char[][] mat = initMat(size);
+
         int blockSize = size * size / 4;
         System.out.println("block size " + blockSize);
-        key = new ArrayList<>();//getRandomKey(size);
-        key.removeAll(key);
-        key.add(new Coordinate(size - 1, 0));
-        key.add(new Coordinate(size - 2, 0));
-        key.add(new Coordinate(size - 1, 1));
-        key.add(new Coordinate(size - 2, 1));
-        Collections.sort(key);
+        key = getRandomKey(size);
+        System.out.println("key");
         for (Coordinate c : key) {
             System.out.println(c);
         }
         System.out.println("");
-        for (int i = 0; i < 4; i++) {
+        System.out.println("pseudo key");
+        fillMatrix(message.substring(0 * blockSize, blockSize + 0 * blockSize), key, mat);
+        showMatrix(mat);
+        System.out.println("fill and rotate");
+        rotateMatrix(mat);
+        showMatrix(mat);
+        for (int i = 1; i < 4; i++) {
             fillMatrix(message.substring(i * blockSize, blockSize + i * blockSize), key, mat);
             rotateMatrix(mat);
+            System.out.println("fill and rotate");
+            showMatrix(mat);
         }
         return mat;
     }
@@ -174,14 +195,28 @@ public class TransCypherEncriptor {
     private static String decodeMessage(char[][] mat, List<Coordinate> key, String fillString) {
         List<String> message = new ArrayList<>();
         StringBuilder original = new StringBuilder();
+        String clearMatrix;
         for (int i = 0; i < 4; i++) {
             rotateByNinetyToRight(mat);
-            message.add(0,clearMatrix(key, mat));
+            System.out.println("get and rotate");
+            clearMatrix = clearMatrix(key, mat);
+            message.add(0, clearMatrix);
+            System.out.println("obtained value: " + clearMatrix);
         }
         for (String m : message) {
             original.append(m);
         }
         return original.toString().replaceAll(fillString, "");
+    }
+
+    private static char[][] initMat(int size) {
+        char[][] mat = new char[size][size];
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[i].length; j++) {
+                mat[i][j] = '-';
+            }
+        }
+        return mat;
     }
 
 }
