@@ -5,6 +5,10 @@
  */
 package cripto;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,7 +23,7 @@ public class TransCypherEncriptor {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
         /*  if (args.length != 2) {
          System.out.println("bad arguments number");
          System.out.println("usage message filler_char");
@@ -29,7 +33,25 @@ public class TransCypherEncriptor {
         String fillString = "#";//args[1];
         char[][] mat = encodeMessage(message, fillString);
         System.out.println("encoding finish");
-        String original = decodeMessage(mat, key, fillString);
+
+        BufferedReader in = new BufferedReader(new FileReader("mat.txt"));
+        String line;
+        String[] cols;
+        List<String[]> rows = new ArrayList<>();
+        while ((line = in.readLine()) != null) {
+            cols = line.split("\\s");
+            rows.add(cols);
+        }
+        char[][] mat2 = transform(rows);
+
+        in = new BufferedReader(new FileReader("key.txt"));
+        List<Coordinate> key2 = new ArrayList<>();
+        while ((line = in.readLine()) != null) {
+            cols = line.split("\\s");
+            key2.add(new Coordinate(Integer.parseInt(cols[0]),
+                    Integer.parseInt(cols[1])));
+        }
+        String original = decodeMessage(mat2, key2, fillString);
         System.out.println("decoded message: " + original);
 
     }
@@ -215,6 +237,18 @@ public class TransCypherEncriptor {
             for (int j = 0; j < mat[i].length; j++) {
                 mat[i][j] = '-';
             }
+        }
+        return mat;
+    }
+
+    private static char[][] transform(List<String[]> rows) {
+        char[][] mat = new char[rows.size()][rows.size()];
+        int i = 0;
+        for (String[] row : rows) {
+            for (int j = 0; j < row.length; j++) {
+                mat[i][j] = row[j].charAt(0);
+            }
+            i++;
         }
         return mat;
     }
