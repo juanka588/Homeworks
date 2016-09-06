@@ -18,41 +18,42 @@ import java.util.Map.Entry;
 
 public class TransCypherEncriptor {
 
-    private static List<Coordinate> key = new ArrayList<>();
-
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        /*  if (args.length != 2) {
-         System.out.println("bad arguments number");
-         System.out.println("usage message filler_char");
-         return;
-         }*/
-        String message = "profeponganosuncinco";//args[0];
-        String fillString = "#";//args[1];
-        char[][] mat = encodeMessage(message, fillString);
-        System.out.println("encoding finish");
-
-        BufferedReader in = new BufferedReader(new FileReader("mat.txt"));
-        String line;
-        String[] cols;
-        List<String[]> rows = new ArrayList<>();
-        while ((line = in.readLine()) != null) {
-            cols = line.split("\\s");
-            rows.add(cols);
+        String fillString;
+        char[][] mat;
+        List<Coordinate> key;
+        if ("-en".equals(args[0])) {
+            String message = args[1];
+            fillString = args[2];
+            if (message.contains(fillString)) {
+                System.out.println("the message can not contain the fill string");
+            }
+            mat = encodeMessage(message, fillString);
+            System.out.println("encoding finish");
+        } else if ("-de".equals(args[0])) {
+            BufferedReader in = new BufferedReader(new FileReader(args[1]));
+            String line;
+            String[] cols;
+            List<String[]> rows = new ArrayList<>();
+            while ((line = in.readLine()) != null) {
+                cols = line.split("\\s");
+                rows.add(cols);
+            }
+            mat = transform(rows);
+            in = new BufferedReader(new FileReader(args[2]));
+            fillString = args[3];
+            key = new ArrayList<>();
+            while ((line = in.readLine()) != null) {
+                cols = line.split("\\s");
+                key.add(new Coordinate(Integer.parseInt(cols[0]),
+                        Integer.parseInt(cols[1])));
+            }
+            String original = decodeMessage(mat, key, fillString);
+            System.out.println("decoded message: " + original);
         }
-        char[][] mat2 = transform(rows);
-
-        in = new BufferedReader(new FileReader("key.txt"));
-        List<Coordinate> key2 = new ArrayList<>();
-        while ((line = in.readLine()) != null) {
-            cols = line.split("\\s");
-            key2.add(new Coordinate(Integer.parseInt(cols[0]),
-                    Integer.parseInt(cols[1])));
-        }
-        String original = decodeMessage(mat2, key2, fillString);
-        System.out.println("decoded message: " + original);
 
     }
 
@@ -193,7 +194,7 @@ public class TransCypherEncriptor {
 
         int blockSize = size * size / 4;
         System.out.println("block size " + blockSize);
-        key = getRandomKey(size);
+        List<Coordinate> key = getRandomKey(size);
         System.out.println("key");
         for (Coordinate c : key) {
             System.out.println(c);
