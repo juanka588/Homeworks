@@ -82,8 +82,59 @@ public class Token {
         switch (type) {
             case ID:
                 return "token_id";
+            case 1:
+                return "token_neg";
+            case 2:
+                return "token_igual";
+            case 3:
+                return "token_mas";
+            case 4:
+                return "token_menos";
+            case 5:
+                return "token_mul";
+            case 6:
+                return "token_mod";
+            case 7:
+                return "token_pyc";
+            case 8:
+                return "token_dosp";
+            case 9:
+                return "token_par_izq";
+            case 10:
+                return "token_par_der";
+            case 11:
+                return "token_cor_izq";
+            case 12:
+                return "token_cor_der";
+            case 13:
+                return "token_o";
+            case 14:
+                return "token_y";    
+            case 15:
+                return "token_coma";
+            case 16:
+                return "token_pot";
+            case 17:
+                return "token_o";
+            case 18:
+                return "token_y";
+            case 19:
+                return "token_asig";
+            case 20:
+                return "token_dif";
+            case 21:
+                return "token_menor";
+            case 22:
+                return "token_mayor";
+            case 23:
+                return "token_menor_igual";
+            case 24:
+                return "token_mayor_igual";
+            case 25:
+                return "token_div";
             default:
                 return "";
+                
         }
     }
 }

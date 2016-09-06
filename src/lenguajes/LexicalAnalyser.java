@@ -94,11 +94,27 @@ public class LexicalAnalyser {
     }
 
     private static int readNextLT(int i, String text, List<Token> tokenList) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (text.charAt(i+1) == "-"){
+            tokenList.add(new Token(<-,row,column,19));
+            return 1;
+        }else if(text.charAt(i+1) == ">"){
+            tokenList.add(new Token(<>,row,column,20));
+            return 1;      
+        }else if(text.charAt(i+1) == "="){
+            tokenList.add(new Token(<=,row,column,23));
+            return 1;
+        }else{
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 
     private static int readNextGT(int i, String text, List<Token> tokenList) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(text.charAt(i+1) == "="){
+            tokenList.add(new Token(<=,row,column,23));
+            return 1;
+        }else{
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
     }
 
     private static int readStringDef(int i, String text, List<Token> tokenList) {
