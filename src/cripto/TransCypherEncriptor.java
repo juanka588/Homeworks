@@ -18,42 +18,53 @@ import java.util.Map.Entry;
 
 public class TransCypherEncriptor {
 
-    private static List<Coordinate> key = new ArrayList<>();
-
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        /*  if (args.length != 2) {
-         System.out.println("bad arguments number");
-         System.out.println("usage message filler_char");
-         return;
-         }*/
-        String message = "profeponganosuncinco";//args[0];
-        String fillString = "#";//args[1];
-        char[][] mat = encodeMessage(message, fillString);
-        System.out.println("encoding finish");
-
-        BufferedReader in = new BufferedReader(new FileReader("mat.txt"));
-        String line;
-        String[] cols;
-        List<String[]> rows = new ArrayList<>();
-        while ((line = in.readLine()) != null) {
-            cols = line.split("\\s");
-            rows.add(cols);
+        String fillString;
+        char[][] mat;
+        List<Coordinate> key;
+        if (args.length < 3) {
+            System.out.println("bad number of arguments");
+            System.out.println("usage -en message fillString");
+            System.out.println("usage -de matMessageFile keyFile fillerString");
+            return;
         }
-        char[][] mat2 = transform(rows);
-
-        in = new BufferedReader(new FileReader("key.txt"));
-        List<Coordinate> key2 = new ArrayList<>();
-        while ((line = in.readLine()) != null) {
-            cols = line.split("\\s");
-            key2.add(new Coordinate(Integer.parseInt(cols[0]),
-                    Integer.parseInt(cols[1])));
+        if ("-en".equals(args[0])) {
+            String message = args[1];
+            fillString = args[2];
+            if (message.contains(fillString)) {
+                System.out.println("the message can not contain the fill string");
+                return;
+            }
+            mat = encodeMessage(message, fillString);
+            System.out.println("encoding finish");
+        } else if ("-de".equals(args[0])) {
+            BufferedReader in = new BufferedReader(new FileReader(args[1]));
+            String line;
+            String[] cols;
+            List<String[]> rows = new ArrayList<>();
+            while ((line = in.readLine()) != null) {
+                cols = line.split("\\s");
+                rows.add(cols);
+            }
+            mat = transform(rows);
+            in = new BufferedReader(new FileReader(args[2]));
+            fillString = args[3];
+            key = new ArrayList<>();
+            while ((line = in.readLine()) != null) {
+                cols = line.split("\\s");
+                key.add(new Coordinate(Integer.parseInt(cols[0]),
+                        Integer.parseInt(cols[1])));
+            }
+            Collections.sort(key);
+            String original = decodeMessage(mat, key, fillString);
+            System.out.println("decoded message: " + original);
+        } else {
+            System.out.println("usage -en message fillString");
+            System.out.println("usage -de matMessageFile keyFile fillerString");
         }
-        String original = decodeMessage(mat2, key2, fillString);
-        System.out.println("decoded message: " + original);
-
     }
 
     /**
@@ -78,7 +89,7 @@ public class TransCypherEncriptor {
     private static void rotateMatrix(char[][] mat) {
         rotateByNinetyToLeft(mat);
     }
-
+    
     public static void rotateByNinetyToLeft(char[][] m) {
         int e = m.length - 1;
         int c = e / 2;
@@ -93,7 +104,7 @@ public class TransCypherEncriptor {
             }
         }
     }
-
+    
     public static void rotateByNinetyToRight(char[][] m) {
         int n = m.length;
         int x1, y1, x2, y2, x3, y3, x4, y4;
@@ -116,7 +127,7 @@ public class TransCypherEncriptor {
             }
         }
     }
-
+    
     private static void fillMatrix(String block, List<Coordinate> key, char[][] mat) {
         if (block.length() != key.size()) {
             throw new IllegalStateException("bad block or key differents sizes \nblock "
@@ -126,7 +137,7 @@ public class TransCypherEncriptor {
             mat[key.get(i).getX()][key.get(i).getY()] = block.charAt(i);
         }
     }
-
+    
     private static String clearMatrix(List<Coordinate> key, char[][] mat) {
         StringBuilder fragment = new StringBuilder();
         for (int i = 0; i < key.size(); i++) {
@@ -134,7 +145,7 @@ public class TransCypherEncriptor {
         }
         return fragment.toString();
     }
-
+    
     private static Map<Integer, List<Coordinate>> fillPosibilities(int blockSize, int n) {
         Map<Integer, List<Coordinate>> posMap = new HashMap<>();
         for (int i = 0; i < blockSize; i++) {
@@ -144,7 +155,7 @@ public class TransCypherEncriptor {
         generatePossibleKeys(posMap, n);
         return posMap;
     }
-
+    
     private static void generatePossibleKeys(Map<Integer, List<Coordinate>> posMap, int n) {
         int t = 0;
         List<Coordinate> tempList;
@@ -160,12 +171,12 @@ public class TransCypherEncriptor {
             }
         }
     }
-
+    
     private static Coordinate getRandomElement(List<Coordinate> list) {
         int pos = (int) (Math.random() * list.size());
         return list.get(pos);
     }
-
+    
     private static void showMatrix(char[][] mat) {
         for (int i = 0; i < mat.length; i++) {
             for (int j = 0; j < mat[i].length; j++) {
@@ -175,7 +186,7 @@ public class TransCypherEncriptor {
         }
         System.out.println("");
     }
-
+    
     private static char[][] encodeMessage(String message, String fillString) {
         int size = (int) Math.ceil(Math.sqrt(message.length()));
         System.out.println("size " + size);
@@ -186,14 +197,14 @@ public class TransCypherEncriptor {
         while (message.length() < size * size) {
             //fill the message
             message += fillString;
-
+            
         }
         System.out.println("new message " + message);
         char[][] mat = initMat(size);
-
+        
         int blockSize = size * size / 4;
         System.out.println("block size " + blockSize);
-        key = getRandomKey(size);
+        List<Coordinate> key = getRandomKey(size);
         System.out.println("key");
         for (Coordinate c : key) {
             System.out.println(c);
@@ -213,7 +224,7 @@ public class TransCypherEncriptor {
         }
         return mat;
     }
-
+    
     private static String decodeMessage(char[][] mat, List<Coordinate> key, String fillString) {
         List<String> message = new ArrayList<>();
         StringBuilder original = new StringBuilder();
@@ -230,7 +241,7 @@ public class TransCypherEncriptor {
         }
         return original.toString().replaceAll(fillString, "");
     }
-
+    
     private static char[][] initMat(int size) {
         char[][] mat = new char[size][size];
         for (int i = 0; i < mat.length; i++) {
@@ -240,7 +251,7 @@ public class TransCypherEncriptor {
         }
         return mat;
     }
-
+    
     private static char[][] transform(List<String[]> rows) {
         char[][] mat = new char[rows.size()][rows.size()];
         int i = 0;
@@ -252,5 +263,5 @@ public class TransCypherEncriptor {
         }
         return mat;
     }
-
+    
 }

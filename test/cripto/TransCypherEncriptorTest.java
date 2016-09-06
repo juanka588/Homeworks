@@ -5,6 +5,7 @@
  */
 package cripto;
 
+import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -42,9 +43,11 @@ public class TransCypherEncriptorTest {
      * Test of main method, of class TransCypherEncriptor.
      */
     @Test
-    public void testMain() {
+    public void testMain() throws IOException {
         System.out.println("main");
-        String[] args = null;
+        String[] args = new String[]{"-en", "mi mega mensaje nuevisimo", "#"};
+        TransCypherEncriptor.main(args);
+        args = new String[]{"-de", "mat.txt", "key.txt", "#"};
         TransCypherEncriptor.main(args);
     }
 
