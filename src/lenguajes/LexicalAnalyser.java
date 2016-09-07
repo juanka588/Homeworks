@@ -9,13 +9,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -208,7 +205,7 @@ public class LexicalAnalyser {
         } else if (nextChar == '=') {
             tokenList.add(new Token("<=", row, column, Token.LE));
             return 1;
-        } else if (isString(nextChar) || isNumber(nextChar)||isSpace(nextChar)) {
+        } else if (isString(nextChar) || isNumber(nextChar) || isSpace(nextChar)) {
             tokenList.add(new Token("<", row, column, Token.LT));
             return 0;
         } else {
@@ -227,7 +224,7 @@ public class LexicalAnalyser {
         if (nextChar == '=') {
             tokenList.add(new Token(">=", row, column, Token.GE));
             return 1;
-        } else if (isString(nextChar) || isNumber(nextChar)||isSpace(nextChar)) {
+        } else if (isString(nextChar) || isNumber(nextChar) || isSpace(nextChar)) {
             tokenList.add(new Token(">", row, column, Token.GT));
             return 0;
         } else {
