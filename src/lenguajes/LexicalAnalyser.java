@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,12 +50,14 @@ public class LexicalAnalyser {
      */
 
     public static void main(String[] args) throws FileNotFoundException, IOException, LexicalException {
-        fileName = args[0];
-        System.out.println("file: " + fileName);
-        BufferedReader in = new BufferedReader(new FileReader(fileName));
-        fileName = getFileName(fileName);
-        System.out.println("fixed name: " + fileName);
-        //new InputStreamReader(System.in);
+      //  fileName = args[0];
+      //  System.out.println("file: " + fileName);
+        BufferedReader in;// = new BufferedReader(new FileReader(fileName));
+      //  fileName = getFileName(fileName);
+      //  System.out.println("fixed name: " + fileName);
+        //
+
+        in = new BufferedReader(new InputStreamReader(System.in));
 
         String text;
         List<Token> tokenList = new ArrayList<>();
@@ -98,7 +102,7 @@ public class LexicalAnalyser {
             }
             row++;
             column = 1;
-            System.out.println(text);
+            System.out.println(Arrays.toString(tokenList.toArray()));
         }
         writeResponse(tokenList, fileName);
     }
