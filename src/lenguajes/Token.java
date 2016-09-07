@@ -11,22 +11,51 @@ package lenguajes;
  */
 public class Token {
 
-    public static final int ID = 0,
-            INTEGER = 2,
-            CADENA = 3,
-            REAL = 4,
-            RESERVED = 1,
-            NEG = 5;
+    public static final int ID = 0;
+    public static final int RESERVED = 1;
+    public static final int INTEGER = 2;
+    /**
+     * int represents string values
+     */
+    public static final int CADENA = 3;
+    public static final int REAL = 4;
 
+    public static final int EQUAL = 5;
+    public static final int DIVOP = 6;
+    public static final int GE = 7;
+    public static final int LE = 8;
+    public static final int GT = 9;
+    public static final int LT = 10;
+    public static final int DIF = 11;
+    public static final int ASIGN = 12;
+    public static final int POWER = 13;
+    public static final int COMMA = 14;
+    public static final int AND = 15;
+    public static final int OR = 16;
+    public static final int CORDER = 17;
+    public static final int CORIZQ = 18;
+    public static final int PARDER = 19;
+    public static final int PARIZQ = 20;
+    public static final int DOUBLE_POINTS = 21;
+    public static final int PYC = 22;
+    public static final int MODOP = 23;
+    public static final int NEG = 24;
+    public static final int PLUSOP = 25;
+    public static final int MULOP = 26;
+    public static final int LESSOP = 27;
     private String lexema;
-    private int row, column;
-    private String type;
+    private int row, column, type;
+    private String typeString;
 
-    public Token(String lexema, int row, int column, String type) {
+    public Token(String lexema, int row, int column, int type) {
         this.lexema = lexema;
         this.row = row;
         this.column = column;
         this.type = type;
+        this.typeString = getTypeFromInt(type);
+        if ("".equals(typeString)) {
+            this.typeString = lexema;
+        }
     }
 
     public String getLexema() {
@@ -53,11 +82,19 @@ public class Token {
         this.column = column;
     }
 
-    public String getType() {
+    public String getTypeString() {
+        return typeString;
+    }
+
+    public void setTypeString(String typeString) {
+        this.typeString = typeString;
+    }
+
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
@@ -65,8 +102,8 @@ public class Token {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("<");
-        sb.append(type);
-        if (!lexema.equals(type)) {
+        sb.append(typeString);
+        if (type == ID || type == INTEGER || type == CADENA || type == REAL) {
             sb.append(",");
             sb.append(lexema);
         }
@@ -81,60 +118,62 @@ public class Token {
     public static String getTypeFromInt(int type) {
         switch (type) {
             case ID:
-                return "token_id";
-            case 1:
+                return "id";
+            case NEG:
                 return "token_neg";
-            case 2:
+            case EQUAL:
                 return "token_igual";
-            case 3:
+            case PLUSOP:
                 return "token_mas";
-            case 4:
+            case LESSOP:
                 return "token_menos";
-            case 5:
+            case MULOP:
                 return "token_mul";
-            case 6:
+            case MODOP:
                 return "token_mod";
-            case 7:
+            case PYC:
                 return "token_pyc";
-            case 8:
+            case DOUBLE_POINTS:
                 return "token_dosp";
-            case 9:
+            case PARIZQ:
                 return "token_par_izq";
-            case 10:
+            case PARDER:
                 return "token_par_der";
-            case 11:
+            case CORIZQ:
                 return "token_cor_izq";
-            case 12:
+            case CORDER:
                 return "token_cor_der";
-            case 13:
+            case OR:
                 return "token_o";
-            case 14:
-                return "token_y";    
-            case 15:
-                return "token_coma";
-            case 16:
-                return "token_pot";
-            case 17:
-                return "token_o";
-            case 18:
+            case AND:
                 return "token_y";
-            case 19:
+            case COMMA:
+                return "token_coma";
+            case POWER:
+                return "token_pot";
+            case ASIGN:
                 return "token_asig";
-            case 20:
+            case DIF:
                 return "token_dif";
-            case 21:
+            case LT:
                 return "token_menor";
-            case 22:
+            case GT:
                 return "token_mayor";
-            case 23:
+            case LE:
                 return "token_menor_igual";
-            case 24:
+            case GE:
                 return "token_mayor_igual";
-            case 25:
+            case DIVOP:
                 return "token_div";
+            case REAL:
+                return "token_real";
+            case INTEGER:
+                return "token_entero";
+            case CADENA:
+                return "token_cadena";
             default:
                 return "";
-                
         }
     }
+
 }
