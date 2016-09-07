@@ -37,13 +37,13 @@
 <token_pyc,18,12>
 <escribir,20,5>
 <token_cadena,Ingrese un valor numérico para x:,20,14>
-<token_pyc,20,49>
+<token_pyc,20,50>
 <leer,21,5>
 <id,x,21,10>
 <token_pyc,21,11>
 <escribir,23,5>
 <token_cadena,Llamada a la función CalcularDoble (pasaje por valor),23,14>
-<token_pyc,23,69>
+<token_pyc,23,70>
 <escribir,24,5>
 <token_cadena,El doble de ,24,14>
 <token_coma,24,28>
@@ -63,7 +63,7 @@
 <token_pyc,25,44>
 <escribir,27,5>
 <token_cadena,Llamada a la función Triplicar (pasaje por referencia),27,14>
-<token_pyc,27,70>
+<token_pyc,27,71>
 <id,triplicar,28,5>
 <token_par_izq,28,14>
 <id,x,28,15>

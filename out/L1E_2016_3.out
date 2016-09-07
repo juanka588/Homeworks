@@ -16,5 +16,4 @@
 <token_mod,10,5>
 <token_real,233.2,13,1>
 <token_real,1.1212,14,48>
-<token_entero,122,18,30>
->>> Error lexico (linea: 18, posicion: 33)
+>>> Error lexico (linea: 18, posicion: 30)

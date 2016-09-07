@@ -61,7 +61,7 @@
 <token_pyc,28,25>
 <escribir,29,9>
 <token_cadena,Menú de recomendaciones,29,18>
-<token_pyc,29,43>
+<token_pyc,29,44>
 <escribir,30,9>
 <token_cadena,   1. Literatura,30,18>
 <token_pyc,30,36>
@@ -70,7 +70,7 @@
 <token_pyc,31,30>
 <escribir,32,9>
 <token_cadena,   3. Música,32,18>
-<token_pyc,32,32>
+<token_pyc,32,33>
 <escribir,33,9>
 <token_cadena,   4. Videojuegos,33,18>
 <token_pyc,33,37>
@@ -79,7 +79,7 @@
 <token_pyc,34,31>
 <escribir,36,9>
 <token_cadena,Elija una opción (1-5): ,36,18>
-<token_pyc,36,44>
+<token_pyc,36,45>
 <leer,37,9>
 <id,op,37,14>
 <token_pyc,37,16>
@@ -93,24 +93,24 @@
 <token_pyc,41,51>
 <escribir,42,17>
 <token_cadena, + Esperándolo a Tito y otros cuentos de fúbol (Eduardo Sacheri),42,26>
-<token_pyc,42,92>
+<token_pyc,42,94>
 <escribir,43,17>
 <token_cadena, + El juego de Ender (Orson Scott Card),43,26>
 <token_pyc,43,67>
 <escribir,44,17>
 <token_cadena, + El sueño de los héroes (Adolfo Bioy Casares),44,26>
-<token_pyc,44,75>
+<token_pyc,44,77>
 <token_entero,2,45,13>
 <token_dosp,45,14>
 <escribir,46,17>
 <token_cadena,Películas recomendables:,46,26>
-<token_pyc,46,52>
+<token_pyc,46,53>
 <escribir,47,17>
 <token_cadena, + Matrix (1999),47,26>
 <token_pyc,47,44>
 <escribir,48,17>
 <token_cadena, + El último samuray (2003),48,26>
-<token_pyc,48,55>
+<token_pyc,48,56>
 <escribir,49,17>
 <token_cadena, + Cars (2006),49,26>
 <token_pyc,49,42>
@@ -124,18 +124,18 @@
 <token_pyc,52,74>
 <escribir,53,17>
 <token_cadena, + Búfalo (La Mississippi, 2008),53,26>
-<token_pyc,53,60>
+<token_pyc,53,61>
 <escribir,54,17>
 <token_cadena, + Gaia (Mägo de Oz, 2003),54,26>
-<token_pyc,54,54>
+<token_pyc,54,55>
 <token_entero,4,55,13>
 <token_dosp,55,14>
 <escribir,56,17>
 <token_cadena,Videojuegos clásicos recomendables,56,26>
-<token_pyc,56,62>
+<token_pyc,56,63>
 <escribir,57,17>
 <token_cadena, + Día del tentáculo (LucasArts, 1993),57,26>
-<token_pyc,57,66>
+<token_pyc,57,68>
 <escribir,58,17>
 <token_cadena, + Terminal Velocity (Terminal Reality/3D Realms, 1995),58,26>
 <token_pyc,58,83>
@@ -153,7 +153,7 @@
 <token_dosp,62,25>
 <escribir,63,17>
 <token_cadena,Opción no válida,63,26>
-<token_pyc,63,44>
+<token_pyc,63,46>
 <finsegun,64,9>
 <escribir,65,9>
 <token_cadena,Presione enter para continuar,65,18>
