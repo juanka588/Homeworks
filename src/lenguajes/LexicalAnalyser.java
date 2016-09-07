@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,29 +29,32 @@ public class LexicalAnalyser {
     private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9]");
     public static final String OUT_DIR = "./out/";
     private static int row, column;
-    private static String fileName;
-/*
-    public static void main2(String[] args) {
-        System.out.println("main");
-        File f = new File("./ejemplos/");
-        File[] files = f.listFiles((File dir, String name) -> name.endsWith(".in"));
-        for (File file : files) {
-            try {
-                main2(new String[]{file.getAbsolutePath()});
-            } catch (IOException ex) {
-                Logger.getLogger(LexicalAnalyser.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (LexicalException ex) {
-                Logger.getLogger(LexicalAnalyser.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-*/
+    private static String fileName = "lexer.out";
+    /*
+     public static void main(String[] args) {
+     System.out.println("main");
+     File f = new File("./ejemplos/");
+     File[] files = f.listFiles((File dir, String name) -> name.endsWith(".in"));
+     for (File file : files) {
+     try {
+     main2(new String[]{file.getAbsolutePath()});
+     } catch (IOException ex) {
+     Logger.getLogger(LexicalAnalyser.class.getName()).log(Level.SEVERE, null, ex);
+     } catch (LexicalException ex) {
+     Logger.getLogger(LexicalAnalyser.class.getName()).log(Level.SEVERE, null, ex);
+     }
+     }
+     }
+     */
+
     public static void main(String[] args) throws FileNotFoundException, IOException, LexicalException {
         fileName = args[0];
         System.out.println("file: " + fileName);
         BufferedReader in = new BufferedReader(new FileReader(fileName));
         fileName = getFileName(fileName);
         System.out.println("fixed name: " + fileName);
+        //new InputStreamReader(System.in);
+
         String text;
         List<Token> tokenList = new ArrayList<>();
         row = 1;
@@ -138,10 +142,13 @@ public class LexicalAnalyser {
             value = SimbolsTable.SIMBOLS_MAP.get(word);
             if (value != null) {
                 tokenList.add(new Token(word, row, column, value));
+            } else {
+                //case identifier
+                tokenList.add(new Token(word, row, column, Token.ID));
             }
         } else if (value != null) {
             //case reserved word
-            tokenList.add(new Token(word, row, column, Token.RESERVED));
+            tokenList.add(new Token(word, row, column, value));
         } else {
             //case identifier
             tokenList.add(new Token(word, row, column, Token.ID));
@@ -167,6 +174,10 @@ public class LexicalAnalyser {
                 break;
             }
             temp = text.charAt(i + count);
+        }
+        if (isString(temp)) {
+            //ex: 2.0as
+            throw new LexicalException(row, column, fileName, tokenList);
         }
         String number = sb.toString();
         int size = number.length();
@@ -304,7 +315,7 @@ public class LexicalAnalyser {
         for (int i = fileName.length() - 1; i >= 0; i--) {
             a = fileName.charAt(i);
             if (extension) {
-                if (a == '\\'||a == '/') {
+                if (a == '\\' || a == '/') {
                     break;
                 }
                 sb.append(a);

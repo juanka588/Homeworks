@@ -10,7 +10,7 @@
 <token_y,7,3>
 <token_o,8,1>
 <token_o,8,3>
-<no,9,1>
+<token_neg,9,1>
 <token_neg,9,4>
-<mod,10,1>
+<token_mod,10,1>
 <token_mod,10,5>
