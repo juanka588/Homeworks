@@ -24,7 +24,8 @@ public class PermutationsTest {
 
     public PermutationsTest() {
         k = new BitSet();
-        k = Utils.bytesToBitSet("0110100001101111011011000110000101101000011011110110110001100001");
+        String bits = Utils.hexToBytes("133457799BBCDFF1");
+        k = Utils.bytesToBitSet(bits);
     }
 
     @BeforeClass
@@ -49,8 +50,10 @@ public class PermutationsTest {
     @Test
     public void testPC1() {
         System.out.println("PC1");
+        assertEquals("0001001100110100010101110111100110011011101111001101111111110001"
+                , Utils.bitSetToString(k));
         BitSet expResult
-                = Utils.bytesToBitSet("0001101000011010000110100010101100111100001111000100110101011111");
+                = Utils.bytesToBitSet("11110000110011001010101011110101010101100110011110001111");
         BitSet result = Permutations.PC1(k);
         assertEquals(expResult, result);
 

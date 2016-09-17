@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.BitSet;
+import java.util.Collections;
 import java.util.List;
 import javax.xml.bind.DatatypeConverter;
 
@@ -84,29 +85,64 @@ public class Utils {
     }
 
     public static BitSet bytesToBitSet(String bits) {
-        BitSet bs = new BitSet(bits.length());
-        for (int i = 0; i < bits.length(); i++) {
-            bs.set(i, bits.charAt(i) == '1');
+        String copy = bits.replaceAll("\\s", "");
+        BitSet bs = new BitSet(copy.length());
+        for (int i = 0; i < copy.length(); i++) {
+            bs.set(i, copy.charAt(i) == '1');
         }
         return bs;
     }
 
+    public static List<BitSet> splitHalf(BitSet k0) {
+        return split(k0, Collections.singletonList(k0.length() / 2));
+    }
+
+    /**
+     *
+     * @param k0
+     * @param cutPoint number of bits of first half
+     * @return
+     */
     public static List<BitSet> split(BitSet k0, int cutPoint) {
-        List<BitSet> parts = new ArrayList<>(2);
-        parts.add(k0.get(0, cutPoint));
-        parts.add(k0.get(cutPoint + 1, k0.length()));
+        return split(k0, Collections.singletonList(cutPoint));
+    }
+
+    public static List<BitSet> split(BitSet k0, List<Integer> cutPoints) {
+        List<BitSet> parts = new ArrayList<>();
+        int temp = 0;
+        for (Integer cp : cutPoints) {
+            if (cp < 0 || cp >= k0.length()) {
+                throw new IllegalArgumentException("bad cut point");
+            }
+            parts.add(k0.get(temp, cp));
+            temp = cp;
+        }
+        //add last part
+        parts.add(k0.get(temp, k0.length()));
         return parts;
     }
 
     public static BitSet leftShift(BitSet k0, int shift) {
         BitSet bs = new BitSet(k0.length());
-        bs.or(k0.get(shift, k0.length() + 1 - shift));
-        System.out.println(Utils.bitSetToString(bs));
-        for (int i = 0; i < shift; i++) {
-            bs.set(k0.length() - shift + i, k0.get(i));
-            System.out.println("entro");
+        int i;
+        for (i = 0; i < k0.length() - shift; i++) {
+            bs.set(i, k0.get(i + shift));
         }
-        System.out.println(Utils.bitSetToString(bs));
+        for (i = k0.length() - shift; i < k0.length(); i++) {
+            bs.set(i, k0.get(i - (k0.length() - shift)));
+        }
+        return bs;
+    }
+
+    public static BitSet rightShift(BitSet k0, int shift) {
+        BitSet bs = new BitSet(k0.length());
+        int i;
+        for (i = 0; i < k0.length() - shift; i++) {
+            bs.set(i + shift, k0.get(i));
+        }
+        for (i = k0.length() - shift; i < k0.length(); i++) {
+            bs.set(i - (k0.length() - shift), k0.get(i));
+        }
         return bs;
     }
 
