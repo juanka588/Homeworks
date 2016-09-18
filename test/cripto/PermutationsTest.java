@@ -6,6 +6,8 @@
 package cripto;
 
 import java.util.BitSet;
+import java.util.HashSet;
+import java.util.Set;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,7 +26,7 @@ public class PermutationsTest {
     public PermutationsTest() {
         k = new BitSet();
         String bits = Utils.hexToBytes("133457799BBCDFF1");
-        k = Utils.bytesToBitSet(bits);
+        k = Utils.bitsToBitSet(bits);
     }
 
     @BeforeClass
@@ -49,10 +51,9 @@ public class PermutationsTest {
     @Test
     public void testPC1() {
         System.out.println("PC1");
-        assertEquals("0001001100110100010101110111100110011011101111001101111111110001"
-                , Utils.bitSetToString(k));
+        assertEquals("0001001100110100010101110111100110011011101111001101111111110001", Utils.bitSetToString(k));
         BitSet expResult
-                = Utils.bytesToBitSet("11110000110011001010101011110101010101100110011110001111");
+                = Utils.bitsToBitSet("11110000110011001010101011110101010101100110011110001111");
         BitSet result = Permutations.PC1(k);
         assertEquals(expResult, result);
 
@@ -65,11 +66,42 @@ public class PermutationsTest {
     public void testPC2() {
         System.out.println("PC2");
         BitSet base
-                = Utils.bytesToBitSet("1110000110011001010101011111 1010101011001100111100011110");
+                = Utils.bitsToBitSet("1110000110011001010101011111 1010101011001100111100011110");
         BitSet expResult
-                = Utils.bytesToBitSet("000110 110000 001011 101111 111111 000111 000001 110010");
+                = Utils.bitsToBitSet("000110 110000 001011 101111 111111 000111 000001 110010");
         BitSet result = Permutations.PC2(base);
         assertEquals(Utils.bitSetToString(expResult), Utils.bitSetToString(result));
+    }
+
+    /**
+     * Test of PC2 method, of class Permutations.
+     */
+    @Test
+    public void testConstants() {
+        System.out.println("Constants");
+        assertTrue(diffRow(Permutations.P));
+        assertTrue(diffRow(Permutations.PC_1));
+        assertTrue(diffRow(Permutations.PC_2));
+        assertTrue(diffRow(Permutations.IP));
+        assertTrue(diffRow(Permutations.IP_INV));
+        int[][][] test = new int[][][]{Permutations.S1, Permutations.S2, Permutations.S3, Permutations.S4,
+            Permutations.S5, Permutations.S6, Permutations.S7, Permutations.S8};
+        for (int[][] mat : test) {
+            for (int[] arr : mat) {
+                assertTrue(diffRow(arr));
+            }
+        }
+
+    }
+
+    private boolean diffRow(int[] array) {
+        boolean ret = true;
+        Set<Integer> map = new HashSet<>();
+        for (int i = 0; i < array.length; i++) {
+
+            ret = ret && map.add(i);
+        }
+        return ret;
     }
 
 }

@@ -84,7 +84,7 @@ public class Utils {
         return new String(bytes, encoding);
     }
 
-    public static BitSet bytesToBitSet(String bits) {
+    public static BitSet bitsToBitSet(String bits) {
         String copy = bits.replaceAll("\\s", "");
         BitSet bs = new BitSet(copy.length());
         for (int i = 0; i < copy.length(); i++) {
@@ -105,6 +105,18 @@ public class Utils {
      */
     public static List<BitSet> split(BitSet k0, int cutPoint) {
         return split(k0, Collections.singletonList(cutPoint));
+    }
+
+    public static List<BitSet> split6(BitSet k0) {
+        List<Integer> cutpoints = new ArrayList<>();
+        cutpoints.add(6);
+        cutpoints.add(12);
+        cutpoints.add(18);
+        cutpoints.add(24);
+        cutpoints.add(30);
+        cutpoints.add(36);
+        cutpoints.add(42);
+        return split(k0, cutpoints);
     }
 
     public static List<BitSet> split(BitSet k0, List<Integer> cutPoints) {
@@ -166,8 +178,12 @@ public class Utils {
     }
 
     public static String bitSetToString(BitSet bs) {
+        return bitSetToString(bs, bs.length());
+    }
+
+    public static String bitSetToString(BitSet bs, int max) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bs.length(); i++) {
+        for (int i = 0; i < max; i++) {
             if (bs.get(i)) {
                 sb.append('1');
             } else {
@@ -175,6 +191,30 @@ public class Utils {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     *
+     * @param bs
+     * @return String representation of binary string
+     * @throws UnsupportedEncodingException
+     */
+    public static String getStringValueOf(BitSet bs) throws UnsupportedEncodingException {
+        return hexToString(bitsToHex(bitSetToString(bs), 4));
+    }
+
+    public static List<String> splitString(String message, int blockSize) {
+        List<String> blocks = new ArrayList<>();
+        int inf, sup;
+        for (int j = 0; j < message.length() / blockSize; j++) {
+            inf = j * blockSize;
+            sup = j * blockSize + blockSize;
+            if (sup > message.length()) {
+                sup = message.length();
+            }
+            blocks.add(message.substring(inf, sup));
+        }
+        return blocks;
     }
 
 }
