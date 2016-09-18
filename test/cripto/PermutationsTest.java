@@ -6,7 +6,6 @@
 package cripto;
 
 import java.util.BitSet;
-import javafx.scene.input.KeyCode;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -65,9 +64,11 @@ public class PermutationsTest {
     @Test
     public void testPC2() {
         System.out.println("PC2");
+        BitSet base
+                = Utils.bytesToBitSet("1110000110011001010101011111 1010101011001100111100011110");
         BitSet expResult
-                = Utils.bytesToBitSet("0001101000011010000110100010101100111100001111000100110101011111");
-        BitSet result = Permutations.PC2(k);
+                = Utils.bytesToBitSet("000110 110000 001011 101111 111111 000111 000001 110010");
+        BitSet result = Permutations.PC2(base);
         assertEquals(Utils.bitSetToString(expResult), Utils.bitSetToString(result));
     }
 
