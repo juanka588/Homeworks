@@ -53,6 +53,28 @@ public class Permutations {
         34, 02, 42, 10, 50, 18, 58, 26,
         33, 01, 41, 9, 49, 17, 57, 25
     };
+    public static final int[] E = new int[]{
+        32, 01, 02, 03, 04, 05, 04, 05,
+        06, 07, 8, 9, 9, 10, 11, 12,
+        12, 13, 12, 13, 14, 15, 16, 17,
+        16, 17, 18, 19, 20, 21, 20, 21,
+        22, 23, 24, 25, 24, 25, 26, 27,
+        28, 29, 28, 29, 30, 31, 32, 01
+    };
+    public static final int[] P = new int[]{
+        16, 07, 20, 21, 29, 12, 28, 17,
+        01, 15, 23, 26, 05, 18, 31, 10,
+        02, 8, 24, 14, 32, 27, 03, 9,
+        19, 13, 30, 06, 22, 11, 04, 25
+    };
+
+    public static BitSet PermutationP(BitSet k) {
+        return permutation(k, P);
+    }
+
+    public static BitSet Expansion(BitSet k) {
+        return permutation(k, E);
+    }
 
     public static BitSet PC1(BitSet k) {
         return permutation(k, PC_1);

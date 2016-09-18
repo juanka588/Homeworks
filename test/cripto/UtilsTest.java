@@ -195,11 +195,11 @@ public class UtilsTest {
     @Test
     public void testFussion() {
         System.out.println("fussion");
-        BitSet left = Utils.bytesToBitSet("0110");
+        BitSet left = Utils.bytesToBitSet("01101");
         BitSet right = Utils.bytesToBitSet("0011");
-        BitSet expResult = Utils.bytesToBitSet("01100011");
+        BitSet expResult = Utils.bytesToBitSet("011010011");
         BitSet result = Utils.fussion(left, right);
-        assertEquals(expResult, result);
+        assertEquals(Utils.bitSetToString(expResult), Utils.bitSetToString(result));
     }
 
     /**

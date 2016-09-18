@@ -147,12 +147,20 @@ public class Utils {
     }
 
     public static BitSet fussion(BitSet left, BitSet right) {
-        BitSet bs = new BitSet(left.length() + right.length());
-        for (int i = 0; i < left.length(); i++) {
-            bs.set(i, left.get(i));
-        }
-        for (int i = 0; i < right.length(); i++) {
-            bs.set(i + left.length() + 1, right.get(i));
+        List<BitSet> parts = new ArrayList<>(2);
+        parts.add(left);
+        parts.add(right);
+        return fussion(parts);
+    }
+
+    public static BitSet fussion(List<BitSet> elements) {
+        BitSet bs = new BitSet();
+        int temp = 0;
+        for (BitSet element : elements) {
+            for (int i = 0; i < element.length(); i++) {
+                bs.set(i + temp, element.get(i));
+            }
+            temp = element.length();
         }
         return bs;
     }
