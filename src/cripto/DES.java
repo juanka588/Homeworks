@@ -42,9 +42,9 @@ public class DES {
 
     private static String process(String cad, String rawKey, int mode) throws UnsupportedEncodingException {
         List<String> blocks = Utils.splitString(cad, 8);
-        List<BitSet> keys = generateKeys(rawKey);
+        List<FullBitSet> keys = generateKeys(rawKey);
         String mPermuted;
-        BitSet m;
+        FullBitSet m;
         String modBlock;
         StringBuilder sb = new StringBuilder();
         for (String block : blocks) {
@@ -64,46 +64,46 @@ public class DES {
         return process(message, rawKey, ENCODE);
     }
 
-    private static List<BitSet> generateKeys(String rawKey) {
+    private static List<FullBitSet> generateKeys(String rawKey) {
         String hexKey = Utils.stringToHex(rawKey);
-        BitSet k = Utils.bitsToBitSet(Utils.hexToBytes(hexKey));
+        FullBitSet k = Utils.bitsToBitSet(Utils.hexToBytes(hexKey));
         return generateKeys(k);
     }
 
-    public static List<BitSet> generateKeys(BitSet k) {
-        BitSet k0 = Permutations.PC1(k);
-        List<BitSet> keys = new ArrayList<>();
-        List<BitSet> parts = Utils.split(k0, 28, 56);
-        BitSet c0 = parts.get(0);
-        BitSet d0 = parts.get(1);
-        BitSet ki;
+    public static List<FullBitSet> generateKeys(FullBitSet k) {
+        FullBitSet k0 = Permutations.PC1(k);
+        List<FullBitSet> keys = new ArrayList<>();
+        List<FullBitSet> parts = k0.split(28);
+        FullBitSet c0 = parts.get(0);
+        FullBitSet d0 = parts.get(1);
+        FullBitSet ki;
         for (int i = 1; i <= 16; i++) {
             switch (i) {
                 case 1:
                 case 2:
                 case 9:
                 case 16:
-                    c0 = Utils.leftShift(c0, 1, 28);
-                    d0 = Utils.leftShift(d0, 1, 28);
+                    c0 = c0.leftShift(1);
+                    d0 = d0.leftShift(1);
                     break;
                 default:
-                    c0 = Utils.leftShift(c0, 2, 28);
-                    d0 = Utils.leftShift(d0, 2, 28);
+                    c0 = c0.leftShift(2);
+                    d0 = d0.leftShift(2);
                     break;
             }
-            ki = Utils.fussion(c0, d0, 28);
+            ki = c0.fussion(d0);
             keys.add(Permutations.PC2(ki));
         }
         return keys;
     }
 
-    private static BitSet applyfunction(BitSet pRight, BitSet key, BitSet pLeft) {
-        BitSet reponse;
-        BitSet expan = Permutations.Expansion(pRight);
+    private static FullBitSet applyfunction(FullBitSet pRight, FullBitSet key, FullBitSet pLeft) {
+        FullBitSet reponse;
+        FullBitSet expan = Permutations.Expansion(pRight);
         expan.xor(key);
-        List<BitSet> split6 = Utils.split6(expan, 48);
-        List<BitSet> sboxes = new ArrayList<>(split6.size());
-        BitSet sb, temp;
+        List<FullBitSet> split6 = expan.split6();
+        List<FullBitSet> sboxes = new ArrayList<>(split6.size());
+        FullBitSet sb, temp;
         for (int i = 0; i < split6.size(); i++) {
             temp = split6.get(i);
             switch (i) {
@@ -136,7 +136,7 @@ public class DES {
             }
             sboxes.add(sb);
         }
-        reponse = Utils.fussion(sboxes, 6);
+        reponse = FullBitSet.fussion(sboxes);
         reponse = Permutations.PermutationP(reponse);
         reponse.xor(pLeft);
         return reponse;
@@ -146,13 +146,13 @@ public class DES {
         return process(cypher, rawKey, DECODE);
     }
 
-    public static BitSet processBlock(BitSet m, List<BitSet> keys, int mode) throws UnsupportedEncodingException {
-        BitSet ip = Permutations.initialPermutation(m);
-        BitSet left = null, pLeft, right = null, pRight;
-        List<BitSet> splitHalf = Utils.splitHalf(ip, 64);
+    public static FullBitSet processBlock(FullBitSet m, List<FullBitSet> keys, int mode) throws UnsupportedEncodingException {
+        FullBitSet ip = Permutations.initialPermutation(m);
+        FullBitSet left = null, pLeft, right = null, pRight;
+        List<FullBitSet> splitHalf = ip.splitHalf();
         pLeft = splitHalf.get(0);
         pRight = splitHalf.get(1);
-        BitSet key = null;
+        FullBitSet key = null;
         for (int i = 0; i < keys.size(); i++) {
             if (ENCODE == mode) {
                 key = keys.get(i);
@@ -164,7 +164,7 @@ public class DES {
             pLeft = left;
             pRight = right;
         }
-        BitSet fussion = Utils.fussion(right, left, 32);
+        FullBitSet fussion = right.fussion(left);
         fussion = Permutations.initialPermutationINV(fussion);
         return fussion;
     }

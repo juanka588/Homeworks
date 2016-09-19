@@ -41,12 +41,12 @@ public class DESTest {
         String mbits = Utils.hexToBytes(m);
         assertEquals(
                 "0000000100100011010001010110011110001001101010111100110111101111", mbits);
-        BitSet message = Utils.bitsToBitSet(mbits);
-        List<BitSet> keys = DES.generateKeys(Utils.bitsToBitSet(Utils.hexToBytes(k)));
-        BitSet cypher = DES.processBlock(message, keys, DES.ENCODE);
-        System.out.println(Utils.bitSetToString(cypher));
+        FullBitSet message = Utils.bitsToBitSet(mbits);
+        List<FullBitSet> keys = DES.generateKeys(Utils.bitsToBitSet(Utils.hexToBytes(k)));
+        FullBitSet cypher = DES.processBlock(message, keys, DES.ENCODE);
+        System.out.println(cypher.toString());
         System.out.println(Utils.bitsToHex(
-                Utils.bitSetToString(cypher), 4));
+                cypher.toString(), 4));
 
     }
 

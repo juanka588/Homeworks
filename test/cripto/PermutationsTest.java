@@ -5,7 +5,6 @@
  */
 package cripto;
 
-import java.util.BitSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.junit.After;
@@ -21,10 +20,10 @@ import static org.junit.Assert.*;
  */
 public class PermutationsTest {
 
-    private BitSet k;
+    private FullBitSet k;
 
     public PermutationsTest() {
-        k = new BitSet();
+        k = new FullBitSet(0);
         String bits = Utils.hexToBytes("133457799BBCDFF1");
         k = Utils.bitsToBitSet(bits);
     }
@@ -51,10 +50,10 @@ public class PermutationsTest {
     @Test
     public void testPC1() {
         System.out.println("PC1");
-        assertEquals("0001001100110100010101110111100110011011101111001101111111110001", Utils.bitSetToString(k));
-        BitSet expResult
+        assertEquals("0001001100110100010101110111100110011011101111001101111111110001", k.toString());
+        FullBitSet expResult
                 = Utils.bitsToBitSet("11110000110011001010101011110101010101100110011110001111");
-        BitSet result = Permutations.PC1(k);
+        FullBitSet result = Permutations.PC1(k);
         assertEquals(expResult, result);
 
     }
@@ -65,12 +64,12 @@ public class PermutationsTest {
     @Test
     public void testPC2() {
         System.out.println("PC2");
-        BitSet base
+        FullBitSet base
                 = Utils.bitsToBitSet("1110000110011001010101011111 1010101011001100111100011110");
-        BitSet expResult
+        FullBitSet expResult
                 = Utils.bitsToBitSet("000110 110000 001011 101111 111111 000111 000001 110010");
-        BitSet result = Permutations.PC2(base);
-        assertEquals(Utils.bitSetToString(expResult), Utils.bitSetToString(result));
+        FullBitSet result = Permutations.PC2(base);
+        assertEquals(expResult.toString(), result.toString());
     }
 
     /**
@@ -79,11 +78,11 @@ public class PermutationsTest {
     @Test
     public void testIP() {
         System.out.println("IP");
-        BitSet base
+        FullBitSet base
                 = Utils.bitsToBitSet("0000000100100011010001010110011110001001101010111100110111101111");
-        BitSet expResult
+        FullBitSet expResult
                 = Utils.bitsToBitSet("1100110000000000110011001111111111110000101010101111000010101010");
-        BitSet result = Permutations.initialPermutation(base);
+        FullBitSet result = Permutations.initialPermutation(base);
         assertEquals(base, Permutations.initialPermutationINV(result));
         assertEquals(expResult, result);
     }

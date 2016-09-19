@@ -117,73 +117,73 @@ public class Permutations {
         {02, 01, 14, 07, 04, 10, 8, 13, 15, 12, 9, 00, 03, 05, 06, 11}
     };
 
-    public static BitSet PermutationP(BitSet k) {
+    public static FullBitSet PermutationP(FullBitSet k) {
         return permutation(k, P);
     }
 
-    public static BitSet Expansion(BitSet k) {
+    public static FullBitSet Expansion(FullBitSet k) {
         return permutation(k, E);
     }
 
-    public static BitSet PC1(BitSet k) {
+    public static FullBitSet PC1(FullBitSet k) {
         return permutation(k, PC_1);
     }
 
-    public static BitSet PC2(BitSet k) {
+    public static FullBitSet PC2(FullBitSet k) {
         return permutation(k, PC_2);
     }
 
-    public static BitSet initialPermutation(BitSet k) {
+    public static FullBitSet initialPermutation(FullBitSet k) {
         return permutation(k, IP);
     }
 
-    public static BitSet initialPermutationINV(BitSet k) {
+    public static FullBitSet initialPermutationINV(FullBitSet k) {
         return permutation(k, IP_INV);
     }
 
-    private static BitSet permutation(BitSet k, int[] idxs) {
-        BitSet bs = new BitSet(idxs.length);
+    private static FullBitSet permutation(FullBitSet k, int[] idxs) {
+        FullBitSet bs = new FullBitSet(idxs.length);
         for (int i = 0; i < idxs.length; i++) {
             bs.set(i, k.get(idxs[i] - 1));
         }
         return bs;
     }
 
-    public static BitSet S1(BitSet temp) {
+    public static FullBitSet S1(FullBitSet temp) {
         return applySBox(temp, S1);
     }
 
-    public static BitSet S2(BitSet temp) {
+    public static FullBitSet S2(FullBitSet temp) {
         return applySBox(temp, S2);
     }
 
-    public static BitSet S3(BitSet temp) {
+    public static FullBitSet S3(FullBitSet temp) {
         return applySBox(temp, S3);
     }
 
-    public static BitSet S4(BitSet temp) {
+    public static FullBitSet S4(FullBitSet temp) {
         return applySBox(temp, S4);
     }
 
-    public static BitSet S5(BitSet temp) {
+    public static FullBitSet S5(FullBitSet temp) {
         return applySBox(temp, S5);
     }
 
-    public static BitSet S6(BitSet temp) {
+    public static FullBitSet S6(FullBitSet temp) {
         return applySBox(temp, S6);
     }
 
-    public static BitSet S7(BitSet temp) {
+    public static FullBitSet S7(FullBitSet temp) {
         return applySBox(temp, S7);
     }
 
-    public static BitSet S8(BitSet temp) {
+    public static FullBitSet S8(FullBitSet temp) {
         return applySBox(temp, S8);
     }
 
-    private static BitSet applySBox(BitSet temp, int[][] SBox) {
-        BitSet result;
-        String bits = Utils.bitSetToString(temp, 6);
+    private static FullBitSet applySBox(FullBitSet temp, int[][] SBox) {
+        FullBitSet result;
+        String bits = temp.toString();
         String r = bits.charAt(0) + "" + bits.charAt(bits.length() - 1);
         String c = bits.substring(1, bits.length() - 1);
         int row, col;
