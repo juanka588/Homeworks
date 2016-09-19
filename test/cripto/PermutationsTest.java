@@ -74,6 +74,21 @@ public class PermutationsTest {
     }
 
     /**
+     * Test of IP method, of class Permutations.
+     */
+    @Test
+    public void testIP() {
+        System.out.println("IP");
+        BitSet base
+                = Utils.bitsToBitSet("0000000100100011010001010110011110001001101010111100110111101111");
+        BitSet expResult
+                = Utils.bitsToBitSet("1100110000000000110011001111111111110000101010101111000010101010");
+        BitSet result = Permutations.initialPermutation(base);
+        assertEquals(base, Permutations.initialPermutationINV(result));
+        assertEquals(expResult, result);
+    }
+
+    /**
      * Test of PC2 method, of class Permutations.
      */
     @Test

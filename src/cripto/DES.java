@@ -18,8 +18,8 @@ import java.util.logging.Logger;
  */
 public class DES {
 
-    private static final int ENCODE = 0;
-    private static final int DECODE = 1;
+    public static final int ENCODE = 0;
+    public static final int DECODE = 1;
 
     public static void main(String[] args) {
         String message = "HOLAHOLA";
@@ -45,6 +45,7 @@ public class DES {
         List<BitSet> keys = generateKeys(rawKey);
         String mPermuted;
         BitSet m;
+        String modBlock;
         StringBuilder sb = new StringBuilder();
         for (String block : blocks) {
             while (block.length() < 8) {
@@ -53,7 +54,8 @@ public class DES {
             mPermuted = Utils.stringToHex(block);
             mPermuted = Utils.hexToBytes(mPermuted);
             m = Utils.bitsToBitSet(mPermuted);
-            sb.append(processBlock(m, keys, mode));
+            modBlock = Utils.getStringValueOf(processBlock(m, keys, mode));
+            sb.append(modBlock);
         }
         return sb.toString();
     }
@@ -68,10 +70,10 @@ public class DES {
         return generateKeys(k);
     }
 
-    private static List<BitSet> generateKeys(BitSet k) {
+    public static List<BitSet> generateKeys(BitSet k) {
         BitSet k0 = Permutations.PC1(k);
         List<BitSet> keys = new ArrayList<>();
-        List<BitSet> parts = Utils.split(k0, 28);
+        List<BitSet> parts = Utils.split(k0, 28, 56);
         BitSet c0 = parts.get(0);
         BitSet d0 = parts.get(1);
         BitSet ki;
@@ -81,15 +83,15 @@ public class DES {
                 case 2:
                 case 9:
                 case 16:
-                    c0 = Utils.leftShift(c0, 1);
-                    d0 = Utils.leftShift(d0, 1);
+                    c0 = Utils.leftShift(c0, 1, 28);
+                    d0 = Utils.leftShift(d0, 1, 28);
                     break;
                 default:
-                    c0 = Utils.leftShift(c0, 2);
-                    d0 = Utils.leftShift(d0, 2);
+                    c0 = Utils.leftShift(c0, 2, 28);
+                    d0 = Utils.leftShift(d0, 2, 28);
                     break;
             }
-            ki = Utils.fussion(c0, d0);
+            ki = Utils.fussion(c0, d0, 28);
             keys.add(Permutations.PC2(ki));
         }
         return keys;
@@ -99,7 +101,7 @@ public class DES {
         BitSet reponse;
         BitSet expan = Permutations.Expansion(pRight);
         expan.xor(key);
-        List<BitSet> split6 = Utils.split6(expan);
+        List<BitSet> split6 = Utils.split6(expan, 48);
         List<BitSet> sboxes = new ArrayList<>(split6.size());
         BitSet sb, temp;
         for (int i = 0; i < split6.size(); i++) {
@@ -134,7 +136,7 @@ public class DES {
             }
             sboxes.add(sb);
         }
-        reponse = Utils.fussion(sboxes);
+        reponse = Utils.fussion(sboxes, 6);
         reponse = Permutations.PermutationP(reponse);
         reponse.xor(pLeft);
         return reponse;
@@ -144,10 +146,10 @@ public class DES {
         return process(cypher, rawKey, DECODE);
     }
 
-    private static String processBlock(BitSet m, List<BitSet> keys, int mode) throws UnsupportedEncodingException {
+    public static BitSet processBlock(BitSet m, List<BitSet> keys, int mode) throws UnsupportedEncodingException {
         BitSet ip = Permutations.initialPermutation(m);
         BitSet left = null, pLeft, right = null, pRight;
-        List<BitSet> splitHalf = Utils.splitHalf(ip);
+        List<BitSet> splitHalf = Utils.splitHalf(ip, 64);
         pLeft = splitHalf.get(0);
         pRight = splitHalf.get(1);
         BitSet key = null;
@@ -162,9 +164,9 @@ public class DES {
             pLeft = left;
             pRight = right;
         }
-        BitSet fussion = Utils.fussion(right, left);
+        BitSet fussion = Utils.fussion(right, left, 32);
         fussion = Permutations.initialPermutationINV(fussion);
-        return Utils.getStringValueOf(fussion);
+        return fussion;
     }
 
 }

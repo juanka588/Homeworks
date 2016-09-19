@@ -93,21 +93,15 @@ public class Utils {
         return bs;
     }
 
-    public static List<BitSet> splitHalf(BitSet k0) {
-        return split(k0, Collections.singletonList(k0.length() / 2));
+    public static List<BitSet> splitHalf(BitSet k0, int realSize) {
+        return split(k0, Collections.singletonList(k0.length() / 2), realSize);
     }
 
-    /**
-     *
-     * @param k0
-     * @param cutPoint number of bits of first half
-     * @return
-     */
-    public static List<BitSet> split(BitSet k0, int cutPoint) {
-        return split(k0, Collections.singletonList(cutPoint));
+    public static List<BitSet> split(BitSet k0, int cutPoint, int realSize) {
+        return split(k0, Collections.singletonList(cutPoint), realSize);
     }
 
-    public static List<BitSet> split6(BitSet k0) {
+    public static List<BitSet> split6(BitSet k0, int realSize) {
         List<Integer> cutpoints = new ArrayList<>();
         cutpoints.add(6);
         cutpoints.add(12);
@@ -116,60 +110,80 @@ public class Utils {
         cutpoints.add(30);
         cutpoints.add(36);
         cutpoints.add(42);
-        return split(k0, cutpoints);
+        return split(k0, cutpoints, realSize);
     }
 
-    public static List<BitSet> split(BitSet k0, List<Integer> cutPoints) {
+    /**
+     * 
+     * @param k0
+     * @param cutPoints
+     * @param realSize size of orginal bitset k0
+     * @return 
+     */
+    public static List<BitSet> split(BitSet k0, List<Integer> cutPoints, int realSize) {
         List<BitSet> parts = new ArrayList<>();
         int temp = 0;
         for (Integer cp : cutPoints) {
-            if (cp < 0 || cp >= k0.length()) {
+            if (cp < 0 || cp >= realSize) {
                 throw new IllegalArgumentException("bad cut point");
             }
             parts.add(k0.get(temp, cp));
             temp = cp;
         }
         //add last part
-        parts.add(k0.get(temp, k0.length()));
+        parts.add(k0.get(temp, realSize));
         return parts;
     }
 
-    public static BitSet leftShift(BitSet k0, int shift) {
+    /**
+     * 
+     * @param k0
+     * @param shift
+     * @param realSize size of orginial bitset
+     * @return 
+     */
+    public static BitSet leftShift(BitSet k0, int shift, int realSize) {
         BitSet bs = new BitSet(k0.length());
         int i;
-        for (i = 0; i < k0.length() - shift; i++) {
+        for (i = 0; i < realSize - shift; i++) {
             bs.set(i, k0.get(i + shift));
         }
-        for (i = k0.length() - shift; i < k0.length(); i++) {
-            bs.set(i, k0.get(i - (k0.length() - shift)));
+        for (i = realSize - shift; i < realSize; i++) {
+            bs.set(i, k0.get(i - (realSize - shift)));
         }
         return bs;
     }
 
-    public static BitSet rightShift(BitSet k0, int shift) {
+    public static BitSet rightShift(BitSet k0, int shift, int realSize) {
         BitSet bs = new BitSet(k0.length());
         int i;
-        for (i = 0; i < k0.length() - shift; i++) {
+        for (i = 0; i < realSize - shift; i++) {
             bs.set(i + shift, k0.get(i));
         }
-        for (i = k0.length() - shift; i < k0.length(); i++) {
-            bs.set(i - (k0.length() - shift), k0.get(i));
+        for (i = realSize - shift; i < realSize; i++) {
+            bs.set(i - (realSize - shift), k0.get(i));
         }
         return bs;
     }
 
-    public static BitSet fussion(BitSet left, BitSet right) {
+    public static BitSet fussion(BitSet left, BitSet right, int realSize) {
         List<BitSet> parts = new ArrayList<>(2);
         parts.add(left);
         parts.add(right);
-        return fussion(parts);
+        return fussion(parts, realSize);
     }
 
-    public static BitSet fussion(List<BitSet> elements) {
+    /**
+     * 
+     * @param elements
+     * @param realSize size of each element
+     * @return 
+     */
+    public static BitSet fussion(List<BitSet> elements, int realSize) {
         BitSet bs = new BitSet();
         int temp = 0;
         for (BitSet element : elements) {
-            for (int i = 0; i < element.length(); i++) {
+            for (int i = 0; i < realSize; i++) {
                 bs.set(i + temp, element.get(i));
             }
             temp = element.length();

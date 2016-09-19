@@ -115,7 +115,7 @@ public class UtilsTest {
         int cutPoint = 4;
         BitSet left = Utils.bitsToBitSet("0110");
         BitSet right = Utils.bitsToBitSet("0011");
-        List<BitSet> result = Utils.split(k0, cutPoint);
+        List<BitSet> result = Utils.split(k0, cutPoint, 8);
         assertEquals(left, result.get(0));
         assertEquals(right, result.get(1));
 
@@ -144,7 +144,7 @@ public class UtilsTest {
         BitSet bs6 = Utils.bitsToBitSet("100110");
         BitSet bs7 = Utils.bitsToBitSet("010100");
         BitSet bs8 = Utils.bitsToBitSet("100111");
-        List<BitSet> result = Utils.split(k0, cutpoints);
+        List<BitSet> result = Utils.split(k0, cutpoints, 48);
         assertEquals(bs1, result.get(0));
         assertEquals(bs2, result.get(1));
         assertEquals(bs3, result.get(2));
@@ -161,14 +161,14 @@ public class UtilsTest {
     @Test
     public void testLeftShift() {
         System.out.println("leftShift");
-        BitSet k0 = Utils.bitsToBitSet("01100011");
+        BitSet k0 = Utils.bitsToBitSet("1010101011001100111100011110");
         int shift = 1;
-        BitSet expResult = Utils.bitsToBitSet("11000110");
-        BitSet result = Utils.leftShift(k0, shift);
+        BitSet expResult = Utils.bitsToBitSet("0101010110011001111000111101");
+        BitSet result = Utils.leftShift(k0, shift, 28);
         assertEquals(Utils.bitSetToString(expResult), Utils.bitSetToString(result));
-        shift = 2;
-        expResult = Utils.bitsToBitSet("10001101");
-        result = Utils.leftShift(k0, shift);
+        shift = 3;
+        expResult = Utils.bitsToBitSet("0101011001100111100011110101");
+        result = Utils.leftShift(k0, shift, 28);
         assertEquals(expResult, result);
     }
 
@@ -181,11 +181,11 @@ public class UtilsTest {
         BitSet k0 = Utils.bitsToBitSet("01100011");
         int shift = 1;
         BitSet expResult = Utils.bitsToBitSet("10110001");
-        BitSet result = Utils.rightShift(k0, shift);
+        BitSet result = Utils.rightShift(k0, shift, 8);
         assertEquals(Utils.bitSetToString(expResult), Utils.bitSetToString(result));
         shift = 2;
         expResult = Utils.bitsToBitSet("11011000");
-        result = Utils.rightShift(k0, shift);
+        result = Utils.rightShift(k0, shift, 8);
         assertEquals(expResult, result);
     }
 
@@ -196,9 +196,15 @@ public class UtilsTest {
     public void testFussion() {
         System.out.println("fussion");
         BitSet left = Utils.bitsToBitSet("01101");
-        BitSet right = Utils.bitsToBitSet("0011");
-        BitSet expResult = Utils.bitsToBitSet("011010011");
-        BitSet result = Utils.fussion(left, right);
+        BitSet right = Utils.bitsToBitSet("00110");
+        BitSet expResult = Utils.bitsToBitSet("0110100110");
+        BitSet result = Utils.fussion(left, right, 5);
+        assertEquals(Utils.bitSetToString(expResult), Utils.bitSetToString(result));
+        left = Utils.bitsToBitSet("1110000110011001010101011111");
+        right = Utils.bitsToBitSet("1010101011001100111100011110");
+        expResult
+                = Utils.bitsToBitSet("1110000110011001010101011111 1010101011001100111100011110");
+        result = Utils.fussion(left, right, 56);
         assertEquals(Utils.bitSetToString(expResult), Utils.bitSetToString(result));
     }
 
