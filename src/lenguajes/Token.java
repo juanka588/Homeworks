@@ -43,6 +43,8 @@ public class Token {
     public static final int PLUSOP = 25;
     public static final int MULOP = 26;
     public static final int LESSOP = 27;
+    public static final int EOF = 28;
+
     private String lexema;
     private int row, column, type;
     private String typeString;

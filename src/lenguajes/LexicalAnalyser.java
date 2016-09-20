@@ -10,9 +10,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,6 +29,11 @@ public class LexicalAnalyser {
     public static final String OUT_DIR = "./out/";
     private static int row, column;
     private static String fileName = "lexer.out";
+    private static String line = null;
+    private static List<Token> tokenList = new ArrayList<>();
+    public static Token token;
+    private static int i;
+    private static BufferedReader in;
 
     public static void main(String[] args) {
         System.out.println("main");
@@ -37,6 +42,9 @@ public class LexicalAnalyser {
         for (File file : files) {
             try {
                 main2(new String[]{file.getAbsolutePath()});
+                line = null;
+                token = null;
+                tokenList.removeAll(tokenList);
             } catch (IOException ex) {
                 Logger.getLogger(LexicalAnalyser.class.getName()).log(Level.SEVERE, null, ex);
             } catch (LexicalException ex) {
@@ -48,57 +56,19 @@ public class LexicalAnalyser {
     public static void main2(String[] args) throws FileNotFoundException, IOException, LexicalException {
         fileName = args[0];
         System.out.println("file: " + fileName);
-        BufferedReader in = new BufferedReader(new FileReader(fileName));
+        in = new BufferedReader(new FileReader(fileName));
         fileName = getFileName(fileName);
         System.out.println("fixed name: " + fileName);
 
         // in = new BufferedReader(new InputStreamReader(System.in));
-        String text;
-        List<Token> tokenList = new ArrayList<>();
         row = 1;
         column = 1;
-        while ((text = in.readLine()) != null) {
-            char c;
-            for (int i = 0; i < text.length(); i++) {
-                column = i + 1;
-                c = text.charAt(i);
-                switch (c) {
-                    case ' ':
-                    case '\t':
-                    case '\n':
-                        break;
-                    case '<':
-                        i += readNextLT(i, text, tokenList);
-                        break;
-                    case '>':
-                        i += readNextGT(i, text, tokenList);
-                        break;
-                    case '\'':
-                    case '\"':
-                        i += readStringDef(i, text, tokenList);
-                        break;
-                    case '/':
-                        i += readComment(i, text, tokenList);
-                        break;
-                    default:
-                        Integer tokenIden = SimbolsTable.SIMBOLS_MAP.get(String.valueOf(c));
-                        if (tokenIden != null) {
-                            tokenList.add(new Token(String.valueOf(c), row, column, tokenIden));
-                        } else if (isString(c)) {
-                            i += readString(i, text, tokenList);
-                        } else if (isNumber(c)) {
-                            i += readNumber(i, text, tokenList);
-                        } else {
-                            throw new LexicalException(row, column, fileName, tokenList);
-                        }
-                        break;
-                }
-            }
-            row++;
-            column = 1;
-            System.out.println(Arrays.toString(tokenList.toArray()));
+        line = in.readLine();
+        i = 0;
+        while (line != null) {
+            i = getNextToken(in, i);
         }
-        writeResponse(tokenList, fileName);
+        //writeResponse(tokenList, fileName);
     }
 
     private static boolean isString(char c) {
@@ -120,18 +90,18 @@ public class LexicalAnalyser {
         }
     }
 
-    private static int readString(int i, String text, List<Token> tokenList) throws LexicalException {
+    private static int readString(int idx, String text, List<Token> tokenList) throws LexicalException {
         int count = 0;
         StringBuilder sb = new StringBuilder();
-        char temp = text.charAt(i);
+        char temp = text.charAt(idx);
         while (isValid(temp)) {
             sb.append(temp);
             count++;
-            if ((i + count) >= text.length()) {
+            if ((idx + count) >= text.length()) {
                 //case finish line
                 break;
             }
-            temp = text.charAt(i + count);
+            temp = text.charAt(idx + count);
         }
         String word = sb.toString().toLowerCase();
         Integer value = SimbolsTable.RESERVED_WORDS.get(word);
@@ -147,22 +117,22 @@ public class LexicalAnalyser {
 
     /**
      *
-     * @param i
+     * @param idx
      * @param text
      * @param tokenList
      * @return an integer can only finich with an operator or space
      */
-    private static int readNumber(int i, String text, List<Token> tokenList) throws LexicalException {
+    private static int readNumber(int idx, String text, List<Token> tokenList) throws LexicalException {
         int count = 0;
         StringBuilder sb = new StringBuilder();
-        char temp = text.charAt(i);
+        char temp = text.charAt(idx);
         while (isValidForReal(temp)) {
             sb.append(temp);
             count++;
-            if ((i + count) >= text.length()) {
+            if ((idx + count) >= text.length()) {
                 break;
             }
-            temp = text.charAt(i + count);
+            temp = text.charAt(idx + count);
         }
         if (isString(temp)) {
             //ex: 2.0as
@@ -170,9 +140,9 @@ public class LexicalAnalyser {
         }
         String number = sb.toString();
         int size = number.length();
-        int idx = number.lastIndexOf(".");
-        if (idx != -1) {
-            if (idx == size - 1) {
+        int idx2 = number.lastIndexOf(".");
+        if (idx2 != -1) {
+            if (idx2 == size - 1) {
                 // ex: 20.
                 throw new LexicalException(row, column, fileName, tokenList);
             }
@@ -188,13 +158,13 @@ public class LexicalAnalyser {
         return count - 1;
     }
 
-    private static int readNextLT(int i, String text, List<Token> tokenList) throws LexicalException {
+    private static int readNextLT(int idx, String text, List<Token> tokenList) throws LexicalException {
         char nextChar;
-        if (i + 1 >= text.length()) {
+        if (idx + 1 >= text.length()) {
             //usefull trick
             nextChar = 'a';
         } else {
-            nextChar = text.charAt(i + 1);
+            nextChar = text.charAt(idx + 1);
         }
         if (nextChar == '-') {
             tokenList.add(new Token("<-", row, column, Token.ASIGN));
@@ -213,13 +183,13 @@ public class LexicalAnalyser {
         }
     }
 
-    private static int readNextGT(int i, String text, List<Token> tokenList) throws LexicalException {
+    private static int readNextGT(int idx, String text, List<Token> tokenList) throws LexicalException {
         char nextChar;
-        if (i + 1 >= text.length()) {
+        if (idx + 1 >= text.length()) {
             //usefull trick
             nextChar = 'a';
         } else {
-            nextChar = text.charAt(i + 1);
+            nextChar = text.charAt(idx + 1);
         }
         if (nextChar == '=') {
             tokenList.add(new Token(">=", row, column, Token.GE));
@@ -232,21 +202,21 @@ public class LexicalAnalyser {
         }
     }
 
-    private static int readStringDef(int i, String text, List<Token> tokenList) throws LexicalException {
+    private static int readStringDef(int idx, String text, List<Token> tokenList) throws LexicalException {
         int count = 1;
         StringBuilder sb = new StringBuilder();
-        if (i + 1 >= text.length()) {
+        if (idx + 1 >= text.length()) {
             //ilegal ' or "
             throw new LexicalException(row, column, fileName, tokenList);
         }
-        char temp = text.charAt(i + count);
+        char temp = text.charAt(idx + count);
         while (temp != '\'' && temp != '\"') {
             sb.append(temp);
             count++;
-            if ((i + count) >= text.length()) {
+            if ((idx + count) >= text.length()) {
                 throw new LexicalException(row, column, fileName, tokenList);
             }
-            temp = text.charAt(i + count);
+            temp = text.charAt(idx + count);
         }
         tokenList.add(new Token(sb.toString(), row, column, Token.CADENA));
         return count;
@@ -280,13 +250,13 @@ public class LexicalAnalyser {
         return isNumber(temp) || temp == '.';
     }
 
-    private static int readComment(int i, String text, List<Token> tokenList) {
+    private static int readComment(int idx, String text, List<Token> tokenList) {
         char nextChar;
-        if (i + 1 >= text.length()) {
+        if (idx + 1 >= text.length()) {
             //usefull trick
             nextChar = 'a';
         } else {
-            nextChar = text.charAt(i + 1);
+            nextChar = text.charAt(idx + 1);
         }
         if (nextChar == '/') {
             //it a comment
@@ -312,5 +282,80 @@ public class LexicalAnalyser {
             extension = extension || a == '.';
         }
         return sb.reverse().toString();
+    }
+
+    public static int getNextToken(BufferedReader in, int idx) throws IOException, LexicalException {
+        if (line == null) {
+            line = in.readLine();
+        }
+        if (line != null) {
+            if (idx >= line.length()) {
+                row++;
+                column = 1;
+                line = null;
+                return getNextToken(in, 0);
+            }
+            char c;
+            column = idx + 1;
+            c = line.charAt(idx);
+            switch (c) {
+                case ' ':
+                case '\t':
+                case '\n':
+                    return idx + 1;
+                case '<':
+                    idx += readNextLT(idx, line, tokenList);
+                    break;
+                case '>':
+                    idx += readNextGT(idx, line, tokenList);
+                    break;
+                case '\'':
+                case '\"':
+                    idx += readStringDef(idx, line, tokenList);
+                    break;
+                case '/':
+                    idx += readComment(idx, line, tokenList);
+                    break;
+                default:
+                    Integer tokenIden = SimbolsTable.SIMBOLS_MAP.get(String.valueOf(c));
+                    if (tokenIden != null) {
+                        tokenList.add(new Token(String.valueOf(c), row, column, tokenIden));
+                    } else if (isString(c)) {
+                        idx += readString(idx, line, tokenList);
+                    } else if (isNumber(c)) {
+                        idx += readNumber(idx, line, tokenList);
+                    } else {
+                        throw new LexicalException(row, column, fileName, tokenList);
+                    }
+                    break;
+            }
+            if (tokenList.size() == 1) {
+                token = tokenList.remove(0);
+                System.out.println(token.toString());
+            } else {
+                return getNextToken(in, idx);
+            }
+        } else {
+            //fin de archivo
+            token = new Token("", row, column, Token.EOF);
+            System.out.println(token.toString());
+        }
+        return idx + 1;
+
+    }
+
+    public static void init() throws FileNotFoundException, IOException, LexicalException {
+        //in = new BufferedReader(new FileReader(fileName));
+         in = new BufferedReader(new InputStreamReader(System.in));
+        row = 1;
+        column = 1;
+        line = in.readLine();
+        i = 0;
+        i = getNextToken(in, i);
+    }
+
+    public static Token getNextToken() throws IOException, LexicalException {
+        i = getNextToken(in, i);
+        return token;
     }
 }
