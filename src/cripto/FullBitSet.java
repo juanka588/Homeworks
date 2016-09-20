@@ -133,13 +133,13 @@ public class FullBitSet extends BitSet {
     }
 
     public static FullBitSet fussion(List<FullBitSet> elements) {
-        FullBitSet bs = new FullBitSet(0);
+        FullBitSet bs = new FullBitSet();
         int temp = 0;
         for (FullBitSet element : elements) {
             for (int i = 0; i < element.getRealSize(); i++) {
                 bs.set(i + temp, element.get(i));
             }
-            temp = element.getRealSize();
+            temp += element.getRealSize();
         }
         return bs;
     }

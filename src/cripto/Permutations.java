@@ -55,7 +55,7 @@ public class Permutations {
     };
     public static final int[] E = new int[]{
         32, 01, 02, 03, 04, 05, 04, 05,
-        06, 07, 8, 9, 9, 10, 11, 12,
+        06, 07, 8, 9, 8, 9, 10, 11,
         12, 13, 12, 13, 14, 15, 16, 17,
         16, 17, 18, 19, 20, 21, 20, 21,
         22, 23, 24, 25, 24, 25, 26, 27,
@@ -190,6 +190,9 @@ public class Permutations {
         row = Integer.parseInt(r, 2);
         col = Integer.parseInt(c, 2);
         String resultBits = Integer.toBinaryString(SBox[row][col]);
+        while (resultBits.length() < 4) {
+            resultBits = "0" + resultBits;
+        }
         result = Utils.bitsToBitSet(resultBits);
         return result;
     }

@@ -98,7 +98,7 @@ public class DES {
     }
 
     private static FullBitSet applyfunction(FullBitSet pRight, FullBitSet key, FullBitSet pLeft) {
-        FullBitSet reponse;
+        FullBitSet response;
         FullBitSet expan = Permutations.Expansion(pRight);
         expan.xor(key);
         List<FullBitSet> split6 = expan.split6();
@@ -136,10 +136,10 @@ public class DES {
             }
             sboxes.add(sb);
         }
-        reponse = FullBitSet.fussion(sboxes);
-        reponse = Permutations.PermutationP(reponse);
-        reponse.xor(pLeft);
-        return reponse;
+        response = FullBitSet.fussion(sboxes);
+        response = Permutations.PermutationP(response);
+        response.xor(pLeft);
+        return response;
     }
 
     private static String decode(String cypher, String rawKey) throws UnsupportedEncodingException {

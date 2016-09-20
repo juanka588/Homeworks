@@ -88,8 +88,18 @@ public class PermutationsTest {
     }
 
     /**
-     * Test of PC2 method, of class Permutations.
+     * Test of Expand method, of class Permutations.
      */
+    @Test
+    public void testExpand() {
+        System.out.println("expand");
+        FullBitSet base
+                = Utils.bitsToBitSet("11110000101010101111000010101010");
+        FullBitSet expResult
+                = Utils.bitsToBitSet("011110 100001 010101 010101 011110 100001 010101 010101");
+        FullBitSet result = Permutations.Expansion(base);
+        assertEquals(expResult, result);
+    }
     @Test
     public void testConstants() {
         System.out.println("Constants");

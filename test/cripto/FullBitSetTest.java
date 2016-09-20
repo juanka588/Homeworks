@@ -30,7 +30,6 @@ public class FullBitSetTest {
     public static void tearDownClass() {
     }
 
-
     /**
      * Test of split method, of class FullBitSet.
      */
@@ -131,6 +130,25 @@ public class FullBitSetTest {
                 = Utils.bitsToBitSet("1110000110011001010101011111 1010101011001100111100011110");
         result = left.fussion(right);
         assertEquals(expResult.toString(), result.toString());
+    }
+
+    /**
+     * Test of fussion method, of class Utils.
+     */
+    @Test
+    public void testFussion6() {
+        System.out.println("fussion 6");
+        List<FullBitSet> parts = new ArrayList<>();
+        parts.add(Utils.bitsToBitSet("011000"));
+        parts.add(Utils.bitsToBitSet("010001"));
+        parts.add(Utils.bitsToBitSet("011110"));
+        parts.add(Utils.bitsToBitSet("111010"));
+        parts.add(Utils.bitsToBitSet("100001"));
+        parts.add(Utils.bitsToBitSet("100110"));
+        parts.add(Utils.bitsToBitSet("010100"));
+        parts.add(Utils.bitsToBitSet("100111"));
+        FullBitSet expected = Utils.bitsToBitSet("011000 010001 011110 111010 100001 100110 010100 100111");
+        assertEquals(expected, FullBitSet.fussion(parts));
     }
 
     /**
