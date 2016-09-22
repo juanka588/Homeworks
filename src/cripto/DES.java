@@ -7,7 +7,6 @@ package cripto;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,7 +21,7 @@ public class DES {
     public static final int DECODE = 1;
 
     public static void main(String[] args) {
-        String message = "HOLAHOLA";
+        String message = "HOLA HOLA MI MUNDO";
         String key = "OCHOBITS";
         if (key.length() != 8) {
             System.out.println("bad key");
@@ -48,10 +47,10 @@ public class DES {
         String modBlock;
         StringBuilder sb = new StringBuilder();
         for (String block : blocks) {
-            while (block.length() < 8) {
-                block += (char) 0;
-            }
             mPermuted = Utils.stringToHex(block);
+            while (mPermuted.length() < 16) {
+                mPermuted += '0';
+            }
             mPermuted = Utils.hexToBytes(mPermuted);
             m = Utils.bitsToBitSet(mPermuted);
             modBlock = Utils.getStringValueOf(processBlock(m, keys, mode));
@@ -142,7 +141,7 @@ public class DES {
         return response;
     }
 
-    private static String decode(String cypher, String rawKey) throws UnsupportedEncodingException {
+    public static String decode(String cypher, String rawKey) throws UnsupportedEncodingException {
         return process(cypher, rawKey, DECODE);
     }
 

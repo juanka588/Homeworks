@@ -6,9 +6,11 @@
 package cripto;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.xml.bind.DatatypeConverter;
 
@@ -42,16 +44,7 @@ public class Utils {
                 sup = size - 1;
             }
             sub = hexKey.substring(inf, sup);
-            num = Integer.toBinaryString(Integer.parseInt(sub, 16));
-            if (num.length() == 3) {
-                num = "0" + num;
-            }
-            if (num.length() == 2) {
-                num = "00" + num;
-            }
-            if (num.length() == 1) {
-                num = "000" + num;
-            }
+            num = toBinaryString(Integer.parseInt(sub, 16), 4);
             sb.append(num);
         }
         return sb.toString();
@@ -103,7 +96,7 @@ public class Utils {
 
     public static List<String> splitString(String message, int blockSize) {
         List<String> blocks = new ArrayList<>();
-        int inf, sup;
+        int inf, sup = 0;
         for (int j = 0; j < message.length() / blockSize; j++) {
             inf = j * blockSize;
             sup = j * blockSize + blockSize;
@@ -112,7 +105,95 @@ public class Utils {
             }
             blocks.add(message.substring(inf, sup));
         }
+        if (message.length() % blockSize != 0) {
+            blocks.add(message.substring(sup, message.length()));
+        }
         return blocks;
+    }
+
+    public static String hexXOR(String hex1, String hex2) {
+        FullBitSet bs1 = bitsToBitSet(hexToBytes(hex1));
+        FullBitSet bs2 = bitsToBitSet(hexToBytes(hex2));
+        bs1.xor(bs2);
+        return bitsToHex(bs1.toString(), 4);
+    }
+
+    public static String toBinaryString(int parseInt, int i) {
+        String ret = Integer.toBinaryString(parseInt);
+        while (ret.length() < i) {
+            ret = "0" + ret;
+        }
+        return ret;
+    }
+
+    public static <T> T[][] transpose(T[][] mat) {
+        T[][] transpose = (T[][]) Array.newInstance(mat[0][0].getClass(), mat.length, mat[0].length);
+        for (int i = 0; i < mat.length; i++) {
+            for (int j = 0; j < mat[i].length; j++) {
+                transpose[j][i] = mat[i][j];
+            }
+        }
+        return transpose;
+    }
+
+    public static <T> T[][] leftShiftRows(T[][] mat) {
+        T[][] shifted = (T[][]) Array.newInstance(mat[0][0].getClass(), mat.length, mat[0].length);
+        for (int i = 0; i < mat.length; i++) {
+            shifted[i] = leftShiftRow(mat[i], i);
+        }
+        return shifted;
+    }
+
+    public static <T> T[][] rightShiftRows(T[][] mat) {
+        T[][] shifted = (T[][]) Array.newInstance(mat[0][0].getClass(), mat.length, mat[0].length);
+        for (int i = 0; i < mat.length; i++) {
+            shifted[i] = rightShiftRow(mat[i], i);
+        }
+        return shifted;
+    }
+
+    /**
+     * *
+     *
+     * @param elements list of list of regular size by every list in a list
+     * @return a list of transposed elements
+     */
+    public static <T> List<List<T>> transpose(List<List<T>> elements) {
+        List<List<T>> tranposed = new ArrayList<>();
+        if (elements.isEmpty()) {
+            return tranposed;
+        }
+        for (int i = 0; i < elements.get(0).size(); i++) {
+            tranposed.add(new ArrayList<>());
+        }
+        for (int j = 0; j < elements.size(); j++) {
+            for (int i = 0; i < elements.get(0).size(); i++) {
+                tranposed.get(i).add(elements.get(j).get(i));
+            }
+        }
+        return tranposed;
+    }
+
+    public static <T> T[] leftShiftRow(T[] mat, int shift) {
+        T[] shifted = (T[]) Array.newInstance(mat[0].getClass(), mat.length);
+        for (int j = 0; j < mat.length - shift; j++) {
+            shifted[j] = mat[j + shift];
+        }
+        for (int j = mat.length - shift; j < mat.length; j++) {
+            shifted[j] = mat[j - (mat.length - shift)];
+        }
+        return shifted;
+    }
+
+    public static <T> T[] rightShiftRow(T[] mat, int shift) {
+        T[] shifted = (T[]) Array.newInstance(mat[0].getClass(), mat.length);
+        for (int j = 0; j < mat.length - shift; j++) {
+            shifted[j + shift] = mat[j];
+        }
+        for (int j = mat.length - shift; j < mat.length; j++) {
+            shifted[j - (mat.length - shift)] = mat[j];
+        }
+        return shifted;
     }
 
 }

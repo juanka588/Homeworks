@@ -47,6 +47,9 @@ public class DESTest {
         System.out.println(cypher.toString());
         System.out.println(Utils.bitsToHex(
                 cypher.toString(), 4));
+        String decode = DES.decode(Utils.bitsToHex(
+                cypher.toString(), 4), Utils.hexToString(k));
+        System.out.println("decode: "+decode);
 
     }
 
