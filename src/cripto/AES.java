@@ -20,77 +20,73 @@ public class AES {
     private static final int KEY_BLOCK_SIZE = 4;
     private static final int ROUNDS = KEY_BLOCK_SIZE + 6;
 
-    private static final String[][] MIX_COLUMN_MATRIX = new String[][]{{"02", "03", "01", "01"},
-    {"01", "02", "03", "01"},
-    {"01", "01", "02", "03"},
-    {"03", "01", "01", "02"},};
-    private static final String[][] MIX_COLUMN_MATRIX_INV = new String[][]{{"02", "03", "01", "01"},
-    {"0e", "0b", "0d", "09"},
-    {"09", "0e", "0b", "0d"},
-    {"0b", "0d", "09", "0e"},};
+    private static final String[][] MIX_COLUMN_MATRIX = new String[][]{
+        {"02", "03", "01", "01"},
+        {"01", "02", "03", "01"},
+        {"01", "01", "02", "03"},
+        {"03", "01", "01", "02"},};
+    public static final String[][] MIX_COLUMN_MATRIX_INV = new String[][]{
+        {"0e", "0b", "0d", "09"},
+        {"09", "0e", "0b", "0d"},
+        {"0d", "09", "0e", "0b"},
+        {"0b", "0d", "09", "0e"},};
     private static final String[] Rcon = new String[]{
         "01", "02", "04", "08", "10",
         "20", "40", "80", "1B", "36",};
 
     public static void main(String[] args) throws UnsupportedEncodingException {
         String message = "AES es muy facil";
-        String key = "5781146089937595";
+        String key = "+~(®Ò¦«÷	ÏO<";
+        if (key.length() != 16) {
+            System.out.println("bad key");
+            return;
+        }
         String cypher = encode(message, key);
         System.out.println("cypher: " + cypher);
+        System.out.println("cypher HEX: " + Utils.stringToHex(cypher));
         String getback = decode(cypher, key);
         System.out.println("decoded: " + getback);
+        System.out.println("decoded HEX: " + Utils.stringToHex(getback));
     }
 
     private static String encode(String message, String key) throws UnsupportedEncodingException {
         String mHex = Utils.stringToHex(message);
-        System.out.println(mHex);
-        String kHex = "2b7e151628aed2a6abf7158809cf4f3c";//Utils.stringToHex(key);
-        System.out.println(kHex);
+        String kHex = Utils.stringToHex(key);
         List<String> kSplit = Utils.splitString(kHex, 8);
         String[][] matKey = toMatrix(kSplit);
         matKey = Utils.transpose(matKey);
-        System.out.println("key");
-        printMat(matKey);
         List<String[][]> keys = generateKeys(matKey);
         List<String> blocks = Utils.splitString(mHex, 2 * BLOCK_SIZE * BLOCK_SIZE);
-        String[][] pResult = null;
+        String[][] pResult;
+        StringBuilder cypher = new StringBuilder();
         for (String block : blocks) {
             List<String> mSplit = Utils.splitString(block, 8);
             String[][] state = toMatrix(mSplit);
-            System.out.println("state");
-            printMat(state);
             state = Utils.transpose(state);
-            System.out.println("state'");
-            printMat(state);
             pResult = process(state, keys);
+            cypher.append(toString(Utils.transpose(pResult)));
         }
-        return Utils.hexToString(toString(Utils.transpose(pResult)));
+        return Utils.hexToString(cypher.toString());
     }
 
     private static String decode(String cypher, String key) throws UnsupportedEncodingException {
         String mHex = Utils.stringToHex(cypher);
-        System.out.println(mHex);
-        String kHex = Utils.stringToHex(key);;
-        System.out.println(kHex);
+        String kHex = Utils.stringToHex(key);
         List<String> kSplit = Utils.splitString(kHex, 8);
         String[][] matKey = toMatrix(kSplit);
         matKey = Utils.transpose(matKey);
-        System.out.println("key");
-        printMat(matKey);
         List<String[][]> keys = generateKeys(matKey);
         List<String> blocks = Utils.splitString(mHex, 2 * BLOCK_SIZE * BLOCK_SIZE);
-        String[][] pResult = null;
+        String[][] pResult;
+        StringBuilder message = new StringBuilder();
         for (String block : blocks) {
             List<String> mSplit = Utils.splitString(block, 8);
             String[][] state = toMatrix(mSplit);
-            System.out.println("state");
-            printMat(state);
             state = Utils.transpose(state);
-            System.out.println("state'");
-            printMat(state);
             pResult = decodeProcess(state, keys);
+            message.append(toString(Utils.transpose(pResult)));
         }
-        return Utils.hexToString(toString(Utils.transpose(pResult)));
+        return Utils.hexToString(message.toString());
     }
 
     private static String[][] addRoundKey(String[][] message, String[][] key) {
@@ -111,13 +107,13 @@ public class AES {
 
     private static String[][] mixColumnsINV(String[][] state) {
         String[][] result = Utils.transpose(state);
-        for (String[] column : result) {
-            column = multiply(column, MIX_COLUMN_MATRIX_INV);
+        for (int i = 0; i < result.length; i++) {
+            result[i] = multiply(result[i], MIX_COLUMN_MATRIX_INV);
         }
         return Utils.transpose(result);
     }
 
-    private static String[] multiply(String[] column, String[][] mat) {
+    public static String[] multiply(String[] column, String[][] mat) {
         String[] result = new String[column.length];
         String mult;
         String sum = "00";
@@ -243,10 +239,13 @@ public class AES {
         result = subBytesTransINV(result);
         result = Utils.rightShiftRows(result);
         for (int i = ROUNDS - 1; i >= 1; i--) {
+            if (i == 1) {
+                System.out.println("");
+            }
             result = addRoundKey(result, keys.get(i));
             result = mixColumnsINV(result);
-            result = subBytesTransINV(result);
             result = Utils.rightShiftRows(result);
+            result = subBytesTransINV(result);
         }
         result = addRoundKey(result, keys.get(0));
         return result;

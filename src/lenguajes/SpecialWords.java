@@ -12,10 +12,10 @@ import java.util.Map;
  *
  * @author JuanCamilo
  */
-public class SimbolsTable {
+public class SpecialWords {
 
     public static final Map<String, Integer> RESERVED_WORDS;
-    public static final Map<String, Integer> SIMBOLS_MAP;
+    public static final Map<String, Integer> RESERVED_SIMBOLS;
 
     static {
         RESERVED_WORDS = new HashMap<>();
@@ -92,23 +92,23 @@ public class SimbolsTable {
     }
 
     static {
-        SIMBOLS_MAP = new HashMap<>();
-        SIMBOLS_MAP.put("~", Token.NEG);
-        SIMBOLS_MAP.put("=", Token.EQUAL);
-        SIMBOLS_MAP.put("+", Token.PLUSOP);
-        SIMBOLS_MAP.put("-", Token.LESSOP);
-        SIMBOLS_MAP.put("*", Token.MULOP);
-        SIMBOLS_MAP.put("%", Token.MODOP);
-        SIMBOLS_MAP.put(";", Token.PYC);
-        SIMBOLS_MAP.put(":", Token.DOUBLE_POINTS);
-        SIMBOLS_MAP.put("(", Token.PARIZQ);
-        SIMBOLS_MAP.put(")", Token.PARDER);
-        SIMBOLS_MAP.put("[", Token.CORIZQ);
-        SIMBOLS_MAP.put("]", Token.CORDER);
-        SIMBOLS_MAP.put("|", Token.OR);
-        SIMBOLS_MAP.put("&", Token.AND);
-        SIMBOLS_MAP.put(",", Token.COMMA);
-        SIMBOLS_MAP.put("^", Token.POWER);
+        RESERVED_SIMBOLS = new HashMap<>();
+        RESERVED_SIMBOLS.put("~", Token.NEG);
+        RESERVED_SIMBOLS.put("=", Token.EQUAL);
+        RESERVED_SIMBOLS.put("+", Token.PLUSOP);
+        RESERVED_SIMBOLS.put("-", Token.LESSOP);
+        RESERVED_SIMBOLS.put("*", Token.MULOP);
+        RESERVED_SIMBOLS.put("%", Token.MODOP);
+        RESERVED_SIMBOLS.put(";", Token.PYC);
+        RESERVED_SIMBOLS.put(":", Token.DOUBLE_POINTS);
+        RESERVED_SIMBOLS.put("(", Token.PARIZQ);
+        RESERVED_SIMBOLS.put(")", Token.PARDER);
+        RESERVED_SIMBOLS.put("[", Token.CORIZQ);
+        RESERVED_SIMBOLS.put("]", Token.CORDER);
+        RESERVED_SIMBOLS.put("|", Token.OR);
+        RESERVED_SIMBOLS.put("&", Token.AND);
+        RESERVED_SIMBOLS.put(",", Token.COMMA);
+        RESERVED_SIMBOLS.put("^", Token.POWER);
     }
 
 }

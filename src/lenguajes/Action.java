@@ -17,30 +17,42 @@ public class Action {
     private SyntacticAnalyser context;
     private int type;
     private String functionID;
+    private String expectedTokenID;
 
-    public Action(SyntacticAnalyser context, int type, String functionID) {
+    public Action(SyntacticAnalyser context, int type, String arg) {
         this.context = context;
         this.type = type;
-        this.functionID = functionID;
+        if (type == MATCH) {
+            this.expectedTokenID = arg;
+        } else {
+            this.functionID = arg;
+        }
     }
 
-    
-    public void execute(SyntacticAnalyser context, Token current) throws SynctacticException {
+    public void execute(SyntacticAnalyser context) throws SynctacticException {
         switch (type) {
             case CALL:
-                GrammaticalRule gr=context.getGrammar().get(functionID);
-                if (gr==null) {
-                    throw new IllegalAccessError("not exiting rule for "+functionID);
+                GrammaticalRule gr = context.getGrammar().get(functionID);
+                if (gr == null) {
+                    throw new IllegalAccessError("not exiting rule for " + functionID);
                 }
-                gr.execute(current);
+                gr.execute();
                 break;
             case MATCH:
-                boolean done=context.match(current);
+                boolean done = context.match(expectedTokenID);
                 if (!done) {
                     throw new SynctacticException();
                 }
                 break;
         }
+    }
+
+    @Override
+    public String toString() {
+        if (type == CALL) {
+            return "function to CALL: " + functionID;
+        }
+        return "MATCH expecting " + expectedTokenID;
     }
 
 }

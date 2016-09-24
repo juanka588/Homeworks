@@ -60,7 +60,7 @@ public class LexicalAnalyser {
         fileName = getFileName(fileName);
         System.out.println("fixed name: " + fileName);
 
-        // in = new BufferedReader(new InputStreamReader(System.in));
+        //in = new BufferedReader(new InputStreamReader(System.in));
         row = 1;
         column = 1;
         line = in.readLine();
@@ -68,6 +68,7 @@ public class LexicalAnalyser {
         while (line != null) {
             i = getNextToken(in, i);
         }
+        in.close();
         //writeResponse(tokenList, fileName);
     }
 
@@ -104,7 +105,7 @@ public class LexicalAnalyser {
             temp = text.charAt(idx + count);
         }
         String word = sb.toString().toLowerCase();
-        Integer value = SimbolsTable.RESERVED_WORDS.get(word);
+        Integer value = SpecialWords.RESERVED_WORDS.get(word);
         if (value != null) {
             //case reserved word
             tokenList.add(new Token(word, row, column, value));
@@ -317,7 +318,7 @@ public class LexicalAnalyser {
                     idx += readComment(idx, line, tokenList);
                     break;
                 default:
-                    Integer tokenIden = SimbolsTable.SIMBOLS_MAP.get(String.valueOf(c));
+                    Integer tokenIden = SpecialWords.RESERVED_SIMBOLS.get(String.valueOf(c));
                     if (tokenIden != null) {
                         tokenList.add(new Token(String.valueOf(c), row, column, tokenIden));
                     } else if (isString(c)) {
@@ -339,6 +340,7 @@ public class LexicalAnalyser {
             //fin de archivo
             token = new Token("", row, column, Token.EOF);
             System.out.println(token.toString());
+            in.close();
         }
         return idx + 1;
 
@@ -346,7 +348,7 @@ public class LexicalAnalyser {
 
     public static void init() throws FileNotFoundException, IOException, LexicalException {
         //in = new BufferedReader(new FileReader(fileName));
-         in = new BufferedReader(new InputStreamReader(System.in));
+        in = new BufferedReader(new InputStreamReader(System.in));
         row = 1;
         column = 1;
         line = in.readLine();

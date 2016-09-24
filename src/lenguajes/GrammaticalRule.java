@@ -6,9 +6,10 @@
 package lenguajes;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import static lenguajes.Utils.printSet;
 
 /**
  *
@@ -18,14 +19,18 @@ public class GrammaticalRule {
 
     private String id;
     private List<Rule> rules;
-    private Map<String, Token> predictionSet;
+    private SortedSet<String> firsts;
+    private SortedSet<String> seconds;
     private SyntacticAnalyser context;
+    private boolean calculated;
 
     public GrammaticalRule(String id, SyntacticAnalyser context) {
         this.id = id;
         this.context = context;
         this.rules = new ArrayList<>();
-        this.predictionSet = new HashMap<>();
+        this.firsts = new TreeSet<>();
+        this.seconds = new TreeSet<>();
+        calculated = false;
     }
 
     public String getId() {
@@ -44,14 +49,6 @@ public class GrammaticalRule {
         this.rules = rules;
     }
 
-    public Map<String, Token> getPredictionSet() {
-        return predictionSet;
-    }
-
-    public void setPredictionSet(Map<String, Token> predictionSet) {
-        this.predictionSet = predictionSet;
-    }
-
     public SyntacticAnalyser getContext() {
         return context;
     }
@@ -64,14 +61,220 @@ public class GrammaticalRule {
         this.rules.add(rule);
     }
 
-    public void execute(Token current) throws SynctacticException {
-        Token get;
+    public void execute() throws SynctacticException {
+        String key = context.getToken().getTypeString();
         for (Rule rule : rules) {
-            get = rule.getConditions().get(current.getTypeString());
-            if (get != null) {
+            if (rule.getConditions().contains(key)) {
                 System.out.println("rule executed: " + rule.toString());
-                rule.executeActions(context, current);
+                rule.executeActions(context);
+                return;
             }
         }
     }
+
+    public SortedSet<String> getFirsts() {
+        return firsts;
+    }
+
+    public void setFirsts(SortedSet<String> firsts) {
+        this.firsts = firsts;
+    }
+
+    public SortedSet<String> getSeconds() {
+        return seconds;
+    }
+
+    public void setSeconds(SortedSet<String> seconds) {
+        this.seconds = seconds;
+    }
+
+    public void calcFirst() {
+        if (firsts.isEmpty()) {
+            for (Rule rule : rules) {
+                firsts.addAll(rule.calcFirst());
+            }
+        }
+    }
+
+    public void calcSeconds(List<Rule> rules) {
+        List<Rule> possibles = getSeconds(rules);
+        if (seconds.size() == 1 && seconds.contains(Rule.EOF)) {
+            getSecondsSet(possibles, rules);
+            return;
+        }
+        if (seconds.isEmpty()) {
+            getSecondsSet(possibles, rules);
+        }
+        calculated = true;
+    }
+
+    public void calcPrediction() {
+        for (Rule rule : rules) {
+            rule.calcConditions();
+        }
+    }
+
+    private List<Rule> getSeconds(List<Rule> rules) {
+        List<Rule> possible = new ArrayList<>();
+        for (Rule rule : rules) {
+            if (contains(rule.getTerms(), id)) {
+                possible.add(rule);
+            }
+        }
+        return possible;
+    }
+
+    private void getSecondsSet(List<Rule> possibles, List<Rule> allRules) {
+        List<Term> terms;
+        SortedSet<String> firsts2, seconds2;
+        for (Rule possible : possibles) {
+            terms = possible.getTerms(id);
+            firsts2 = possible.calcFirst(terms);
+            if (firsts2.contains(Rule.EPSILON)) {
+                firsts2.remove(Rule.EPSILON);
+                seconds.addAll(firsts2);
+                GrammaticalRule ruleToDerivate = context.getGrammar().get(possible.getID());
+                if (!ruleToDerivate.calculated) {
+                    ruleToDerivate.calcSeconds(allRules);
+                }
+                seconds2 = new TreeSet<>(ruleToDerivate.getSeconds());
+                seconds.addAll(seconds2);
+            } else {
+                seconds.addAll(firsts2);
+            }
+        }
+    }
+
+    private boolean contains(List<Term> terms, String id) {
+        for (Term term : terms) {
+            if (term.getIdentifier().equals(id)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " sub rules " + rules.size();
+    }
+
+    public void checkConditions() {
+        TreeSet<String> allCond = new TreeSet<>();
+        for (Rule rule : rules) {
+            for (String cond : rule.getConditions()) {
+                if (allCond.contains(cond)) {
+                    throw new IllegalAccessError("there are repeated conditions");
+                } else {
+                    allCond.add(cond);
+                }
+            }
+        }
+    }
+
+    public void checkLeftRecusion() {
+        List<Rule> recussion = new ArrayList<>();
+        for (Rule rule : rules) {
+            if (rule.getTerms().get(0).getIdentifier().equals(rule.getID())) {
+                System.out.println("left recussion detected " + rule.toString());
+                recussion.add(rule);
+            }
+        }
+        fixRecurssion(recussion);
+    }
+
+    public void checkCommonFactors(int iter) {
+        List<Rule> commonRules = new ArrayList<>();
+        String termID, otherID;
+        for (int i = 0; i < rules.size(); i++) {
+            termID = rules.get(i).getTerms().get(0).getIdentifier();
+            if (!Rule.EPSILON.equals(termID)) {
+                for (int j = i + 1; j < rules.size(); j++) {
+                    otherID = rules.get(j).getTerms().get(0).getIdentifier();
+                    if (termID.equals(otherID)) {
+                        System.out.println("common factors detected");
+                        commonRules.add(rules.get(i));
+                        commonRules.add(rules.get(j));
+                    }
+                }
+            }
+        }
+        fixCommonFactors(commonRules, iter);
+    }
+
+    private void fixRecurssion(List<Rule> recussion) {
+        if (recussion.isEmpty()) {
+            return;
+        }
+        String nId = this.id + "_FIX";
+        String raw;
+        String[] split;
+        for (Rule recRule : recussion) {
+            this.rules.remove(recRule);
+            raw = recRule.toString();
+            split = raw.split("->");
+            raw = split[0].replaceAll(recRule.getID(), nId);
+            raw = raw + " -> " + split[1].replaceFirst(recRule.getID(), "");
+            raw = raw + " " + nId;
+            new Rule(raw, context);
+        }
+        for (Rule rule : rules) {
+            rule.getTerms().add(new Term(Term.NO_TERMINAL, nId));
+            //case epsilon
+            if (rule.getActions().isEmpty()) {
+                rule.setOriginalString(rule.getID() + " -> " + nId);
+            } else {
+                rule.setOriginalString(rule.toString() + " " + nId);
+            }
+
+        }
+        new Rule(nId + " -> " + Rule.EPSILON, context);
+    }
+
+    private void fixCommonFactors(List<Rule> commonRules, int i) {
+        if (commonRules.isEmpty()) {
+            return;
+        }
+        String nId = this.id + "_" + i;
+        String raw;
+        String commonFactor = null;
+        for (Rule recRule : commonRules) {
+            this.rules.remove(recRule);
+            commonFactor = recRule.getTerms().get(0).getIdentifier();
+            raw = recRule.toString();
+            raw = raw.replaceAll(commonFactor, "");
+            raw = raw.replaceAll(recRule.getID(), nId);
+            new Rule(raw, context);
+        }
+        new Rule(id + " -> " + commonFactor + " " + nId, context);
+        checkCommonFactors(i + 1);
+    }
+
+    public String printFirst() {
+        return printSet(id, "firsts", firsts);
+    }
+
+    public String printSeconds() {
+        return printSet(id, "seconds", seconds);
+    }
+
+    public String fullPrint() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(id);
+        sb.append("[");
+        sb.append("\\n");
+        sb.append(printFirst());
+        sb.append("\\n");
+        sb.append(printSeconds());
+        sb.append("\\n");
+        for (Rule rule : rules) {
+            sb.append(rule.toString());
+            sb.append("\\t");
+            sb.append(rule.printPrediction());
+            sb.append("\\n");
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
 }
