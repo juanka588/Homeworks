@@ -37,6 +37,7 @@ public class SpecialWords {
         RESERVED_WORDS.put("finsi", Token.RESERVED);
 
         RESERVED_WORDS.put("segun", Token.RESERVED);
+        RESERVED_WORDS.put("caso", Token.RESERVED);
         RESERVED_WORDS.put("de", Token.RESERVED);
         RESERVED_WORDS.put("otro", Token.RESERVED);
         RESERVED_WORDS.put("modo", Token.RESERVED);
@@ -80,8 +81,10 @@ public class SpecialWords {
         RESERVED_WORDS.put("escribir", Token.RESERVED);
         RESERVED_WORDS.put("leer", Token.RESERVED);
 
-        RESERVED_WORDS.put("verdadero", Token.RESERVED);
-        RESERVED_WORDS.put("falso", Token.RESERVED);
+        RESERVED_WORDS.put("verdadero", Token.TRUE);
+        RESERVED_WORDS.put("falso", Token.FALSE);
+        RESERVED_WORDS.put("v", Token.TRUE);
+        RESERVED_WORDS.put("f", Token.FALSE);
 
         //operadores
         RESERVED_WORDS.put("mod", Token.MODOP);

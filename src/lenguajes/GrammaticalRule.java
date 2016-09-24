@@ -61,7 +61,7 @@ public class GrammaticalRule {
         this.rules.add(rule);
     }
 
-    public void execute() throws SynctacticException {
+    public void execute() {
         String key = context.getToken().getTypeString();
         for (Rule rule : rules) {
             if (rule.getConditions().contains(key)) {
@@ -70,6 +70,7 @@ public class GrammaticalRule {
                 return;
             }
         }
+        new SynctacticException(firsts, context.getToken());
     }
 
     public SortedSet<String> getFirsts() {
@@ -96,14 +97,17 @@ public class GrammaticalRule {
         }
     }
 
-    public void calcSeconds(List<Rule> rules) {
-        List<Rule> possibles = getSeconds(rules);
+    public void calcSeconds(List<Rule> allRules) {
+        if (allRules.isEmpty()) {
+            return;
+        }
+        List<Rule> possibles = getSeconds(allRules);
         if (seconds.size() == 1 && seconds.contains(Rule.EOF)) {
-            getSecondsSet(possibles, rules);
+            getSecondsSet(possibles, allRules);
             return;
         }
         if (seconds.isEmpty()) {
-            getSecondsSet(possibles, rules);
+            getSecondsSet(possibles, allRules);
         }
         calculated = true;
     }
@@ -135,7 +139,9 @@ public class GrammaticalRule {
                 seconds.addAll(firsts2);
                 GrammaticalRule ruleToDerivate = context.getGrammar().get(possible.getID());
                 if (!ruleToDerivate.calculated) {
-                    ruleToDerivate.calcSeconds(allRules);
+                    List<Rule> copy = new ArrayList<>(allRules);
+                    copy.remove(possible);
+                    ruleToDerivate.calcSeconds(copy);
                 }
                 seconds2 = new TreeSet<>(ruleToDerivate.getSeconds());
                 seconds.addAll(seconds2);
@@ -164,7 +170,10 @@ public class GrammaticalRule {
         for (Rule rule : rules) {
             for (String cond : rule.getConditions()) {
                 if (allCond.contains(cond)) {
-                    throw new IllegalAccessError("there are repeated conditions");
+                    System.out.println("there are repeated conditions");
+                    System.out.println("rule: " + rule.toString());
+                    System.out.println("condition: " + cond);
+                    System.exit(1);
                 } else {
                     allCond.add(cond);
                 }
@@ -255,25 +264,25 @@ public class GrammaticalRule {
     }
 
     public String printSeconds() {
-        return printSet(id, "seconds", seconds);
+        return printSet(id, "next", seconds);
     }
 
     public String fullPrint() {
         StringBuilder sb = new StringBuilder();
+        sb.append("------");
         sb.append(id);
-        sb.append("[");
-        sb.append("\\n");
+        sb.append("------");
+        sb.append("\n");
         sb.append(printFirst());
-        sb.append("\\n");
+        sb.append("\n");
         sb.append(printSeconds());
-        sb.append("\\n");
+        sb.append("\n");
         for (Rule rule : rules) {
             sb.append(rule.toString());
-            sb.append("\\t");
+            sb.append("\t\t\t\t\t\t\t\t\t");
             sb.append(rule.printPrediction());
-            sb.append("\\n");
+            sb.append("\n");
         }
-        sb.append("]");
         return sb.toString();
     }
 

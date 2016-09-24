@@ -11,14 +11,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -33,12 +27,16 @@ public class SyntacticAnalyser {
     private Token token;
     private GrammaticalRule initRule;
 
-    public SyntacticAnalyser() throws IOException, FileNotFoundException, LexicalException {
+    public SyntacticAnalyser(String grammarFile,String fileName) throws IOException, FileNotFoundException, LexicalException {
         this.grammar = new HashMap<>();
-        LexicalAnalyser.init();
+        LexicalAnalyser.init(fileName);
         this.token = LexicalAnalyser.token;
         initRule = null;
-        loadGrammar();
+        loadGrammar(grammarFile);
+    }
+
+    public SyntacticAnalyser() throws IOException, FileNotFoundException, LexicalException {
+        this("grammar.txt","");
     }
 
     public Map<String, GrammaticalRule> getGrammar() {
@@ -72,10 +70,8 @@ public class SyntacticAnalyser {
     public Token nextToken() {
         try {
             return LexicalAnalyser.getNextToken();
-        } catch (IOException ex) {
-            Logger.getLogger(SyntacticAnalyser.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (LexicalException ex) {
-            Logger.getLogger(SyntacticAnalyser.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            System.out.println(ex.toString());
         }
         return null;
     }
@@ -88,8 +84,8 @@ public class SyntacticAnalyser {
         this.initRule = initRule;
     }
 
-    private void loadGrammar() throws IOException {
-        BufferedReader in = new BufferedReader(new BufferedReader(new FileReader("grammar.txt")));
+    private void loadGrammar(String fileName) throws IOException {
+        BufferedReader in = new BufferedReader(new BufferedReader(new FileReader(fileName)));
         String line = in.readLine();
         List<Rule> rules = new ArrayList<>();
         while (line != null) {
@@ -108,6 +104,7 @@ public class SyntacticAnalyser {
         for (Map.Entry<String, GrammaticalRule> entry : getGrammar().entrySet()) {
             entry.getValue().calcPrediction();
         }
+        System.out.println(printGrammar());
         for (Map.Entry<String, GrammaticalRule> entry : getGrammar().entrySet()) {
             entry.getValue().checkConditions();
         }
@@ -126,7 +123,7 @@ public class SyntacticAnalyser {
         StringBuilder sb = new StringBuilder();
         for (Map.Entry<String, GrammaticalRule> entry : getGrammar().entrySet()) {
             sb.append(entry.getValue().fullPrint());
-            sb.append("\\n");
+            sb.append("\n");
         }
         return sb.toString();
     }

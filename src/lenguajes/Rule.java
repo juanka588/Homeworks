@@ -15,7 +15,7 @@ import java.util.TreeSet;
  * @author JuanCamilo
  */
 public class Rule {
-
+    
     public static final String EPSILON = "epsilon";
     public static final String EOF = "$";
     /**
@@ -29,7 +29,7 @@ public class Rule {
     private SortedSet<String> firsts;
     private List<Term> terms;
     private String id;
-
+    
     public Rule(String ruleRaw, SyntacticAnalyser context) {
         this.originalString = ruleRaw;
         this.context = context;
@@ -39,7 +39,7 @@ public class Rule {
         this.firsts = new TreeSet<>();
         parseRule(ruleRaw);
     }
-
+    
     private void parseRule(String ruleRaw) {
         String[] split = ruleRaw.split("\\s+");
         id = split[0];
@@ -73,45 +73,49 @@ public class Rule {
         gr.addRule(this);
         context.getGrammar().put(id, gr);
     }
-
+    
     public TreeSet<String> getConditions() {
         return conditions;
     }
-
+    
     public void setConditions(TreeSet<String> conditions) {
         this.conditions = conditions;
     }
-
+    
     public List<Action> getActions() {
         return actions;
     }
-
+    
     public void setActions(List<Action> actions) {
         this.actions = actions;
     }
-
+    
     public SyntacticAnalyser getContext() {
         return context;
     }
-
+    
     public void setContext(SyntacticAnalyser context) {
         this.context = context;
     }
-
-    public void executeActions(SyntacticAnalyser context) throws SynctacticException {
+    
+    public void executeActions(SyntacticAnalyser context) {
+        boolean excution = true;
         for (Action action : actions) {
-            action.execute(context);
+            excution = excution && action.execute(context);
+            if (!excution) {
+                 new SynctacticException(conditions, context.getToken());
+            }
         }
     }
-
+    
     public List<Term> getTerms() {
         return terms;
     }
-
+    
     public void setTerms(List<Term> terms) {
         this.terms = terms;
     }
-
+    
     public SortedSet<String> calcFirst(List<Term> terms) {
         SortedSet<String> other;
         SortedSet<String> frst = new TreeSet<>();
@@ -146,7 +150,7 @@ public class Rule {
         }
         return frst;
     }
-
+    
     public SortedSet<String> calcFirst() {
         if (firsts.isEmpty()) {
             firsts = calcFirst(terms);
@@ -154,7 +158,7 @@ public class Rule {
         }
         return firsts;
     }
-
+    
     public void calcConditions() {
         if (firsts.contains(EPSILON)) {
             SortedSet<String> clone = new TreeSet<>(firsts);
@@ -165,12 +169,12 @@ public class Rule {
             conditions.addAll(firsts);
         }
     }
-
+    
     @Override
     public String toString() {
         return originalString;
     }
-
+    
     public List<Term> getTerms(String id) {
         List<Term> terms2 = new ArrayList<>();
         boolean add = false;
@@ -185,21 +189,21 @@ public class Rule {
         }
         return terms2;
     }
-
+    
     public String getID() {
         return id;
     }
-
+    
     public String getOriginalString() {
         return originalString;
     }
-
+    
     public void setOriginalString(String originalString) {
         this.originalString = originalString;
     }
-
+    
     public String printPrediction() {
         return Utils.printSet(id, "predictions", conditions);
     }
-
+    
 }

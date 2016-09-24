@@ -303,7 +303,7 @@ public class LexicalAnalyser {
                 case ' ':
                 case '\t':
                 case '\n':
-                    return idx + 1;
+                    return getNextToken(in, idx + 1);
                 case '<':
                     idx += readNextLT(idx, line, tokenList);
                     break;
@@ -346,9 +346,12 @@ public class LexicalAnalyser {
 
     }
 
-    public static void init() throws FileNotFoundException, IOException, LexicalException {
-        //in = new BufferedReader(new FileReader(fileName));
-        in = new BufferedReader(new InputStreamReader(System.in));
+    public static void init(String fileName) throws FileNotFoundException, IOException, LexicalException {
+        if ("".equals(fileName)) {
+            in = new BufferedReader(new InputStreamReader(System.in));
+        } else {
+            in = new BufferedReader(new FileReader("./ejemplos/" + fileName));
+        }
         row = 1;
         column = 1;
         line = in.readLine();

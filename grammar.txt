@@ -1,11 +1,110 @@
-S -> A uno B C
-S -> S dos
-A -> B C D
-A -> A tres
-A -> epsilon
-B -> D cuatro C tres
-B -> epsilon
-C -> cinco D B
+S -> P
+S -> SP_LIST P SP_LIST
+SP_LIST -> epsilon
+SP_LIST -> SP SP_LIST
+SP -> subproceso OPT_ASG_SP id OPT_SP C finsubproceso
+OPT_ASG_SP -> id token_asig
+OPT_ASG_SP -> epsilon
+OPT_SP -> epsilon
+OPT_SP -> token_par_izq OPT_PARAM token_par_der
+OPT_PARAM -> id ID_LIST
+OPT_PARAM -> epsilon
+P -> MAIN_BEGIN id C MAIN_END
+MAIN_BEGIN -> proceso
+MAIN_BEGIN -> algoritmo
+MAIN_END -> finproceso
+MAIN_END -> finalgoritmo
+C -> D token_pyc C
 C -> epsilon
-D -> seis
-D -> epsilon
+C -> A token_pyc C
+C -> READ token_pyc C
+C -> WRITE token_pyc C
+C -> DIM token_pyc C
+C -> CALL token_pyc C
+C -> IF C
+C -> FOR C
+C -> WHILE C
+C -> DOWHILE C
+C -> SWITCH C
+C -> WAIT token_pyc C
+C -> CLEAR token_pyc C
+IF -> si EXP_BOOL entonces C END_IF
+END_IF -> finsi
+END_IF -> sino C finsi
+FOR -> para A hasta EXP_NUM OPT_FOR hacer C finpara
+OPT_FOR -> con paso EXP_NUM
+OPT_FOR -> epsilon
+WHILE -> mientras EXP_BOOL hacer C finmientras
+DOWHILE -> repetir C hasta que EXP_BOOL
+SWITCH -> segun EXP_NUM hacer OPT_CASE OPT_DEFAULT finsegun
+OPT_CASE -> caso EXP_NUM token_dosp C OPT_CASE
+OPT_CASE -> epsilon
+OPT_DEFAULT -> epsilon
+OPT_DEFAULT -> de otro modo token_dosp C
+WAIT -> esperar WAIT_TYPE
+WAIT_TYPE -> tecla
+WAIT_TYPE -> EXP_NUM UNITY
+UNITY -> segundos
+UNITY -> milisegundos
+CLEAR -> borrar SCREEN
+CLEAR -> limpiar SCREEN
+SCREEN -> pantalla
+CALL -> id OPT_SP
+DIM -> dimension DEF_DIM
+DEF_DIM -> id token_cor_izq EXP_NUM EXP_NUM_LIST token_cor_der DEF_DIM_LIST
+DEF_DIM_LIST -> epsilon
+DEF_DIM_LIST -> token_coma DEF_DIM DEF_DIM_LIST
+EXP_NUM_LIST -> epsilon
+EXP_NUM_LIST -> token_coma EXP_NUM EXP_NUM_LIST
+READ -> leer id ID_LIST
+WRITE -> escribir E E_LIST
+E_LIST -> token_coma E E_LIST
+E_LIST -> epsilon
+D -> definir id ID_LIST como TIPO
+ID_LIST -> token_coma id ID_LIST
+ID_LIST -> epsilon
+TIPO -> entero
+TIPO -> real
+TIPO -> numero
+TIPO -> numerico
+TIPO -> texto
+TIPO -> cadena
+TIPO -> caracter
+TIPO -> logico
+A -> id token_asig E
+E -> EXP_NUM
+E -> EXP_STR
+EXP_BOOL -> EXP_BOOL token_o EXP_BOOL_2
+EXP_BOOL -> EXP_BOOL_2
+EXP_BOOL_2 -> EXP_BOOL_2 token_y EXP_BOOL_3
+EXP_BOOL_2 -> EXP_BOOL_3
+EXP_BOOL_3 -> token_neg EXP_BOOL_4
+EXP_BOOL_3 -> EXP_BOOL_4
+EXP_BOOL_4 -> verdadero
+EXP_BOOL_4 -> falso
+EXP_BOOL_4 -> EXP_REL
+EXP_REL -> EXP_NUM REL_OPT EXP_NUM
+EXP_REL -> EXP_STR REL_OPT EXP_STR
+EXP_STR -> token_cadena
+REL_OPT -> token_igual
+REL_OPT -> token_dif
+REL_OPT -> token_mayor
+REL_OPT -> token_mayor_igual
+REL_OPT -> token_menor
+REL_OPT -> token_menor_igual
+EXP_NUM -> EXP_NUM token_mod EXP_NUM_1
+EXP_NUM -> EXP_NUM_1
+EXP_NUM_1 -> EXP_NUM_1 SUM_OPT EXP_NUM_2
+EXP_NUM_1 -> EXP_NUM_2
+SUM_OPT -> token_mas
+SUM_OPT -> token_menos
+EXP_NUM_2 -> EXP_NUM_2 MUL_OPT EXP_NUM_3
+MUL_OPT -> token_mul
+MUL_OPT -> token_div
+EXP_NUM_2 -> EXP_NUM_3
+EXP_NUM_3 -> EXP_NUM_3 token_pot FACTOR
+EXP_NUM_3 -> FACTOR
+FACTOR -> id
+FACTOR -> token_real
+FACTOR -> token_entero
+FACTOR -> token_par_izq EXP_NUM token_par_der

@@ -44,6 +44,8 @@ public class Token {
     public static final int MULOP = 26;
     public static final int LESSOP = 27;
     public static final int EOF = 28;
+    public static final int TRUE = 29;
+    public static final int FALSE = 30;
 
     private String lexema;
     private int row, column, type;
@@ -173,6 +175,10 @@ public class Token {
                 return "token_entero";
             case CADENA:
                 return "token_cadena";
+            case TRUE:
+                return "verdadero";
+            case FALSE:
+                return "falso";
             default:
                 return "";
         }

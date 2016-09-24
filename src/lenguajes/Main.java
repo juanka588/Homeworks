@@ -14,9 +14,10 @@ import java.io.IOException;
  */
 public class Main {
 
-    public static void main(String[] args) throws IOException, FileNotFoundException, LexicalException, SynctacticException {
-        SyntacticAnalyser sa = new SyntacticAnalyser();
-        sa.setToken(sa.nextToken());
+    public static void main(String[] args) throws IOException, FileNotFoundException, LexicalException {
+        SyntacticAnalyser sa = new SyntacticAnalyser("grammar.txt","test02.txt");
+        sa.setToken(LexicalAnalyser.token);
         sa.getInitRule().execute();
+        System.out.println("El analisis sintactico ha finalizado correctamente.");
     }
 }

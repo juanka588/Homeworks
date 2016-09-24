@@ -29,7 +29,7 @@ public class Action {
         }
     }
 
-    public void execute(SyntacticAnalyser context) throws SynctacticException {
+    public boolean execute(SyntacticAnalyser context) {
         switch (type) {
             case CALL:
                 GrammaticalRule gr = context.getGrammar().get(functionID);
@@ -37,14 +37,11 @@ public class Action {
                     throw new IllegalAccessError("not exiting rule for " + functionID);
                 }
                 gr.execute();
-                break;
+                return true;
             case MATCH:
-                boolean done = context.match(expectedTokenID);
-                if (!done) {
-                    throw new SynctacticException();
-                }
-                break;
+                return context.match(expectedTokenID);
         }
+        return false;
     }
 
     @Override
