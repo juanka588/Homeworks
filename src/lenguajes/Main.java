@@ -15,7 +15,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException, FileNotFoundException, LexicalException {
-        SyntacticAnalyser sa = new SyntacticAnalyser("grammar.txt","test02.txt");
+        SyntacticAnalyser sa = new SyntacticAnalyser("grammar.txt","test11.txt");
         sa.setToken(LexicalAnalyser.token);
         sa.getInitRule().execute();
         System.out.println("El analisis sintactico ha finalizado correctamente.");

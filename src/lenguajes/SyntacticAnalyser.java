@@ -89,7 +89,8 @@ public class SyntacticAnalyser {
         String line = in.readLine();
         List<Rule> rules = new ArrayList<>();
         while (line != null) {
-            Rule r = new Rule(line, this);
+            Rule r = new Rule(line, this); 
+            
             line = in.readLine();
         }
         checkLL1();

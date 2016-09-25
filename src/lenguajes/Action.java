@@ -52,4 +52,9 @@ public class Action {
         return "MATCH expecting " + expectedTokenID;
     }
 
+    public String getExpectedTokenID() {
+        return expectedTokenID;
+    }
+    
+
 }

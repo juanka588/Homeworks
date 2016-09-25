@@ -21,6 +21,7 @@ public class GrammaticalRule {
     private List<Rule> rules;
     private SortedSet<String> firsts;
     private SortedSet<String> seconds;
+    private SortedSet<String> predictions;
     private SyntacticAnalyser context;
     private boolean calculated;
 
@@ -30,6 +31,7 @@ public class GrammaticalRule {
         this.rules = new ArrayList<>();
         this.firsts = new TreeSet<>();
         this.seconds = new TreeSet<>();
+        this.predictions= new TreeSet<>();
         calculated = false;
     }
 
@@ -63,6 +65,9 @@ public class GrammaticalRule {
 
     public void execute() {
         String key = context.getToken().getTypeString();
+        if ("".equals(key)) {
+            key = Rule.EPSILON;
+        }
         for (Rule rule : rules) {
             if (rule.getConditions().contains(key)) {
                 System.out.println("rule executed: " + rule.toString());
@@ -70,7 +75,8 @@ public class GrammaticalRule {
                 return;
             }
         }
-        new SynctacticException(firsts, context.getToken());
+        System.out.println("Gramtical Rule " + fullPrint());
+        new SynctacticException(predictions, context.getToken());
     }
 
     public SortedSet<String> getFirsts() {
@@ -115,6 +121,7 @@ public class GrammaticalRule {
     public void calcPrediction() {
         for (Rule rule : rules) {
             rule.calcConditions();
+            predictions.addAll(rule.getConditions());
         }
     }
 

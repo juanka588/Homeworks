@@ -35,8 +35,8 @@ public class AES {
         "20", "40", "80", "1B", "36",};
 
     public static void main(String[] args) throws UnsupportedEncodingException {
-        String message = "AES es muy facil";
-        String key = "+~(®Ò¦«÷	ÏO<";
+        String message = "por fin sirve esto soy muy genial";
+        String key = "OCHOBITSOCHOBITS";
         if (key.length() != 16) {
             System.out.println("bad key");
             return;
@@ -60,6 +60,9 @@ public class AES {
         String[][] pResult;
         StringBuilder cypher = new StringBuilder();
         for (String block : blocks) {
+            while (block.length() < 32) {
+                block += "0";
+            }
             List<String> mSplit = Utils.splitString(block, 8);
             String[][] state = toMatrix(mSplit);
             state = Utils.transpose(state);
@@ -252,6 +255,9 @@ public class AES {
     }
 
     private static String multiplyHEX(String hex1, String hex2) {
+        if ("00".equals(hex1) || "00".equals(hex2)) {
+            return "00";
+        }
         String tHex1 = Permutations.applyGaloisL(hex1);
         String tHex2 = Permutations.applyGaloisL(hex2);
         int val1, val2;

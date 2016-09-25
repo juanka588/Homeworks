@@ -6,8 +6,6 @@
 package lenguajes;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 /**
  *
@@ -32,12 +30,31 @@ class SynctacticException {
         sb.append(found.getRow());
         sb.append(":");
         sb.append(found.getColumn());
-        sb.append("> Error sintactico: se encontro: ");
-        sb.append(found.getTypeString());
-        sb.append("; se esperaba: ");
+        sb.append("> Error sintactico: se encontro: \"");
+        if (found.getType() == Token.RESERVED) {
+            sb.append(found.getTypeString());
+        } else {
+            sb.append(found.getLexema());
+        }
+        sb.append("\"; se esperaba: ");
         for (String exp : expected) {
+            String sub = exp;
+            switch (exp) {
+                case "id":
+                    sub = "identificador";
+                    break;
+                case "token_cadena":
+                    sub = "valor_cadena";
+                    break;
+                case "token_entero":
+                    sub = "valor_entero";
+                    break;
+                case "token_real":
+                    sub = "valor_real";
+                    break;
+            }
             sb.append("\"");
-            sb.append(exp);
+            sb.append(sub);
             sb.append("\",");
         }
         sb.deleteCharAt(sb.lastIndexOf(","));
