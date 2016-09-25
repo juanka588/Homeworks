@@ -31,6 +31,7 @@ C -> WAIT token_pyc C
 C -> CLEAR token_pyc C
 C_OPT -> token_asig E
 C_OPT -> OPT_ARGS
+C_OPT -> epsilon
 IF -> si E entonces C END_IF
 END_IF -> finsi
 END_IF -> sino C finsi
@@ -98,6 +99,8 @@ OPT_MOD -> epsilon
 TERM -> MOD_TERM OPT_SUM
 OPT_SUM -> epsilon
 OPT_SUM -> SUM_OPT MOD_TERM OPT_SUM
+MOD_TERM -> SIGNED_FACTOR OPT_MUL
+SIGNED_FACTOR -> SUM_OPT S_TERM
 MOD_TERM -> S_TERM OPT_MUL
 OPT_MUL -> epsilon
 OPT_MUL -> MUL_OPT S_TERM OPT_MUL
