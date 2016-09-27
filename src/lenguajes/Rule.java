@@ -104,11 +104,14 @@ public class Rule {
         for (Action action : actions) {
             excution = excution && action.execute(context);
             if (!excution) {
-                System.out.println("actual rule: "+toString());
-                System.out.println("action: "+action.toString());
+                if (context.isDebug()) {
+                    System.out.println("actual rule: " + toString());
+                    System.out.println("action: " + action.toString());
+                }
                 new SynctacticException(
-                        Collections.singletonList(action.getExpectedTokenID()), 
+                        Collections.singletonList(action.getExpectedTokenID()),
                         context.getToken());
+                return;
             }
         }
     }
@@ -210,5 +213,4 @@ public class Rule {
     public String printPrediction() {
         return Utils.printSet(id, "predictions", conditions);
     }
-
 }

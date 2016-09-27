@@ -1,7 +1,9 @@
 S -> SP_LIST P
 SP_LIST -> epsilon
 SP_LIST -> SP SP_LIST
-SP -> subproceso id COMPLEMENT OPT_SP C finsubproceso
+SP -> subproceso id COMPLEMENT OPT_SP C END_SUBPRO
+END_SUBPRO -> finsubproceso
+END_SUBPRO -> finfuncion
 COMPLEMENT -> token_asig id
 COMPLEMENT -> epsilon
 OPT_SP -> epsilon
@@ -29,7 +31,7 @@ C -> DOWHILE C
 C -> SWITCH C
 C -> WAIT token_pyc C
 C -> CLEAR token_pyc C
-C_OPT -> token_asig E
+C_OPT -> ARRAY_POS token_asig E
 C_OPT -> OPT_ARGS
 C_OPT -> epsilon
 IF -> si E entonces C END_IF
@@ -54,12 +56,15 @@ CLEAR -> borrar SCREEN
 CLEAR -> limpiar SCREEN
 SCREEN -> pantalla
 DIM -> dimension DEF_DIM
-DEF_DIM -> id token_cor_izq EXP_NUM EXP_NUM_LIST token_cor_der DEF_DIM_LIST
+DEF_DIM -> id ARRAY_PARAMS DEF_DIM_LIST
+ARRAY_PARAMS -> token_cor_izq EXP_NUM EXP_NUM_LIST token_cor_der
 DEF_DIM_LIST -> epsilon
 DEF_DIM_LIST -> token_coma DEF_DIM DEF_DIM_LIST
 EXP_NUM_LIST -> epsilon
 EXP_NUM_LIST -> token_coma EXP_NUM EXP_NUM_LIST
-READ -> leer id ID_LIST
+READ -> leer id ARRAY_POS
+ARRAY_POS -> ARRAY_PARAMS
+ARRAY_POS -> epsilon
 WRITE -> escribir E E_LIST
 E_LIST -> token_coma E E_LIST
 E_LIST -> epsilon
@@ -82,8 +87,6 @@ OPT_AND -> epsilon
 OPT_AND -> token_y NOT_FACTOR OPT_AND
 NOT_FACTOR -> token_neg B_FACTOR
 NOT_FACTOR -> B_FACTOR
-B_FACTOR -> verdadero
-B_FACTOR -> falso
 B_FACTOR -> EXP_NUM EXP_NUM_COM
 EXP_NUM_COM -> epsilon
 EXP_NUM_COM -> REL_OPT EXP_NUM EXP_NUM_COM
@@ -116,6 +119,9 @@ FACTOR -> token_cadena
 FACTOR -> token_real
 FACTOR -> token_entero
 FACTOR -> id OPT_FUNCTION
+FACTOR -> verdadero
+FACTOR -> falso
 OPT_FUNCTION -> OPT_ARGS
 OPT_FUNCTION -> epsilon
+OPT_FUNCTION -> ARRAY_PARAMS
 FACTOR -> token_par_izq E token_par_der

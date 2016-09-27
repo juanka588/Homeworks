@@ -31,7 +31,7 @@ public class SyntaticAnalyserTest {
 
     @Test(expected = IllegalAccessError.class)
     public void testAnalyser() throws IOException, FileNotFoundException, LexicalException {
-        SyntacticAnalyser sa = new SyntacticAnalyser("grammarTest.txt", "test1.txt");
+        SyntacticAnalyser sa = new SyntacticAnalyser("grammarTest.txt", "test1.txt", true);
         String cad = sa.printGrammar();
         assertEquals(cad + "2", cad);
     }

@@ -1,4 +1,0 @@
-Proceso Mayores
-    Definir datos,datos2 Como entero;
-    Dimension datos[200.8-102.1,569] ,datos2[10];
-finalgoritmo

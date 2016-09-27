@@ -55,6 +55,4 @@ public class Action {
     public String getExpectedTokenID() {
         return expectedTokenID;
     }
-    
-
 }

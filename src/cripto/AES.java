@@ -35,18 +35,32 @@ public class AES {
         "20", "40", "80", "1B", "36",};
 
     public static void main(String[] args) throws UnsupportedEncodingException {
-        String message = "por fin sirve esto soy muy genial";
-        String key = "OCHOBITSOCHOBITS";
+        String message;
+        String key;
+        String mode;
+        if (args.length != 3) {
+            System.out.println("usage message|cypher key -MODE \n -en : encription -de: decode");
+            return;
+        } else {
+            message = args[0];
+            key = args[1];
+            mode = args[2];
+        }
         if (key.length() != 16) {
-            System.out.println("bad key");
+            System.out.println("bad key\n must have 16 characters lenght");
             return;
         }
-        String cypher = encode(message, key);
-        System.out.println("cypher: " + cypher);
-        System.out.println("cypher HEX: " + Utils.stringToHex(cypher));
-        String getback = decode(cypher, key);
-        System.out.println("decoded: " + getback);
-        System.out.println("decoded HEX: " + Utils.stringToHex(getback));
+        if ("-en".equals(mode)) {
+            String cypher = encode(message, key);
+            System.out.println("cypher: " + cypher);
+            System.out.println("cypher HEX: " + Utils.stringToHex(cypher));
+        } else if ("-de".equals(mode)) {
+            String getback = decode(message, key);
+            System.out.println("decoded: " + getback);
+            System.out.println("decoded HEX: " + Utils.stringToHex(getback));
+        } else {
+            System.out.println("bad parameter " + mode);
+        }
     }
 
     private static String encode(String message, String key) throws UnsupportedEncodingException {

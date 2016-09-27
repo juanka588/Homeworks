@@ -11,7 +11,7 @@ import java.util.Collection;
  *
  * @author JuanCamilo
  */
-class SynctacticException {
+public class SynctacticException {
 
     private Collection<String> expected;
     private Token found;
@@ -20,7 +20,7 @@ class SynctacticException {
         this.expected = expecteds;
         this.found = token;
         System.out.println(toString());
-        System.exit(1);
+        //System.exit(0);
     }
 
     @Override
@@ -30,13 +30,19 @@ class SynctacticException {
         sb.append(found.getRow());
         sb.append(":");
         sb.append(found.getColumn());
-        sb.append("> Error sintactico: se encontro: \"");
+        sb.append("> Error sintactico: ");
+        if (expected.contains("proceso")) {
+            sb.append("falta proceso");
+            return sb.toString();
+        }
+        sb.append("se encontro: \"");
         if (found.getType() == Token.RESERVED) {
             sb.append(found.getTypeString());
         } else {
             sb.append(found.getLexema());
         }
         sb.append("\"; se esperaba: ");
+
         for (String exp : expected) {
             String sub = exp;
             switch (exp) {
@@ -52,15 +58,21 @@ class SynctacticException {
                 case "token_real":
                     sub = "valor_real";
                     break;
+                default:
+                    sub = SpecialWords.RESERVED_SIMBOLS_INV.get(sub);
+                    if (sub == null) {
+                        sub = exp;
+                    }
+                    break;
             }
             sb.append("\"");
             sb.append(sub);
-            sb.append("\",");
+            sb.append("\", ");
         }
         sb.deleteCharAt(sb.lastIndexOf(","));
+        sb.deleteCharAt(sb.lastIndexOf(" "));
         sb.append(".");
         return sb.toString();
 
     }
-
 }

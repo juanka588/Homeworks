@@ -1,7 +1,0 @@
-Proceso mi_proceso
-    Definir c Como Caracter;
-    c <- "";
-    Repetir
-        Leer c;
-    Hasta Que c="salir"
-FinProceso

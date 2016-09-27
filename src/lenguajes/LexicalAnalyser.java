@@ -332,14 +332,12 @@ public class LexicalAnalyser {
             }
             if (tokenList.size() == 1) {
                 token = tokenList.remove(0);
-                System.out.println(token.toString());
             } else {
                 return getNextToken(in, idx);
             }
         } else {
             //fin de archivo
             token = new Token("", row, column, Token.EOF);
-            System.out.println(token.toString());
             in.close();
         }
         return idx + 1;

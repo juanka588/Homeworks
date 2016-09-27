@@ -31,7 +31,7 @@ public class GrammaticalRule {
         this.rules = new ArrayList<>();
         this.firsts = new TreeSet<>();
         this.seconds = new TreeSet<>();
-        this.predictions= new TreeSet<>();
+        this.predictions = new TreeSet<>();
         calculated = false;
     }
 
@@ -70,13 +70,18 @@ public class GrammaticalRule {
         }
         for (Rule rule : rules) {
             if (rule.getConditions().contains(key)) {
-                System.out.println("rule executed: " + rule.toString());
+                if (context.isDebug()) {
+                    System.out.println("rule executed: " + rule.toString());
+                }
                 rule.executeActions(context);
                 return;
             }
         }
-        System.out.println("Gramtical Rule " + fullPrint());
+        if (context.isDebug()) {
+            System.out.println("Gramatical Rule " + fullPrint());
+        }
         new SynctacticException(predictions, context.getToken());
+        return;
     }
 
     public SortedSet<String> getFirsts() {

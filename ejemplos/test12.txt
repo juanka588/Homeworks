@@ -1,8 +1,0 @@
-Proceso mi_proceso
-    Definir a Como texto;
-    a <- "hola";
-    Mientras a<>"mundo" Hacer
-        Escribir a;
-        a <- "mundo";
-    FinMientras
-FinProceso

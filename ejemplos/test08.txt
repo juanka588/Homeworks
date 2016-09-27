@@ -1,8 +1,0 @@
-proceso mi_proceso
-    leer a;
-    leer variable1,variable2,a,b;
-    leer 12,"cadena"; //Error sintactico
-    leer a,b,"v"; //Error sintactico
-    leer a; leer b;
-    leer ; //Error sintactico    
-finproceso

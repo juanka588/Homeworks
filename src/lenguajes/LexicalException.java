@@ -14,7 +14,7 @@ import java.util.logging.Logger;
  *
  * @author JuanCamilo
  */
-class LexicalException extends Exception {
+public class LexicalException extends Exception {
 
     private int row, column;
     private String fileName;
@@ -34,5 +34,4 @@ class LexicalException extends Exception {
     public String toString() {
         return ">>> Error lexico (linea: " + row + ", posicion: " + column + ")";
     }
-
 }

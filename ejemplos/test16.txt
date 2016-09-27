@@ -1,8 +1,0 @@
-SubProceso Saludar
-    Escribir "Hola";
-FinSubProceso
-
-Proceso mi_proceso
-    Saludar;
-    Saludar();
-FinProceso

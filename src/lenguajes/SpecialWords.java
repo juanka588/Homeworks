@@ -16,6 +16,7 @@ public class SpecialWords {
 
     public static final Map<String, Integer> RESERVED_WORDS;
     public static final Map<String, Integer> RESERVED_SIMBOLS;
+    public static final Map<String, String> RESERVED_SIMBOLS_INV;
 
     static {
         RESERVED_WORDS = new HashMap<>();
@@ -83,8 +84,8 @@ public class SpecialWords {
 
         RESERVED_WORDS.put("verdadero", Token.TRUE);
         RESERVED_WORDS.put("falso", Token.FALSE);
-        RESERVED_WORDS.put("v", Token.TRUE);
-        RESERVED_WORDS.put("f", Token.FALSE);
+        //RESERVED_WORDS.put("v", Token.TRUE);
+        //RESERVED_WORDS.put("f", Token.FALSE);
 
         //operadores
         RESERVED_WORDS.put("mod", Token.MODOP);
@@ -114,4 +115,29 @@ public class SpecialWords {
         RESERVED_SIMBOLS.put("^", Token.POWER);
     }
 
+    static {
+        RESERVED_SIMBOLS_INV = new HashMap<>();
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.NEG), "~");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.EQUAL), "=");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.PLUSOP), "+");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.LESSOP), "-");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.MULOP), "*");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.MODOP), "%");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.PYC), ";");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.DOUBLE_POINTS), ":");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.PARIZQ), "(");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.PARDER), ")");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.CORIZQ), "[");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.CORDER), "]");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.OR), "|");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.AND), "&");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.COMMA), ",");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.POWER), "^");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.GT), ">");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.GE), ">=");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.LT), "<");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.LE), "<=");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.DIF), "<>");
+        RESERVED_SIMBOLS_INV.put(Token.getTypeFromInt(Token.ASIGN), "<-");
+    }
 }

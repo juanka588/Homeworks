@@ -1,7 +1,0 @@
-SubProceso variable_de_retorno <- mi_funcion ( Argumentos )
-    //comandos
-FinSubProceso
-
-Proceso mi_proceso
-    mi_funcion(Argumentos)
-finproceso

@@ -1,7 +1,0 @@
-//Declaracion de subprocesos o funciones
-
-proceso mi_proceso
-
-    //Comandos del proceso principal
-
-finproceso

@@ -8,8 +8,6 @@ package cripto;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -19,24 +17,43 @@ public class DES {
 
     public static final int ENCODE = 0;
     public static final int DECODE = 1;
+    private static boolean useHEX = false;
 
-    public static void main(String[] args) {
-        String message = "HOLA HOLA MI MUNDO";
-        String key = "OCHOBITS";
-        if (key.length() != 8) {
-            System.out.println("bad key");
+    public static void main(String[] args) throws UnsupportedEncodingException {
+        String message;
+        String key;
+        String mode;
+        if (args.length < 3 || args.length > 4) {
+            System.out.println("usage message|cypher key -MODE -h \n MODE: -en "
+                    + ": encription -de: decode\n -h: use hexadecimal representation directly for message and key");
+            return;
+        } else {
+            message = args[0];
+            key = args[1];
+            mode = args[2];
+        }
+        if (args.length == 4 && "-h".equals(args[3])) {
+            useHEX = true;
+        } else {
+            System.out.println("using RAW String format for " + DES.class.getTypeName());
+        }
+        if (!useHEX && key.length() != 8) {
+            System.out.println("bad key\n must have 8 characters lenght");
             return;
         }
-        try {
+        if ("-en".equals(mode)) {
             String cypher = encription(message, key);
             System.out.println("cypher: " + cypher);
-            System.out.println("cypher hex: " + Utils.stringToHex(cypher));
-            String decode = decode(cypher, key);
-            System.out.println("decoded : " + decode);
-            System.out.println("decoded hex: " + Utils.stringToHex(decode));
-        } catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(DES.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println("cypher HEX: " + Utils.stringToHex(cypher));
+        } else if ("-de".equals(mode)) {
+            String getback = decode(message, key);
+            System.out.println("decoded: " + getback);
+            System.out.println("decoded HEX: " + Utils.stringToHex(getback));
+        } else {
+            System.out.println("bad parameter " + mode);
+            return;
         }
+        System.out.println("key HEX: " + Utils.stringToHex(key));
     }
 
     private static String process(String cad, String rawKey, int mode) throws UnsupportedEncodingException {
@@ -47,7 +64,11 @@ public class DES {
         String modBlock;
         StringBuilder sb = new StringBuilder();
         for (String block : blocks) {
-            mPermuted = Utils.stringToHex(block);
+            if (useHEX) {
+                mPermuted = block;
+            } else {
+                mPermuted = Utils.stringToHex(block);
+            }
             while (mPermuted.length() < 16) {
                 mPermuted += '0';
             }
@@ -65,6 +86,9 @@ public class DES {
 
     private static List<FullBitSet> generateKeys(String rawKey) {
         String hexKey = Utils.stringToHex(rawKey);
+        if (useHEX) {
+            hexKey = rawKey;
+        }
         FullBitSet k = Utils.bitsToBitSet(Utils.hexToBytes(hexKey));
         return generateKeys(k);
     }
