@@ -1,11 +1,11 @@
 grammar PSGrammar;		
 init:	(sp)* p;
 //definicion de las funciones
-sp: 'subproceso' (ID TOKEN_ASIG)? ID(TOKEN_PAR_IZR (ID (TOKEN_COMA ID)*)? TOKEN_PAR_DER)? command end_sp;
-end_sp: 'finsubproceso'|'finfuncion';
+sp: S U B P R O C E S O (ID TOKEN_ASIG)? ID(TOKEN_PAR_IZR (ID (TOKEN_COMA ID)*)? TOKEN_PAR_DER)? command end_sp;
+end_sp: F I N S U B P R O C E S O| F I N F U N C I O N;
 p: MAIN_BEGIN ID command MAIN_END ;
-MAIN_BEGIN: 'proceso' | 'algoritmo';
-MAIN_END: 'finproceso' | 'finalgoritmo';
+MAIN_BEGIN: P R O C E S O | A L G O R I T M O;
+MAIN_END: F I N P R O C E S O | F I N A L G O R I T M O;
 //definicion de los comandos
 command:  definition TOKEN_PYC (command)*
 		| ID (command_opt)? TOKEN_PYC (command)*;
@@ -14,7 +14,7 @@ command_opt: (array_pos)? TOKEN_ASIG exp|opt_args;
 opt_args: TOKEN_PAR_IZR (args)? TOKEN_PAR_DER;
 args: exp (TOKEN_COMA exp)*;
 array_pos: TOKEN_COR_IZR exp_num (TOKEN_COMA exp_num)* TOKEN_COR_DER;
-definition: 'definir' ID (TOKEN_COMA ID)* 'como' TIPO;
+definition: D E F I N I R ID (TOKEN_COMA ID)* C O M O TIPO;
 
 
 //definicion expresiones
@@ -115,3 +115,32 @@ TOKEN_ENTERO : [0-9]+;
 VERDADERO : 'verdadero';
 FALSO: 'falso';
 WS: [ \t\n\r]->skip;
+
+
+//definion del abecedario
+A:('a'|'A');
+B:('b'|'B');
+C:('c'|'C');
+D:('d'|'D');
+E:('e'|'E');
+F:('f'|'F');
+G:('g'|'G');
+H:('h'|'H');
+I:('i'|'I');
+J:('j'|'J');
+K:('k'|'K');
+L:('l'|'L');
+M:('m'|'M');
+N:('n'|'N');
+O:('o'|'O');
+P:('p'|'P');
+Q:('q'|'Q');
+R:('r'|'R');
+S:('s'|'S');
+T:('t'|'T');
+U:('u'|'U');
+V:('v'|'V');
+W:('w'|'W');
+X:('x'|'X');
+Y:('y'|'Y');
+Z:('z'|'Z');
