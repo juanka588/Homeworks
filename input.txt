@@ -1,0 +1,4 @@
+proceso mi_proceso
+definir a,b,c como entero;
+esperar 5 segundos;
+finproceso

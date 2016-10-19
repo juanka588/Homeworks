@@ -89,7 +89,7 @@ NOT_FACTOR -> token_neg B_FACTOR
 NOT_FACTOR -> B_FACTOR
 B_FACTOR -> EXP_NUM EXP_NUM_COM
 EXP_NUM_COM -> epsilon
-EXP_NUM_COM -> REL_OPT EXP_NUM EXP_NUM_COM
+EXP_NUM_COM -> REL_OPT EXP_NUM
 REL_OPT -> token_igual
 REL_OPT -> token_dif
 REL_OPT -> token_mayor
