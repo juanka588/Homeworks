@@ -47,11 +47,96 @@ public interface PSGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMain_end(PSGrammarParser.Main_endContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PSGrammarParser#command}.
+	 * Visit a parse tree produced by the {@code continue1}
+	 * labeled alternative in {@link PSGrammarParser#command}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCommand(PSGrammarParser.CommandContext ctx);
+	T visitContinue1(PSGrammarParser.Continue1Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continueID}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinueID(PSGrammarParser.ContinueIDContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continue2}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinue2(PSGrammarParser.Continue2Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continue3}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinue3(PSGrammarParser.Continue3Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continue4}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinue4(PSGrammarParser.Continue4Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continue5}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinue5(PSGrammarParser.Continue5Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continue6}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinue6(PSGrammarParser.Continue6Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continue7}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinue7(PSGrammarParser.Continue7Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continue8}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinue8(PSGrammarParser.Continue8Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continue9}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinue9(PSGrammarParser.Continue9Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continue10}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinue10(PSGrammarParser.Continue10Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continue11}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinue11(PSGrammarParser.Continue11Context ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continue12}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinue12(PSGrammarParser.Continue12Context ctx);
 	/**
 	 * Visit a parse tree produced by {@link PSGrammarParser#if_sentence}.
 	 * @param ctx the parse tree
@@ -335,17 +420,31 @@ public interface PSGrammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFactor(PSGrammarParser.FactorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link PSGrammarParser#opt_complement}.
+	 * Visit a parse tree produced by the {@code continue}
+	 * labeled alternative in {@link PSGrammarParser#opt_complement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitOpt_complement(PSGrammarParser.Opt_complementContext ctx);
+	T visitContinue(PSGrammarParser.ContinueContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code array_call}
+	 * labeled alternative in {@link PSGrammarParser#opt_complement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArray_call(PSGrammarParser.Array_callContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PSGrammarParser#tipo}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitTipo(PSGrammarParser.TipoContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link PSGrammarParser#token_mod}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitToken_mod(PSGrammarParser.Token_modContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link PSGrammarParser#token_y}.
 	 * @param ctx the parse tree

@@ -68,15 +68,161 @@ public interface PSGrammarListener extends ParseTreeListener {
 	 */
 	void exitMain_end(PSGrammarParser.Main_endContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PSGrammarParser#command}.
+	 * Enter a parse tree produced by the {@code continue1}
+	 * labeled alternative in {@link PSGrammarParser#command}.
 	 * @param ctx the parse tree
 	 */
-	void enterCommand(PSGrammarParser.CommandContext ctx);
+	void enterContinue1(PSGrammarParser.Continue1Context ctx);
 	/**
-	 * Exit a parse tree produced by {@link PSGrammarParser#command}.
+	 * Exit a parse tree produced by the {@code continue1}
+	 * labeled alternative in {@link PSGrammarParser#command}.
 	 * @param ctx the parse tree
 	 */
-	void exitCommand(PSGrammarParser.CommandContext ctx);
+	void exitContinue1(PSGrammarParser.Continue1Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continueID}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinueID(PSGrammarParser.ContinueIDContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continueID}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinueID(PSGrammarParser.ContinueIDContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continue2}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinue2(PSGrammarParser.Continue2Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continue2}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinue2(PSGrammarParser.Continue2Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continue3}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinue3(PSGrammarParser.Continue3Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continue3}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinue3(PSGrammarParser.Continue3Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continue4}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinue4(PSGrammarParser.Continue4Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continue4}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinue4(PSGrammarParser.Continue4Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continue5}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinue5(PSGrammarParser.Continue5Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continue5}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinue5(PSGrammarParser.Continue5Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continue6}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinue6(PSGrammarParser.Continue6Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continue6}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinue6(PSGrammarParser.Continue6Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continue7}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinue7(PSGrammarParser.Continue7Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continue7}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinue7(PSGrammarParser.Continue7Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continue8}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinue8(PSGrammarParser.Continue8Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continue8}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinue8(PSGrammarParser.Continue8Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continue9}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinue9(PSGrammarParser.Continue9Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continue9}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinue9(PSGrammarParser.Continue9Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continue10}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinue10(PSGrammarParser.Continue10Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continue10}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinue10(PSGrammarParser.Continue10Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continue11}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinue11(PSGrammarParser.Continue11Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continue11}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinue11(PSGrammarParser.Continue11Context ctx);
+	/**
+	 * Enter a parse tree produced by the {@code continue12}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void enterContinue12(PSGrammarParser.Continue12Context ctx);
+	/**
+	 * Exit a parse tree produced by the {@code continue12}
+	 * labeled alternative in {@link PSGrammarParser#command}.
+	 * @param ctx the parse tree
+	 */
+	void exitContinue12(PSGrammarParser.Continue12Context ctx);
 	/**
 	 * Enter a parse tree produced by {@link PSGrammarParser#if_sentence}.
 	 * @param ctx the parse tree
@@ -554,15 +700,29 @@ public interface PSGrammarListener extends ParseTreeListener {
 	 */
 	void exitFactor(PSGrammarParser.FactorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PSGrammarParser#opt_complement}.
+	 * Enter a parse tree produced by the {@code continue}
+	 * labeled alternative in {@link PSGrammarParser#opt_complement}.
 	 * @param ctx the parse tree
 	 */
-	void enterOpt_complement(PSGrammarParser.Opt_complementContext ctx);
+	void enterContinue(PSGrammarParser.ContinueContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PSGrammarParser#opt_complement}.
+	 * Exit a parse tree produced by the {@code continue}
+	 * labeled alternative in {@link PSGrammarParser#opt_complement}.
 	 * @param ctx the parse tree
 	 */
-	void exitOpt_complement(PSGrammarParser.Opt_complementContext ctx);
+	void exitContinue(PSGrammarParser.ContinueContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code array_call}
+	 * labeled alternative in {@link PSGrammarParser#opt_complement}.
+	 * @param ctx the parse tree
+	 */
+	void enterArray_call(PSGrammarParser.Array_callContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code array_call}
+	 * labeled alternative in {@link PSGrammarParser#opt_complement}.
+	 * @param ctx the parse tree
+	 */
+	void exitArray_call(PSGrammarParser.Array_callContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PSGrammarParser#tipo}.
 	 * @param ctx the parse tree
@@ -573,6 +733,16 @@ public interface PSGrammarListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTipo(PSGrammarParser.TipoContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link PSGrammarParser#token_mod}.
+	 * @param ctx the parse tree
+	 */
+	void enterToken_mod(PSGrammarParser.Token_modContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link PSGrammarParser#token_mod}.
+	 * @param ctx the parse tree
+	 */
+	void exitToken_mod(PSGrammarParser.Token_modContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PSGrammarParser#token_y}.
 	 * @param ctx the parse tree

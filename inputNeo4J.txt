@@ -1,0 +1,1 @@
+create (n:Nodo{name:"mi nodo", age:15})

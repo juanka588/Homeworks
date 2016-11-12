@@ -16,7 +16,8 @@ public class Variable<T> {
     public static final int TYPE_INTEGER = 2;
     public static final int TYPE_STRING = 3;
     public static final int TYPE_CHAR = 4;
-    public static final int TYPE_VOID = 5;
+    public static final int TYPE_ARRAY = 5;
+    public static final int TYPE_VOID = 6;
 
     private int type;
     private T value;
@@ -30,8 +31,16 @@ public class Variable<T> {
         return type;
     }
 
+    public void setType(int type) {
+        this.type = type;
+    }
+
     public T getValue() {
         return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
     }
 
     @Override
@@ -39,7 +48,7 @@ public class Variable<T> {
         return getTypeString() + " " + value;
     }
 
-    private String getTypeString() {
+    public String getTypeString() {
         switch (type) {
             case TYPE_BOOLEAN:
                 return "booleano";
@@ -53,6 +62,8 @@ public class Variable<T> {
                 return "real";
             case TYPE_VOID:
                 return "void";
+            case TYPE_ARRAY:
+                return "Arreglo";
         }
         return "error";
     }

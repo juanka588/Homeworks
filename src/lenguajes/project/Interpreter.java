@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lenguajes.antlr;
+package lenguajes.project;
 
+import lenguajes.antlr.*;
 import java.io.File;
 import java.io.FileInputStream;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -18,13 +19,13 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public class Interpreter {
 
     public static void main(String[] args) throws Exception {
-        ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(new File("input.txt")));
-        PSGrammarLexer lexer = new PSGrammarLexer(input);
+        ANTLRInputStream input = new ANTLRInputStream(new FileInputStream(new File("inputNeo4J.txt")));
+        Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
-        PSGrammarParser parser = new PSGrammarParser(tokens);
+        Neo4JParser parser = new Neo4JParser(tokens);
         ParseTree tree = parser.init();
-        PSIntVisitor<Object> loader = new PSIntVisitor<>();
-        System.out.println("output: " + loader.visit(tree));
+        MyNeo4JVisitor<Object> loader = new MyNeo4JVisitor<>();
+        System.out.println("translation " + loader.visit(tree));
     }
 
 }

@@ -2,7 +2,7 @@ grammar PSGrammar;
 init				: (sp)* p;
 
 //definicion de las funciones
-sp					: SUBPROCESO (ID TOKEN_ASIG)? ID(TOKEN_PAR_IZR (ID (TOKEN_COMA ID)*)? TOKEN_PAR_DER)? 
+sp					: (SUBPROCESO | FUNCION) (ID TOKEN_ASIG)? ID(TOKEN_PAR_IZR (ID (TOKEN_COMA ID)*)? TOKEN_PAR_DER)? 
 						command end_sp;
 end_sp				: FINSUBPROCESO | FINFUNCION;
 p					: main_begin ID command main_end ;
@@ -10,19 +10,19 @@ main_begin			: PROCESO | ALGORITMO;
 main_end			: FINPROCESO | FINALGORITMO;
 
 //definicion de los comandos
-command				: definition TOKEN_PYC command
-					| ID (command_opt)? TOKEN_PYC command
-					| read TOKEN_PYC command
-					| write TOKEN_PYC command
-					| dim TOKEN_PYC command
-					| if_sentence command
-					| for_sentence command
-					| while_sentence command
-					| dowhile_sentence command
-					| switch_sentence command
-					| wait_sentence TOKEN_PYC command
-					| clear TOKEN_PYC command
-					|
+command				: definition TOKEN_PYC command 			#continue1
+					| ID (command_opt)? TOKEN_PYC command   #continueID
+					| read TOKEN_PYC command				#continue2
+					| write TOKEN_PYC command				#continue3
+					| dim TOKEN_PYC command					#continue4
+					| if_sentence command					#continue5
+					| for_sentence command					#continue6
+					| while_sentence command				#continue7
+					| dowhile_sentence command				#continue8
+					| switch_sentence command				#continue9
+					| wait_sentence TOKEN_PYC command		#continue10
+					| clear TOKEN_PYC command				#continue11
+					|										#continue12
 					;
 if_sentence			: SI exp ENTONCES command end_if;
 end_if				: FINSI | SINO command FINSI;
@@ -37,11 +37,11 @@ wait_type			: TECLA | exp_num unity;
 unity				: SEGUNDOS | MILISEGUNDOS;
 clear				: BORRAR PANTALLA | LIMPIAR PANTALLA;
 dim					: DIMENSION def_dim;
-def_dim				: ID array_pos def_dim_list;
+def_dim				: ID (array_pos)+ def_dim_list;
 def_dim_list		: TOKEN_COMA def_dim def_dim_list|;
 read				: LEER ID array_pos;
 write				: ESCRIBIR exp (TOKEN_COMA exp)*;
-command_opt			: (array_pos)? TOKEN_ASIG exp 									#alloc
+command_opt			: (array_pos)* TOKEN_ASIG exp 									#alloc
 					| opt_args 														#functionCall;
 opt_args			: TOKEN_PAR_IZR args TOKEN_PAR_DER;
 args				: exp (TOKEN_COMA exp)* |;
@@ -54,10 +54,10 @@ exp					: exp token_o b_term 											#or_operation
 					| b_term														#exp_single;
 b_term				: b_term token_y eq_factor										#and_operation
 					| eq_factor														#b_term_single;
-eq_factor			: eq_factor dif_opt b_factor									#equals_operation
+eq_factor			: b_factor dif_opt b_factor										#equals_operation
 					| b_factor 														#eq_factor_single;
 dif_opt				: TOKEN_IGUAL | TOKEN_DIF;	
-b_factor			: b_factor rel_opt exp_num										#rel_operation
+b_factor			: exp_num rel_opt exp_num										#rel_operation
 					| exp_num														#b_factor_single;
 rel_opt				: TOKEN_MAYOR| TOKEN_MAYOR_IGUAL | TOKEN_MENOR | TOKEN_MENOR_IGUAL;
 exp_num				: exp_num sum_opt mod_term										#sum_operation
@@ -65,18 +65,19 @@ exp_num				: exp_num sum_opt mod_term										#sum_operation
 sum_opt				: TOKEN_MAS | TOKEN_MENOS;
 mod_term			: mod_term mul_opt s_term										#mul_mod_operation
 					| s_term														#mod_term_single;
-mul_opt				: TOKEN_MUL | TOKEN_DIV | TOKEN_MOD;
+mul_opt				: TOKEN_MUL | TOKEN_DIV | token_mod;
 s_term				: s_term TOKEN_POT not_factor									#pot_operation
 					| not_factor													#s_term_single;
 not_factor			: token_neg not_factor 											#negation_operation
 					| factor														#not_factor_single;
 factor				: TOKEN_CADENA | TOKEN_REAL | TOKEN_ENTERO | VERDADERO | FALSO 
 					| TOKEN_PAR_IZR exp TOKEN_PAR_DER | ID (opt_complement)?;
-opt_complement		: opt_args | array_pos;
+opt_complement		: opt_args #continue| (array_pos)+ #array_call;
 
 //palabras reservadas
 SUBPROCESO			: S U B P R O C E S O;
 FINSUBPROCESO		: F I N S U B P R O C E S O;
+FUNCION				: F U N C I O N;
 FINFUNCION			: F I N F U N C I O N;
 PROCESO				: P R O C E S O;
 ALGORITMO			: A L G O R I T M O;
@@ -146,12 +147,12 @@ TOKEN_DIV 			: '/';
 TOKEN_MAS 			: '+';
 TOKEN_MENOS 		: '-';
 TOKEN_POT 			: '^';
-TOKEN_MOD 			: '%';
+token_mod 			: '%'|'mod';
 token_y 			: '&'|'y';
 token_o 			: '|'|'o';
 TOKEN_DOSP 			: ':';
 token_neg 			: '~'|'no';
-TOKEN_CADENA 		: [\"\'][.]*[\"\'];
+TOKEN_CADENA 		: ('"'|'\'')~('\r'|'\n'|'"')*('"'|'\'');
 TOKEN_REAL 			: [0-9]+[.][0-9]+;
 TOKEN_ENTERO 		: [0-9]+;
 WS					: [ \t\n\r]->skip;
