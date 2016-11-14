@@ -14,8 +14,10 @@ import java.util.SortedSet;
 public class SQLSentence {
 
     protected String tableName;
+    protected String alias;
     protected SortedSet<PropertyNeo4J> properties;
     protected String translation;
+
 
     public String getTableName() {
         return tableName;
@@ -39,6 +41,14 @@ public class SQLSentence {
 
     public void setTranslation(String translation) {
         this.translation = translation;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public static String getConditions(String tableName, SortedSet<PropertyNeo4J> props) {

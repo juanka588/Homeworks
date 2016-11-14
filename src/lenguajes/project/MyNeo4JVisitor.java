@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
-import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  *
@@ -21,6 +20,87 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
 
     private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9]+([.][0-9]*)?");
+
+    @Override
+    public T visitInit(Neo4JParser.InitContext ctx) {
+        StringBuilder sb = new StringBuilder();
+        for (Neo4JParser.CreateContext create : ctx.create()) {
+            sb.append(visit(create));
+        }
+        for (Neo4JParser.Select_sentenceContext select : ctx.select_sentence()) {
+            sb.append(visit(select));
+        }
+        return (T) sb.toString();
+    }
+
+    //MATCH basic_query opt_where RETURN exp (TOKEN_COMA exp)* (TOKEN_FIN_LINEA|);
+    @Override
+    public T visitSelect_sentence(Neo4JParser.Select_sentenceContext ctx) {
+        List<SQLSentence> fourElements = (List<SQLSentence>) visit(ctx.basic_query());
+        SQLSentence where = (SQLSentence) visit(ctx.opt_where());
+        StringBuilder projection = new StringBuilder("");
+        int i = 0;
+        for (Neo4JParser.ExpContext exp : ctx.exp()) {
+            projection.append(exp.getText());
+            if (i != ctx.exp().size() - 1) {
+                projection.append(",");
+            }
+            i++;
+        }
+
+        SQLSentence tableCreation1 = fourElements.get(0);
+        SQLSentence tableCreation2 = fourElements.get(2);
+        String joinTableName = tableCreation1.tableName + "_" + tableCreation2.tableName;
+        if (tableCreation1.tableName.compareTo(tableCreation2.tableName) > 0) {
+            joinTableName = tableCreation2.tableName + "_" + tableCreation1.tableName;
+        }
+        StringBuilder result = new StringBuilder();
+
+        result.append("SELECT ");
+        for (PropertyNeo4J props : tableCreation1.getProperties()) {
+            result.append(projection);
+        }
+
+        result.append(" FROM ");
+        result.append(tableCreation1.getTableName());
+        result.append(" AS ");
+        result.append(tableCreation1.getAlias());
+        result.append(" INNER JOIN ");
+        result.append(joinTableName);
+        result.append(" ON ");
+        result.append(tableCreation1.getAlias());
+        result.append(".");
+        result.append(tableCreation1.getTableName().toLowerCase());
+        result.append("_id = ");
+
+        where.setTranslation(where + projection.toString());
+        result.append(" WHERE ");
+        return (T) result;
+    }
+
+    @Override
+    public T visitOpt_where(Neo4JParser.Opt_whereContext ctx) {
+        StringBuilder sb = new StringBuilder("");
+        int i = 0;
+        for (Neo4JParser.ExpContext exp : ctx.exp()) {
+            sb.append(exp.getText());
+            if (i != ctx.exp().size() - 1) {
+                sb.append(" AND ");
+            }
+            i++;
+        }
+        SQLSentence sqlSentence = new SQLSentence();
+        sqlSentence.setTranslation(sb.toString());
+        return (T) sqlSentence;
+    }
+
+    @Override
+    public T visitBasic_query(Neo4JParser.Basic_queryContext ctx) {
+        List<SQLSentence> leftTable = (List<SQLSentence>) visit(ctx.node_def(0));
+        List<SQLSentence> rightTable = (List<SQLSentence>) visit(ctx.node_def(1));
+        leftTable.addAll(rightTable);
+        return (T) new ArrayList<SQLSentence>(leftTable);
+    }
 
     @Override
     public T visitCreate(Neo4JParser.CreateContext ctx) {
@@ -77,11 +157,10 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
     public T visitRelation_def(Neo4JParser.Relation_defContext ctx) {
         List<SQLSentence> result = new ArrayList<>(2);
         List<SQLSentence> leftTable = (List<SQLSentence>) visit(ctx.node_def(0));
-        List<SQLSentence> rightTable = (List<SQLSentence>) visit(ctx.node_def(0));
+        List<SQLSentence> rightTable = (List<SQLSentence>) visit(ctx.node_def(1));
         String label = (String) visit(ctx.relation_type());
 
         SortedSet<PropertyNeo4J> originProps, destinantionProps;
-        Map<String, TableDefinition> tds = new HashMap<>();
         String tname1 = leftTable.get(0).getTableName(), tname2 = rightTable.get(0).getTableName();
         String joinTableName, origin = tname1, destinantion = tname2;
         originProps = leftTable.get(0).getProperties();
@@ -98,7 +177,7 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         props.add(new PropertyNeo4J("origin", origin, "LONG", true));
         props.add(new PropertyNeo4J("destination", destinantion, "LONG", true));
         props.add(new PropertyNeo4J("label", "Label", "LONG", true));
-        result.add(new TableDefinition(joinTableName, props));
+        result.add(new TableDefinition("", joinTableName, props));
         result.add(new ComplexInsertSentence(joinTableName, origin, destinantion,
                 originProps, destinantionProps, label));
         return (T) result;
@@ -122,10 +201,14 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
     @Override
     public T visitDefinition(Neo4JParser.DefinitionContext ctx) {
         String tableName = ctx.LABEL().getText();
-        SortedSet<PropertyNeo4J> properties = (TreeSet<PropertyNeo4J>) visit(ctx.props_list(0));
+        String alias = ctx.ID().getText();
+        SortedSet<PropertyNeo4J> properties = new TreeSet<>();
+        if (ctx.props_list() != null) {
+            properties = (TreeSet<PropertyNeo4J>) visit(ctx.props_list());
+        }
         List<SQLSentence> sentences = new ArrayList<>(2);
-        sentences.add(new TableDefinition(tableName, properties));
-        sentences.add(new InsertSentence(tableName, properties));
+        sentences.add(new TableDefinition(alias, tableName, properties));
+        sentences.add(new InsertSentence(alias, tableName, properties));
         return (T) sentences;
     }
 

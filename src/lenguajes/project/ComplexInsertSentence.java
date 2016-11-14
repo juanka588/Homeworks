@@ -25,7 +25,7 @@ class ComplexInsertSentence extends SQLSentence {
         sb.append("SET @origin :=(select ");
         sb.append(origin);
         sb.append(".");
-        sb.append(origin);
+        sb.append(origin.toLowerCase());
         sb.append("_id from ");
         sb.append(origin);
         sb.append(" where ");
@@ -35,7 +35,7 @@ class ComplexInsertSentence extends SQLSentence {
         sb.append("SET @destination :=(select ");
         sb.append(destinantion);
         sb.append(".");
-        sb.append(destinantion);
+        sb.append(destinantion.toLowerCase());
         sb.append("_id from ");
         sb.append(destinantion);
         sb.append(" where ");

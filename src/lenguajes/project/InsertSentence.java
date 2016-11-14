@@ -14,9 +14,14 @@ import java.util.SortedSet;
  */
 public class InsertSentence extends SQLSentence {
 
-    public InsertSentence(String tableName, SortedSet<PropertyNeo4J> properties) {
+    public InsertSentence(String alias, String tableName, SortedSet<PropertyNeo4J> properties) {
         this.tableName = tableName;
         this.properties = properties;
+        this.alias = alias;
+        if (properties.isEmpty()) {
+            this.translation = "";
+            return;
+        }
         StringBuilder insert = new StringBuilder(), values = new StringBuilder();
         insert.append("INSERT INTO ");
         insert.append(tableName);

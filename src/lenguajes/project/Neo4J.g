@@ -1,14 +1,13 @@
 grammar Neo4J;		
 init				:  (create)*|(select_sentence)*;
 
-select_sentence				: MATCH node_def  opt_where RETURN exp (TOKEN_COMA exp)* opt_agregation;
-opt_where					:
-							|;
-opt_agregation				:
+select_sentence				: MATCH basic_query opt_where RETURN exp (TOKEN_COMA exp)* (TOKEN_FIN_LINEA|);
+basic_query					: node_def relation_type node_def;
+opt_where					: WHERE exp (TOKEN_COMA exp)*
 							|;
 create                      : CREATE opt_create (TOKEN_FIN_LINEA|);
 opt_create					: node_def (TOKEN_COMA node_def)*								#create_multiple
-							| relation_def (TOKEN_COMA relation_def)*							#create_relation;
+							| relation_def (TOKEN_COMA relation_def)*						#create_relation;
 							//(n:Node{name:"mike"})-->(m:Node{name:"john"})
 relation_def				: node_def relation_type node_def;
 relation_type				: TOKEN_RELATION												#simple_relation //--
@@ -54,6 +53,7 @@ MATCH						: M A T C H;
 CREATE						: C R E A T E;
 RETURN						: R E T U R N;
 AVG							: A V G;
+AND							: A N D;
 SUM							: S U M;
 DISTINCT 					: D I S T I N C T;
 MAX							: M A X;
@@ -123,7 +123,7 @@ TOKEN_DIRECTED_RELATION 	: '-->';
 TOKEN_POT 					: '^';
 TOKEN_PUNTO					: '.';
 token_mod 					: '%';
-token_y 					: '&';
+token_y 					: '&' | AND;
 token_o 					: '|' | OR;
 TOKEN_XOR 					: X O R;
 TOKEN_DOSP 					: ':';

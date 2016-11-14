@@ -14,9 +14,10 @@ import java.util.TreeSet;
  */
 public class TableDefinition extends SQLSentence implements Comparable<TableDefinition> {
 
-    public TableDefinition(String tableName, SortedSet<PropertyNeo4J> properties) {
+    public TableDefinition(String alias, String tableName, SortedSet<PropertyNeo4J> properties) {
         this.tableName = tableName;
         this.properties = properties;
+        this.alias = alias;
         StringBuilder result = new StringBuilder();
         result.append("CREATE TABLE IF NOT EXISTS ");
         result.append(tableName);
@@ -35,7 +36,7 @@ public class TableDefinition extends SQLSentence implements Comparable<TableDefi
                 result.append(property.getName());
                 result.append(") REFERENCES ");
                 //trick
-                result.append(property.getValue().toLowerCase());
+                result.append(property.getValue());
                 result.append("(");
                 result.append(property.getValue().toLowerCase());
                 result.append("_id),");
@@ -52,7 +53,7 @@ public class TableDefinition extends SQLSentence implements Comparable<TableDefi
         if (td1.getTableName().equals(td2.getTableName())) {
             properties.addAll(td1.getProperties());
             properties.addAll(td2.getProperties());
-            return new TableDefinition(td1.getTableName(), properties);
+            return new TableDefinition(td1.alias, td1.getTableName(), properties);
         } else {
             System.out.println("impossible to fussion");
             return null;

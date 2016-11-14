@@ -18,6 +18,36 @@ public interface Neo4JListener extends ParseTreeListener {
 	 */
 	void exitInit(Neo4JParser.InitContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link Neo4JParser#select_sentence}.
+	 * @param ctx the parse tree
+	 */
+	void enterSelect_sentence(Neo4JParser.Select_sentenceContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Neo4JParser#select_sentence}.
+	 * @param ctx the parse tree
+	 */
+	void exitSelect_sentence(Neo4JParser.Select_sentenceContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Neo4JParser#basic_query}.
+	 * @param ctx the parse tree
+	 */
+	void enterBasic_query(Neo4JParser.Basic_queryContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Neo4JParser#basic_query}.
+	 * @param ctx the parse tree
+	 */
+	void exitBasic_query(Neo4JParser.Basic_queryContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Neo4JParser#opt_where}.
+	 * @param ctx the parse tree
+	 */
+	void enterOpt_where(Neo4JParser.Opt_whereContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Neo4JParser#opt_where}.
+	 * @param ctx the parse tree
+	 */
+	void exitOpt_where(Neo4JParser.Opt_whereContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link Neo4JParser#create}.
 	 * @param ctx the parse tree
 	 */
