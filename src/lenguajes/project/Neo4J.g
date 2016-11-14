@@ -1,7 +1,12 @@
 grammar Neo4J;		
-init				:  create;
+init				:  (create)*|(select_sentence)*;
 
-create                      : CREATE opt_create TOKEN_FIN_LINEA;
+select_sentence				: MATCH node_def  opt_where RETURN exp (TOKEN_COMA exp)* opt_agregation;
+opt_where					:
+							|;
+opt_agregation				:
+							|;
+create                      : CREATE opt_create (TOKEN_FIN_LINEA|);
 opt_create					: node_def (TOKEN_COMA node_def)*								#create_multiple
 							| relation_def (TOKEN_COMA relation_def)*							#create_relation;
 							//(n:Node{name:"mike"})-->(m:Node{name:"john"})
@@ -13,7 +18,7 @@ relation_type				: TOKEN_RELATION												#simple_relation //--
 							//(definition)
 node_def					: TOKEN_PAR_IZR definition TOKEN_PAR_DER;
 							//n : Nodo props_list
-definition					: ID TOKEN_DOSP LABEL (props_list)+; 
+definition					: ID TOKEN_DOSP LABEL (props_list)?; 
 							//{name : 15*3, year:"1993"}
 props_list					: TOKEN_LLAVE_IZR prop (TOKEN_COMA prop)* TOKEN_LLAVE_DER;
 prop						: ID TOKEN_DOSP exp												#property
