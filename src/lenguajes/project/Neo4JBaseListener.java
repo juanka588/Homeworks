@@ -148,13 +148,25 @@ public class Neo4JBaseListener implements Neo4JListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProp(Neo4JParser.PropContext ctx) { }
+	@Override public void enterProperty(Neo4JParser.PropertyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitProp(Neo4JParser.PropContext ctx) { }
+	@Override public void exitProperty(Neo4JParser.PropertyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterQuery_cond(Neo4JParser.Query_condContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitQuery_cond(Neo4JParser.Query_condContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -419,6 +431,18 @@ public class Neo4JBaseListener implements Neo4JListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitFactor(Neo4JParser.FactorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFunction_sentence(Neo4JParser.Function_sentenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFunction_sentence(Neo4JParser.Function_sentenceContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

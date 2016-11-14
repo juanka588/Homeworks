@@ -82,11 +82,19 @@ public interface Neo4JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitProps_list(Neo4JParser.Props_listContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link Neo4JParser#prop}.
+	 * Visit a parse tree produced by the {@code property}
+	 * labeled alternative in {@link Neo4JParser#prop}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitProp(Neo4JParser.PropContext ctx);
+	T visitProperty(Neo4JParser.PropertyContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code query_cond}
+	 * labeled alternative in {@link Neo4JParser#prop}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitQuery_cond(Neo4JParser.Query_condContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code or_operation}
 	 * labeled alternative in {@link Neo4JParser#exp}.
@@ -236,6 +244,12 @@ public interface Neo4JVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFactor(Neo4JParser.FactorContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link Neo4JParser#function_sentence}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunction_sentence(Neo4JParser.Function_sentenceContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link Neo4JParser#relationship_rels}.
 	 * @param ctx the parse tree

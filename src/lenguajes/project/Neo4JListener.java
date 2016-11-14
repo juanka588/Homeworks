@@ -128,15 +128,29 @@ public interface Neo4JListener extends ParseTreeListener {
 	 */
 	void exitProps_list(Neo4JParser.Props_listContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link Neo4JParser#prop}.
+	 * Enter a parse tree produced by the {@code property}
+	 * labeled alternative in {@link Neo4JParser#prop}.
 	 * @param ctx the parse tree
 	 */
-	void enterProp(Neo4JParser.PropContext ctx);
+	void enterProperty(Neo4JParser.PropertyContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link Neo4JParser#prop}.
+	 * Exit a parse tree produced by the {@code property}
+	 * labeled alternative in {@link Neo4JParser#prop}.
 	 * @param ctx the parse tree
 	 */
-	void exitProp(Neo4JParser.PropContext ctx);
+	void exitProperty(Neo4JParser.PropertyContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code query_cond}
+	 * labeled alternative in {@link Neo4JParser#prop}.
+	 * @param ctx the parse tree
+	 */
+	void enterQuery_cond(Neo4JParser.Query_condContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code query_cond}
+	 * labeled alternative in {@link Neo4JParser#prop}.
+	 * @param ctx the parse tree
+	 */
+	void exitQuery_cond(Neo4JParser.Query_condContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code or_operation}
 	 * labeled alternative in {@link Neo4JParser#exp}.
@@ -391,6 +405,16 @@ public interface Neo4JListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitFactor(Neo4JParser.FactorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link Neo4JParser#function_sentence}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunction_sentence(Neo4JParser.Function_sentenceContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link Neo4JParser#function_sentence}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunction_sentence(Neo4JParser.Function_sentenceContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link Neo4JParser#relationship_rels}.
 	 * @param ctx the parse tree

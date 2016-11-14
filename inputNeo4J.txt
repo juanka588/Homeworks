@@ -1,1 +1,1 @@
-create (n:Nodo{name:"mi nodo", age:15})
+create (n:Nodo{name:"mi nodo", age:15}),(b:Nodo{name:"hola bb",song:"una cancion",age:23})

@@ -38,7 +38,21 @@ public class MyNeo4JVisitorTest {
 
     @Test
     public void testCreate1() throws FileNotFoundException, IOException {
-        ANTLRInputStream input=new ANTLRInputStream("create (h:Person{name:\"juan\"})");
+        ANTLRInputStream input = new ANTLRInputStream("create (h:Person{name:\"juan\",age:23})");
+        Neo4JLexer lexer = new Neo4JLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        Neo4JParser parser = new Neo4JParser(tokens);
+        ParseTree tree = parser.init();
+        MyNeo4JVisitor<Object> loader = new MyNeo4JVisitor<>();
+        String translation = (String) loader.visit(tree);
+        assertEquals("CREATE TABLE IF NOT EXISTS Person (person_id LONG NOT NULL AUTO_INCREMENT,name VARCHAR(255)(),age FLOAT(64)(), PRIMARY KEY (person_id));INSERT INTO Person VALUES (\"juan\",23);"
+                , translation);
+    }
+
+    @Test
+    public void testCreate2() throws FileNotFoundException, IOException {
+        ANTLRInputStream input = new ANTLRInputStream("create (h:Person{name:\"juan\",age:23})"
+                + ",(d:Deparment{name:\"Sales\",chief:\"mike\"})");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -47,5 +61,4 @@ public class MyNeo4JVisitorTest {
         String translation = (String) loader.visit(tree);
         assertEquals("CREATE TABLE Person (name varchar());", translation);
     }
-
 }

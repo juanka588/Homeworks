@@ -2,13 +2,13 @@ grammar Neo4J;
 init				:  create;
 
 create                      : CREATE opt_create TOKEN_FIN_LINEA;
-opt_create					: node_def (TOKEN_COMA node_def)*								#create_multiple
-							| relation_def													#create_relation;
-							//(n)-->(m)
-relation_def				: TOKEN_PAR_IZR ID TOKEN_PAR_DER relation_type	TOKEN_PAR_IZR ID TOKEN_PAR_DER;
+opt_create					: node_def (TOKEN_COMA opt_create)*								#create_multiple
+							| relation_def (TOKEN_COMA opt_create)*							#create_relation;
+							//(n:Node{name:"mike"})-->(m:Node{name:"john"})
+relation_def				: node_def relation_type node_def;
 relation_type				: TOKEN_RELATION												#simple_relation //--
 							| TOKEN_DIRECTED_RELATION										#directed_relation //-->
-							| TOKEN_MENOS TOKEN_COR_IZR (definition)+ TOKEN_COR_DER TOKEN_MENOS (TOKEN_MAYOR)+	#complex_relation;
+							| TOKEN_MENOS TOKEN_COR_IZR (definition)? TOKEN_COR_DER TOKEN_MENOS (TOKEN_MAYOR)+	#complex_relation;
 							
 							//(definition)
 node_def					: TOKEN_PAR_IZR definition TOKEN_PAR_DER;
@@ -16,7 +16,8 @@ node_def					: TOKEN_PAR_IZR definition TOKEN_PAR_DER;
 definition					: ID TOKEN_DOSP LABEL (props_list)+; 
 							//{name : 15*3, year:"1993"}
 props_list					: TOKEN_LLAVE_IZR prop (TOKEN_COMA prop)* TOKEN_LLAVE_DER;
-prop						: ID TOKEN_DOSP exp;
+prop						: ID TOKEN_DOSP exp												#property
+							| ID rel_opt exp												#query_cond;
 
 //definicion expresiones
 exp							: exp token_o b_term 											#or_operation
@@ -29,7 +30,7 @@ eq_factor					: b_factor dif_opt b_factor										#equals_operation
 dif_opt						: TOKEN_IGUAL | TOKEN_DIF;	
 b_factor					: exp_num rel_opt exp_num										#rel_operation
 							| exp_num														#b_factor_single;
-rel_opt						: TOKEN_MAYOR| TOKEN_MAYOR_IGUAL | TOKEN_MENOR | TOKEN_MENOR_IGUAL;
+rel_opt						: TOKEN_MAYOR| TOKEN_MAYOR_IGUAL | TOKEN_MENOR | TOKEN_MENOR_IGUAL | TOKEN_IGUAL | TOKEN_REGEX;
 exp_num						: exp_num sum_opt mod_term										#sum_operation
 							| mod_term														#exp_num_single;
 sum_opt						: TOKEN_MAS | TOKEN_MENOS;
@@ -41,8 +42,8 @@ s_term						: s_term TOKEN_POT not_factor									#pot_operation
 not_factor					: token_neg not_factor 											#negation_operation
 							| factor														#not_factor_single;
 factor						: TOKEN_CADENA | TOKEN_REAL | TOKEN_ENTERO | TRUE | FALSE 
-							| TOKEN_PAR_IZR exp TOKEN_PAR_DER | ID;
-
+							| TOKEN_PAR_IZR exp TOKEN_PAR_DER | ID TOKEN_PUNTO ID| function_sentence TOKEN_PAR_IZR exp TOKEN_PAR_DER;
+function_sentence			: AVG | COUNT | SUM | MAX | MIN | DISTINCT;
 //palabras reservadas
 MATCH						: M A T C H;
 CREATE						: C R E A T E;
@@ -115,6 +116,7 @@ TOKEN_MENOS 				: '-';
 TOKEN_RELATION 				: '--';
 TOKEN_DIRECTED_RELATION 	: '-->';
 TOKEN_POT 					: '^';
+TOKEN_PUNTO					: '.';
 token_mod 					: '%';
 token_y 					: '&';
 token_o 					: '|' | OR;

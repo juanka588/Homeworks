@@ -6,7 +6,12 @@
 package lenguajes.project;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -14,26 +19,32 @@ import java.util.List;
  */
 public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
 
-    @Override
-    public T visitInit(Neo4JParser.InitContext ctx) {
-        T visitInit = super.visitInit(ctx); //To change body of generated methods, choose Tools | Templates.
-        return visitInit;
-    }
+    private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9]+([.][0-9]*)?");
 
     @Override
     public T visitCreate(Neo4JParser.CreateContext ctx) {
         T visitInit = visit(ctx.opt_create());
         return visitInit;
-
     }
 
     @Override
     public T visitCreate_multiple(Neo4JParser.Create_multipleContext ctx) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder(), tableDef = new StringBuilder();
+        List<SQLSentence> sentences;
+        Map<String, TableDefinition> tds = new HashMap<>();
+        String tableName;
         for (Neo4JParser.Node_defContext node_def : ctx.node_def()) {
-            sb.append(visit(node_def));
+            sentences = (List<SQLSentence>) visit(node_def);
+            tableName = sentences.get(0).getTableName();
+            if (tds.containsKey(tableName)) {
+                tds.put(tableName, TableDefinition.fussion(tds.get(tableName), (TableDefinition) sentences.get(0)));
+            } else {
+                tds.put(tableName, (TableDefinition) sentences.get(0));
+            }
+            sb.append(sentences.get(1).getTranslation());
         }
-        return (T) sb.toString();
+        tds.forEach((k, v) -> tableDef.append(v.getTranslation()));
+        return (T) tableDef.append(sb).toString();
     }
 
     @Override
@@ -42,41 +53,69 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
     }
 
     @Override
-    public T visitDefinition(Neo4JParser.DefinitionContext ctx) {
-        StringBuilder result = new StringBuilder();
-        StringBuilder insert = new StringBuilder();
-        result.append("CREATE TABLE ");
-        String tableName = ctx.LABEL().getText();
-        result.append(tableName);
-        result.append(" (");
-        List<PropertyNeo4J> properties = (List<PropertyNeo4J>) visit(ctx.props_list(0));
-        PropertyNeo4J property;
-        for (int i = 0; i < properties.size() - 1; i++) {
-            property = properties.get(i);
-            result.append(property.getName());
-            result.append(" ");
-            result.append(property.getType());
-            result.append(",");
-            insert.append(property.getValue());
-            insert.append(",");
+    public T visitCreate_relation(Neo4JParser.Create_relationContext ctx) {
+        StringBuilder sb = new StringBuilder(), tableDef = new StringBuilder();
+        List<SQLSentence> sentences;
+        Map<String, TableDefinition> tds = new HashMap<>();
+        String tableName;
+        for (Neo4JParser.Relation_defContext node_def : ctx.relation_def()) {
+            sentences = (List<SQLSentence>) visit(node_def);
+            tableName = sentences.get(0).getTableName();
+            if (tds.containsKey(tableName)) {
+                tds.put(tableName, TableDefinition.fussion(tds.get(tableName), (TableDefinition) sentences.get(0)));
+            } else {
+                tds.put(tableName, (TableDefinition) sentences.get(0));
+            }
+            sb.append(sentences.get(1).getTranslation());
         }
-        property = properties.get(properties.size() - 1);
-        result.append(property.getName());
-        result.append(" ");
-        result.append(property.getType());
-        result.append(");");
-        insert.append(property.getValue());
-        result.append("INSERT INTO ");
-        result.append(tableName);
-        result.append(" VALUES (");
-        result.append(insert);
-        result.append(");");
-        return (T) result.toString();
+        tds.forEach((k, v) -> tableDef.append(v.getTranslation()));
+        return (T) tableDef.append(sb).toString();
+    }
+
+    @Override
+    public T visitRelation_def(Neo4JParser.Relation_defContext ctx) {
+        List<SQLSentence> result = new ArrayList<>(2);
+        List<SQLSentence> leftTable = (List<SQLSentence>) visit(ctx.node_def(0));
+        List<SQLSentence> rightTable = (List<SQLSentence>) visit(ctx.node_def(0));
+        String label = (String) visit(ctx.relation_type());
+
+        SortedSet<PropertyNeo4J> originProps, destinantionProps;
+        Map<String, TableDefinition> tds = new HashMap<>();
+        String tname1 = leftTable.get(0).getTableName(), tname2 = rightTable.get(0).getTableName();
+        String joinTableName, origin = tname1, destinantion = tname2;
+        originProps = leftTable.get(0).getProperties();
+        destinantionProps = rightTable.get(0).getProperties();
+        if (tname1.compareToIgnoreCase(tname2) > 0) {
+            origin = tname2;
+            destinantion = tname1;
+            originProps = rightTable.get(0).getProperties();
+            destinantionProps = leftTable.get(0).getProperties();
+        }
+        joinTableName = origin + "_" + destinantion;
+
+        SortedSet<PropertyNeo4J> props = new TreeSet<>();
+        props.add(new PropertyNeo4J("origin", origin, "LONG", true));
+        props.add(new PropertyNeo4J("destinantion", destinantion, "LONG", true));
+
+        result.add(new TableDefinition(joinTableName, props));
+        result.add(new ComplexInsertSentence(joinTableName, origin, destinantion,
+                originProps, destinantionProps, label));
+        return (T) result;
+    }
+
+    @Override
+    public T visitDefinition(Neo4JParser.DefinitionContext ctx) {
+        String tableName = ctx.LABEL().getText();
+        SortedSet<PropertyNeo4J> properties = (TreeSet<PropertyNeo4J>) visit(ctx.props_list(0));
+        List<SQLSentence> sentences = new ArrayList<>(2);
+        sentences.add(new TableDefinition(tableName, properties));
+        sentences.add(new InsertSentence(tableName, properties));
+        return (T) sentences;
     }
 
     @Override
     public T visitProps_list(Neo4JParser.Props_listContext ctx) {
-        List<PropertyNeo4J> props = new ArrayList<>();
+        SortedSet<PropertyNeo4J> props = new TreeSet<>();
         for (Neo4JParser.PropContext prop : ctx.prop()) {
             props.add((PropertyNeo4J) visit(prop));
         }
@@ -84,18 +123,32 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
     }
 
     @Override
-    public T visitProp(Neo4JParser.PropContext ctx) {
+    public T visitProperty(Neo4JParser.PropertyContext ctx) {
         PropertyNeo4J prop;
         String name = ctx.ID().getText();
-        String value = (String) visit(ctx.exp());
-        String type = "varchar";
+        String value = ctx.exp().getText();
+        String type = getType(value);
         prop = new PropertyNeo4J(name, value, type);
         return (T) prop;
     }
 
-    @Override
-    public T visitOr_operation(Neo4JParser.Or_operationContext ctx) {
-        return (T) "hola";
+    private String getType(String value) {
+        if (value.contains("&") || value.contains("|") || value.contains("<")
+                || value.contains("=") || value.contains(">") || value.toLowerCase().contains("true")
+                || value.toLowerCase().contains("false")) {
+            return "TINYINT(1)";
+        }
+        if (value.contains("\"") || value.contains("\'")) {
+            return "VARCHAR(255)";
+        }
+        if (value.contains("\"") || value.contains("\'")) {
+            return "VARCHAR(255)";
+        }
+        if (NUMBER_PATTERN.matcher(value).matches()) {
+            return "FLOAT(64)";
+        }
+        throw new IllegalStateException("type can not be infered");
+
     }
 
 }
