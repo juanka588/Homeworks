@@ -61,4 +61,20 @@ public class MyNeo4JVisitorTest {
         String translation = (String) loader.visit(tree);
         assertEquals("CREATE TABLE Person (name varchar());", translation);
     }
+    @Test
+    public void testCreate3() throws FileNotFoundException, IOException {
+        ANTLRInputStream input = new ANTLRInputStream("create (h:Person{name:12345})-[:EMPLOYEE]->(h:Person{name:123})");
+        Neo4JLexer lexer = new Neo4JLexer(input);
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        Neo4JParser parser = new Neo4JParser(tokens);
+        ParseTree tree = parser.init();
+        MyNeo4JVisitor<Object> loader = new MyNeo4JVisitor<>();
+        String translation = (String) loader.visit(tree);
+        
+        assertEquals("CREATE TABLE Person_Person (person_person_id LONG NOT NULL AUTO_INCREMENT,destinantion LONG, FOREIGN KEY (destinantion) REFERENCES Person(Person_id),label LONG, FOREIGN KEY (label) REFERENCES Person(label),origin LONG, FOREIGN KEY (origin) REFERENCES Person(Person_id), PRIMARY KEY (person_person_id));"
+                + "SET @label := (select label.label_id from label where label.label_name=\"EMPLOYEE\" limit 1);"
+                + "SET @origin :=(select Person.Person_id from Person where Person.name=12345 limit 1) ;"
+                + "SET @destination :=(select Person.Person_id from Person where Person.name=12345 limit 1) ;"
+                + "INSERT INTO Person_Person (Person_Person.origin,Person_Person.destination,Person_Person.label ) VALUES (@origin,@destination,@label);", translation);
+    }
 }
