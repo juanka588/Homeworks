@@ -2,13 +2,13 @@ grammar Neo4J;
 init				:  create;
 
 create                      : CREATE opt_create TOKEN_FIN_LINEA;
-opt_create					: node_def (TOKEN_COMA opt_create)*								#create_multiple
-							| relation_def (TOKEN_COMA opt_create)*							#create_relation;
+opt_create					: node_def (TOKEN_COMA node_def)*								#create_multiple
+							| relation_def (TOKEN_COMA relation_def)*							#create_relation;
 							//(n:Node{name:"mike"})-->(m:Node{name:"john"})
 relation_def				: node_def relation_type node_def;
 relation_type				: TOKEN_RELATION												#simple_relation //--
 							| TOKEN_DIRECTED_RELATION										#directed_relation //-->
-							| TOKEN_MENOS TOKEN_COR_IZR (definition)? TOKEN_COR_DER TOKEN_MENOS (TOKEN_MAYOR)+	#complex_relation;
+							| TOKEN_MENOS TOKEN_COR_IZR (TOKEN_DOSP LABEL)? TOKEN_COR_DER TOKEN_MENOS (TOKEN_MAYOR)+	#complex_relation;
 							
 							//(definition)
 node_def					: TOKEN_PAR_IZR definition TOKEN_PAR_DER;

@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
+import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  *
@@ -96,11 +97,26 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         SortedSet<PropertyNeo4J> props = new TreeSet<>();
         props.add(new PropertyNeo4J("origin", origin, "LONG", true));
         props.add(new PropertyNeo4J("destinantion", destinantion, "LONG", true));
-
+        props.add(new PropertyNeo4J("label", destinantion, "LONG", true));
         result.add(new TableDefinition(joinTableName, props));
         result.add(new ComplexInsertSentence(joinTableName, origin, destinantion,
                 originProps, destinantionProps, label));
         return (T) result;
+    }
+
+    @Override
+    public T visitSimple_relation(Neo4JParser.Simple_relationContext ctx) {
+        return (T) "";
+    }
+
+    @Override
+    public T visitDirected_relation(Neo4JParser.Directed_relationContext ctx) {
+        return (T) "";
+    }
+
+    @Override
+    public T visitComplex_relation(Neo4JParser.Complex_relationContext ctx) {
+        return (T) ctx.LABEL().getText();
     }
 
     @Override

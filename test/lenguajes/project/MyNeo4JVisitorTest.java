@@ -45,7 +45,7 @@ public class MyNeo4JVisitorTest {
         ParseTree tree = parser.init();
         MyNeo4JVisitor<Object> loader = new MyNeo4JVisitor<>();
         String translation = (String) loader.visit(tree);
-        assertEquals("CREATE TABLE IF NOT EXISTS Person (person_id LONG NOT NULL AUTO_INCREMENT,name VARCHAR(255)(),age FLOAT(64)(), PRIMARY KEY (person_id));INSERT INTO Person VALUES (\"juan\",23);"
+        assertEquals("CREATE TABLE IF NOT EXISTS Person (person_id LONG NOT NULL AUTO_INCREMENT,name VARCHAR(255),age FLOAT(64), PRIMARY KEY (person_id));INSERT INTO Person VALUES (\"juan\",23);"
                 , translation);
     }
 

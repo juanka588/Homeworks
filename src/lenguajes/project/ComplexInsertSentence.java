@@ -12,16 +12,6 @@ import java.util.SortedSet;
  * @author JuanCamilo
  */
 class ComplexInsertSentence extends SQLSentence {
-    /*
-     SET @label :=(select label.label_id from label where label.label_name="IS_EMPLOYEE" limit 1);
-     SET @origin :=(select client.client_id from client where client.NIT="1020" limit 1);
-     SET @destination :=(select employee.employee_id from employee where employee.document_id="1013642638" limit 1);
-     SELECT @origin,@destination;
-     insert into temp (temp.origin,temp.destinantion) 
-     VALUES(@origin,@destination);
-     select * from temp;
-     */
-//(n:Person{name:"juan"})-[KNOW]-(x:Person{name:"pedro"})
 
     public ComplexInsertSentence(String joinTableName, String origin, String destinantion,
             SortedSet<PropertyNeo4J> originProps, SortedSet<PropertyNeo4J> destinantionProps,
@@ -56,9 +46,10 @@ class ComplexInsertSentence extends SQLSentence {
         sb.append(joinTableName);
         sb.append(".origin,");
         sb.append(joinTableName);
-        sb.append(".destination");
-        sb.append(" ) VALUES (@");
-        sb.append(" );");
+        sb.append(".destination,");
+        sb.append(joinTableName);
+        sb.append(".label");
+        sb.append(" ) VALUES (@origin,@destination,@label);");
         translation = sb.toString();
     }
 
