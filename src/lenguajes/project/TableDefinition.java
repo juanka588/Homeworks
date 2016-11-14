@@ -33,11 +33,11 @@ public class TableDefinition extends SQLSentence implements Comparable<TableDefi
             if (property.isForeing()) {
                 result.append(" FOREIGN KEY (");
                 result.append(property.getName());
-                result.append(") REFERENCES");
+                result.append(") REFERENCES ");
                 //trick
                 result.append(property.getValue());
                 result.append("(");
-                result.append(property.getValue());
+                result.append(property.getValue().toLowerCase());
                 result.append("_id),");
             }
         }

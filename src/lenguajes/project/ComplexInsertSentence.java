@@ -17,6 +17,8 @@ class ComplexInsertSentence extends SQLSentence {
             SortedSet<PropertyNeo4J> originProps, SortedSet<PropertyNeo4J> destinantionProps,
             String label) {
         StringBuilder sb = new StringBuilder();
+        sb.append("CREATE TABLE IF NOT EXISTS label (label_id LONG AUTOINCREMENT,"
+                + " label_name VARCHAR(255) UNIQUE, PRIMARY KEY (label_id));");
         sb.append("SET @label := (select label.label_id from label where label.label_name=\"");
         sb.append(label);
         sb.append("\" limit 1);");
