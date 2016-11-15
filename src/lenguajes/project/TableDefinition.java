@@ -37,7 +37,7 @@ public class TableDefinition extends SQLSentence implements Comparable<TableDefi
                 //trick
                 result.append(property.getValue());
                 result.append("(");
-                result.append(property.getValue());
+                result.append(property.getValue().toLowerCase());
                 result.append("_id),");
             }
         }
