@@ -1,5 +1,5 @@
 grammar Neo4J;		
-init				:  create;
+init				:  (create)*|(select_sentence);
 
 create                      : CREATE opt_create TOKEN_FIN_LINEA;
 opt_create					: node_def (TOKEN_COMA node_def)*								#create_multiple
