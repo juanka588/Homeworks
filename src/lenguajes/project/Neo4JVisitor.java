@@ -23,6 +23,12 @@ public interface Neo4JVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSelect_sentence(Neo4JParser.Select_sentenceContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link Neo4JParser#basic_query}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBasic_query(Neo4JParser.Basic_queryContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link Neo4JParser#opt_where}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

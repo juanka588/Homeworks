@@ -1,2 +1,3 @@
+create (n:Nodo)
 create (n:Nodo{name:"mi nodo", age:15}),(b:Nodo{name:"hola bb",song:"una cancion",age:23})
 create (n:Nodo{age:15})-[:FRIEND_OF]->(n:Nodo{name:"hola bb"})

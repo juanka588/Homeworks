@@ -40,6 +40,18 @@ public class Neo4JBaseListener implements Neo4JListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterBasic_query(Neo4JParser.Basic_queryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBasic_query(Neo4JParser.Basic_queryContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterOpt_where(Neo4JParser.Opt_whereContext ctx) { }
 	/**
 	 * {@inheritDoc}
