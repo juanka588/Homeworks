@@ -46,7 +46,7 @@ s_term						: s_term TOKEN_POT not_factor									#pot_operation
 not_factor					: token_neg not_factor 											#negation_operation
 							| factor														#not_factor_single;
 factor						: TOKEN_CADENA | TOKEN_REAL | TOKEN_ENTERO | TRUE | FALSE 
-							| TOKEN_PAR_IZR exp TOKEN_PAR_DER | ID TOKEN_PUNTO ID| function_sentence TOKEN_PAR_IZR exp TOKEN_PAR_DER;
+							| TOKEN_PAR_IZR exp TOKEN_PAR_DER | ID TOKEN_PUNTO ID| function_sentence TOKEN_PAR_IZR exp TOKEN_PAR_DER | ID;
 function_sentence			: AVG | COUNT | SUM | MAX | MIN | DISTINCT;
 //palabras reservadas
 MATCH						: M A T C H;

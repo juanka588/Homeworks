@@ -40,14 +40,18 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         SQLSentence where = (SQLSentence) visit(ctx.opt_where());
         StringBuilder projection = new StringBuilder("");
         int i = 0;
+        String text;
         for (Neo4JParser.ExpContext exp : ctx.exp()) {
-            projection.append(exp.getText());
+            text = exp.getText();
+            if (!text.contains(".")) {
+                text = text + ".*";
+            }
+            projection.append(text);
             if (i != ctx.exp().size() - 1) {
                 projection.append(",");
             }
             i++;
         }
-
         SQLSentence tableCreation1 = fourElements.get(0);
         SQLSentence tableCreation2 = fourElements.get(2);
         String joinTableName = tableCreation1.tableName + "_" + tableCreation2.tableName;
@@ -55,12 +59,17 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
             joinTableName = tableCreation2.tableName + "_" + tableCreation1.tableName;
         }
         StringBuilder result = new StringBuilder();
-
-        result.append("SELECT ");
-        for (PropertyNeo4J props : tableCreation1.getProperties()) {
-            result.append(projection);
+        String labelCond = " AND " + joinTableName + ".label=";
+        if (!fourElements.get(4).getTranslation().isEmpty()) {
+            result.append("SET @label := (select Label.label_id from Label where Label.label_name=\"");
+            result.append(fourElements.get(4).getTranslation());
+            result.append("\" limit 1);");
+            labelCond += "@label";
+        } else {
+            labelCond = "";
         }
-
+        result.append("SELECT ");
+        result.append(projection);
         result.append(" FROM ");
         result.append(tableCreation1.getTableName());
         result.append(" AS ");
@@ -72,9 +81,35 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         result.append(".");
         result.append(tableCreation1.getTableName().toLowerCase());
         result.append("_id = ");
+        result.append(joinTableName);
+        result.append(".origin ");
 
-        where.setTranslation(where + projection.toString());
+        result.append(" INNER JOIN ");
+        result.append(joinTableName);
+        result.append(" AS ");
+        result.append(tableCreation2.getAlias());
+        result.append(" ON ");
+        result.append(tableCreation2.getAlias());
+        result.append(".");
+        result.append(tableCreation2.getTableName().toLowerCase());
+        result.append("_id = ");
+        result.append(joinTableName);
+        result.append(".destination");
+
+        String conditions1 = SQLSentence.getConditions(tableCreation1.alias, tableCreation1.getProperties());
+        String conditions2 = SQLSentence.getConditions(tableCreation2.alias, tableCreation2.getProperties());
+        String total = "";
+        if (!conditions1.isEmpty()) {
+            total += conditions1;
+            if (!conditions2.isEmpty()) {
+                total += " AND " + conditions2;
+            } else {
+                total += " AND ";
+            }
+        }
+        where.setTranslation(total + where + labelCond);
         result.append(" WHERE ");
+        result.append(where.getTranslation());
         return (T) result;
     }
 
@@ -99,7 +134,11 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         List<SQLSentence> leftTable = (List<SQLSentence>) visit(ctx.node_def(0));
         List<SQLSentence> rightTable = (List<SQLSentence>) visit(ctx.node_def(1));
         leftTable.addAll(rightTable);
-        return (T) new ArrayList<SQLSentence>(leftTable);
+        String label = (String) visit(ctx.relation_type());
+        SQLSentence sql = new SQLSentence();
+        sql.setTranslation(label);
+        leftTable.add(sql);
+        return (T) new ArrayList<>(leftTable);
     }
 
     @Override
@@ -174,9 +213,9 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         joinTableName = origin + "_" + destinantion;
 
         SortedSet<PropertyNeo4J> props = new TreeSet<>();
-        props.add(new PropertyNeo4J("origin", origin, "LONG", true));
-        props.add(new PropertyNeo4J("destination", destinantion, "LONG", true));
-        props.add(new PropertyNeo4J("label", "Label", "LONG", true));
+        props.add(new PropertyNeo4J("origin", origin, "LONG", "=", true));
+        props.add(new PropertyNeo4J("destination", destinantion, "LONG", "=", true));
+        props.add(new PropertyNeo4J("label", "Label", "LONG", "=", true));
         result.add(new TableDefinition("", joinTableName, props));
         result.add(new ComplexInsertSentence(joinTableName, origin, destinantion,
                 originProps, destinantionProps, label));
@@ -227,7 +266,18 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         String name = ctx.ID().getText();
         String value = ctx.exp().getText();
         String type = getType(value);
-        prop = new PropertyNeo4J(name, value, type);
+        prop = new PropertyNeo4J(name, value, type, "=");
+        return (T) prop;
+    }
+
+    @Override
+    public T visitQuery_cond(Neo4JParser.Query_condContext ctx) {
+        PropertyNeo4J prop;
+        String name = ctx.ID().getText();
+        String value = ctx.exp().getText();
+        String type = "";
+        String relop = ctx.rel_opt().getText();
+        prop = new PropertyNeo4J(name, value, type, relop);
         return (T) prop;
     }
 
@@ -246,6 +296,7 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         if (NUMBER_PATTERN.matcher(value).matches()) {
             return "FLOAT(64)";
         }
+        System.out.println("value " + value);
         throw new IllegalStateException("type can not be infered");
 
     }
