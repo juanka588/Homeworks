@@ -28,6 +28,30 @@ public class Neo4JBaseListener implements Neo4JListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterSelect_sentence(Neo4JParser.Select_sentenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSelect_sentence(Neo4JParser.Select_sentenceContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterOpt_where(Neo4JParser.Opt_whereContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitOpt_where(Neo4JParser.Opt_whereContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterCreate(Neo4JParser.CreateContext ctx) { }
 	/**
 	 * {@inheritDoc}

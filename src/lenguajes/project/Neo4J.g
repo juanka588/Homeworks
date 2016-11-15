@@ -1,14 +1,12 @@
 grammar Neo4J;		
 init				:  (create)*|(select_sentence)*;
 
-select_sentence				: MATCH node_def  opt_where RETURN exp (TOKEN_COMA exp)* opt_agregation;
-opt_where					:
-							|;
-opt_agregation				:
+select_sentence				: MATCH node_def opt_where RETURN exp (TOKEN_COMA exp)* (TOKEN_FIN_LINEA|);
+opt_where					: WHERE exp (TOKEN_COMA exp)*
 							|;
 create                      : CREATE opt_create (TOKEN_FIN_LINEA|);
 opt_create					: node_def (TOKEN_COMA node_def)*								#create_multiple
-							| relation_def (TOKEN_COMA relation_def)*							#create_relation;
+							| relation_def (TOKEN_COMA relation_def)*						#create_relation;
 							//(n:Node{name:"mike"})-->(m:Node{name:"john"})
 relation_def				: node_def relation_type node_def;
 relation_type				: TOKEN_RELATION												#simple_relation //--

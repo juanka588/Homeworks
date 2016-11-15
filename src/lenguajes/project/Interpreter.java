@@ -25,7 +25,7 @@ public class Interpreter {
         Neo4JParser parser = new Neo4JParser(tokens);
         ParseTree tree = parser.init();
         MyNeo4JVisitor<Object> loader = new MyNeo4JVisitor<>();
-        System.out.printf("translation " + loader.visit(tree));
+        System.out.println("translation " + loader.visit(tree));
     }
 
 }

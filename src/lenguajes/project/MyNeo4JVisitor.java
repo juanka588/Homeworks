@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
-import org.antlr.v4.runtime.tree.ParseTree;
 
 /**
  *
@@ -22,6 +21,27 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
 
     private static final Pattern NUMBER_PATTERN = Pattern.compile("[0-9]+([.][0-9]*)?");
 
+    @Override
+    public T visitInit(Neo4JParser.InitContext ctx) {
+        StringBuilder sb = new StringBuilder();
+        for (Neo4JParser.CreateContext create : ctx.create()) {
+            sb.append(visit(create));
+        }
+        for (Neo4JParser.Select_sentenceContext select : ctx.select_sentence()) {
+            sb.append(visit(select));
+        }
+        return (T) sb.toString();
+    }
+
+    @Override
+    public T visitSelect_sentence(Neo4JParser.Select_sentenceContext ctx) {
+    
+        
+        return super.visitSelect_sentence(ctx); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    
+    
     @Override
     public T visitCreate(Neo4JParser.CreateContext ctx) {
         T visitInit = visit(ctx.opt_create());
@@ -122,7 +142,7 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
     @Override
     public T visitDefinition(Neo4JParser.DefinitionContext ctx) {
         String tableName = ctx.LABEL().getText();
-        SortedSet<PropertyNeo4J> properties = (TreeSet<PropertyNeo4J>) visit(ctx.props_list(0));
+        SortedSet<PropertyNeo4J> properties = (TreeSet<PropertyNeo4J>) visit(ctx.props_list());
         List<SQLSentence> sentences = new ArrayList<>(2);
         sentences.add(new TableDefinition(tableName, properties));
         sentences.add(new InsertSentence(tableName, properties));
