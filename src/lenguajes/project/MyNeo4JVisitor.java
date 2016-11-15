@@ -43,6 +43,7 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         String text;
         for (Neo4JParser.ExpContext exp : ctx.exp()) {
             text = exp.getText();
+            //TODO: fix problem with functions
             if (!text.contains(".")) {
                 text = text + ".*";
             }
@@ -108,8 +109,10 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
             }
         }
         where.setTranslation(total + where + labelCond);
-        result.append(" WHERE ");
-        result.append(where.getTranslation());
+        if (!where.getTranslation().isEmpty()) {
+            result.append(" WHERE ");
+            result.append(where.getTranslation());
+        }
         return (T) result;
     }
 
@@ -234,6 +237,9 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
 
     @Override
     public T visitComplex_relation(Neo4JParser.Complex_relationContext ctx) {
+        if (ctx.LABEL() == null) {
+            return (T) "";
+        }
         return (T) ctx.LABEL().getText();
     }
 

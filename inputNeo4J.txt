@@ -1,1 +1,1 @@
-match (p:Person{lastName="mango", name<5*3})-[:KNOWS]->(x:Pet{id=15})   return p,x.age
+match (p:Person)-[]->(x:Cat) return avg(p),sum(x.age*5+3-p.age),count(x)
