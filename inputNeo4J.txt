@@ -1,1 +1,1 @@
-match (p:Person)-[]->(x:Cat) return avg(p),sum(x.age*5+3-p.age),count(x)
+match (p:Person) set p.age=50

@@ -18,7 +18,10 @@ class ComplexInsertSentence extends SQLSentence {
             String label) {
         StringBuilder sb = new StringBuilder();
         sb.append("CREATE TABLE IF NOT EXISTS Label (label_id LONG AUTOINCREMENT,"
-                + " label_name VARCHAR(255) UNIQUE, PRIMARY KEY (label_id));");
+                + " label_name VARCHAR(255) UNIQUE, PRIMARY KEY (label_id,label_name));");
+        sb.append("INSERT INTO Label (label_name) VALUES (\"");
+        sb.append(label);
+        sb.append("\";");
         sb.append("SET @label := (select Label.label_id from Label where Label.label_name=\"");
         sb.append(label);
         sb.append("\" limit 1);");

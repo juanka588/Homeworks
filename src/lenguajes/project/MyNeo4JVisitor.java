@@ -44,7 +44,7 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         for (Neo4JParser.ExpContext exp : ctx.exp()) {
             text = exp.getText();
             //TODO: fix problem with functions
-            if (!text.contains(".")) {
+            if (!text.contains(".") && !text.contains("(")) {
                 text = text + ".*";
             }
             projection.append(text);
@@ -54,65 +54,15 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
             i++;
         }
         SQLSentence tableCreation1 = fourElements.get(0);
-        SQLSentence tableCreation2 = fourElements.get(2);
-        String joinTableName = tableCreation1.tableName + "_" + tableCreation2.tableName;
-        if (tableCreation1.tableName.compareTo(tableCreation2.tableName) > 0) {
-            joinTableName = tableCreation2.tableName + "_" + tableCreation1.tableName;
-        }
-        StringBuilder result = new StringBuilder();
-        String labelCond = " AND " + joinTableName + ".label=";
-        if (!fourElements.get(4).getTranslation().isEmpty()) {
-            result.append("SET @label := (select Label.label_id from Label where Label.label_name=\"");
-            result.append(fourElements.get(4).getTranslation());
-            result.append("\" limit 1);");
-            labelCond += "@label";
+        String result;
+        if (fourElements.size() < 3) {
+            result = singleSelect(tableCreation1, ctx, projection.toString(), where.getTranslation());
         } else {
-            labelCond = "";
+            result = doubleSelect(tableCreation1, fourElements.get(2), ctx,
+                    projection.toString(), where.getTranslation(),
+                    fourElements.get(4).getTranslation());
         }
-        result.append("SELECT ");
-        result.append(projection);
-        result.append(" FROM ");
-        result.append(tableCreation1.getTableName());
-        result.append(" AS ");
-        result.append(tableCreation1.getAlias());
-        result.append(" INNER JOIN ");
-        result.append(joinTableName);
-        result.append(" ON ");
-        result.append(tableCreation1.getAlias());
-        result.append(".");
-        result.append(tableCreation1.getTableName().toLowerCase());
-        result.append("_id = ");
-        result.append(joinTableName);
-        result.append(".origin ");
 
-        result.append(" INNER JOIN ");
-        result.append(joinTableName);
-        result.append(" AS ");
-        result.append(tableCreation2.getAlias());
-        result.append(" ON ");
-        result.append(tableCreation2.getAlias());
-        result.append(".");
-        result.append(tableCreation2.getTableName().toLowerCase());
-        result.append("_id = ");
-        result.append(joinTableName);
-        result.append(".destination");
-
-        String conditions1 = SQLSentence.getConditions(tableCreation1.alias, tableCreation1.getProperties());
-        String conditions2 = SQLSentence.getConditions(tableCreation2.alias, tableCreation2.getProperties());
-        String total = "";
-        if (!conditions1.isEmpty()) {
-            total += conditions1;
-            if (!conditions2.isEmpty()) {
-                total += " AND " + conditions2;
-            } else {
-                total += " AND ";
-            }
-        }
-        where.setTranslation(total + where + labelCond);
-        if (!where.getTranslation().isEmpty()) {
-            result.append(" WHERE ");
-            result.append(where.getTranslation());
-        }
         return (T) result;
     }
 
@@ -135,6 +85,9 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
     @Override
     public T visitBasic_query(Neo4JParser.Basic_queryContext ctx) {
         List<SQLSentence> leftTable = (List<SQLSentence>) visit(ctx.node_def(0));
+        if (ctx.node_def(1) == null) {
+            return (T) leftTable;
+        }
         List<SQLSentence> rightTable = (List<SQLSentence>) visit(ctx.node_def(1));
         leftTable.addAll(rightTable);
         String label = (String) visit(ctx.relation_type());
@@ -305,6 +258,118 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         System.out.println("value " + value);
         throw new IllegalStateException("type can not be infered");
 
+    }
+
+    private String singleSelect(SQLSentence tableCreation1,
+            Neo4JParser.Select_sentenceContext ctx, String projection, String where) {
+
+        StringBuilder result = new StringBuilder();
+        if (ctx.RETURN() != null) {
+            result.append("SELECT ");
+            result.append(projection);
+            result.append(" FROM ");
+            result.append(tableCreation1.getTableName());
+            result.append(" AS ");
+            result.append(tableCreation1.getAlias());
+        }
+        if (ctx.DELETE() != null) {
+            result.append("DELETE FROM ");
+            result.append(tableCreation1.getTableName());
+            result.append(" AS ");
+            result.append(tableCreation1.getAlias());
+        }
+        String conditions1 = SQLSentence.getConditions(tableCreation1.alias,
+                tableCreation1.getProperties());
+        String total = "";
+        if (!conditions1.isEmpty()) {
+            total += conditions1 + " AND ";
+        }
+        String where2 = total + where;
+        if (!where2.isEmpty()) {
+            result.append(" WHERE ");
+            result.append(where2);
+        }
+        if (ctx.SET() != null) {
+            result.append("UPDATE ");
+            result.append(tableCreation1.getTableName());
+            result.append(" AS ");
+            result.append(tableCreation1.getAlias());
+            if (!conditions1.isEmpty()) {
+                throw new IllegalStateException("bad sintaxis");
+            }
+            result.append(" SET ");
+            result.append(projection);
+        }
+
+        return result.toString();
+
+    }
+
+    private String doubleSelect(SQLSentence tableCreation1, SQLSentence tableCreation2, Neo4JParser.Select_sentenceContext ctx, String projection, String where, String label) {
+        String joinTableName = tableCreation1.tableName + "_" + tableCreation2.tableName;
+        if (tableCreation1.tableName.compareTo(tableCreation2.tableName) > 0) {
+            joinTableName = tableCreation2.tableName + "_" + tableCreation1.tableName;
+        }
+        StringBuilder result = new StringBuilder();
+        String labelCond = joinTableName + ".label=";
+        if (!label.isEmpty()) {
+            result.append("SET @label := (select Label.label_id from Label where Label.label_name=\"");
+            result.append(label);
+            result.append("\" limit 1);");
+            labelCond += "@label";
+        } else {
+            labelCond = "";
+        }
+        result.append("SELECT ");
+        result.append(projection);
+        result.append(" FROM ");
+        result.append(tableCreation1.getTableName());
+        result.append(" AS ");
+        result.append(tableCreation1.getAlias());
+        result.append(" INNER JOIN ");
+        result.append(joinTableName);
+        result.append(" ON ");
+        result.append(tableCreation1.getAlias());
+        result.append(".");
+        result.append(tableCreation1.getTableName().toLowerCase());
+        result.append("_id = ");
+        result.append(joinTableName);
+        result.append(".origin ");
+
+        result.append(" INNER JOIN ");
+        result.append(joinTableName);
+        result.append(" AS ");
+        result.append(tableCreation2.getAlias());
+        result.append(" ON ");
+        result.append(tableCreation2.getAlias());
+        result.append(".");
+        result.append(tableCreation2.getTableName().toLowerCase());
+        result.append("_id = ");
+        result.append(joinTableName);
+        result.append(".destination");
+
+        String conditions1 = SQLSentence.getConditions(tableCreation1.alias, tableCreation1.getProperties());
+        String conditions2 = SQLSentence.getConditions(tableCreation2.alias, tableCreation2.getProperties());
+        String total = "";
+        if (!conditions1.isEmpty()) {
+            total += conditions1;
+            if (!conditions2.isEmpty()) {
+                total += " AND " + conditions2;
+            } else {
+                total += " AND ";
+            }
+        }
+        String where2 = total + where;
+        if (where2.isEmpty()) {
+            where2 = labelCond;
+        } else {
+            where2 += " AND " + labelCond;
+        }
+        if (!where2.isEmpty()) {
+            result.append(" WHERE ");
+            result.append(where2);
+        }
+        return result.toString();
     }
 
 }
