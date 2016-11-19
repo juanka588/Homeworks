@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>Neo4j to mySQL Project</title>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style>
+            .leftPanel{
+                float: left;
+                display: inline;
+                margin-left: 5%;
+                width: 44%;
+                height: 40em;
+                overflow: hidden;
+            }
+            .rightPanel{
+                display: inline;
+                float: right;
+                margin-right: 5%;
+                width: 44%;
+                height: 40em;
+                overflow: hidden;
+            }
+        </style>
+    </head>
+    <body>
+        <div ><iframe name="sqlFrame" class="leftPanel" src="http://127.0.0.1/phpmyadmin/index.php"></iframe></div>
+        <div ><iframe  class="rightPanel" src="http://localhost:7474"></iframe></div>
+    </body>
+</html>

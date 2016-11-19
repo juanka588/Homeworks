@@ -40,41 +40,29 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         SQLSentence where = (SQLSentence) visit(ctx.opt_where());
         StringBuilder projection = new StringBuilder("");
         int i = 0;
+        String text;
         for (Neo4JParser.ExpContext exp : ctx.exp()) {
-            projection.append(exp.getText());
+            text = exp.getText();
+            //TODO: fix problem with functions
+            if (!text.contains(".") && !text.contains("(")) {
+                text = text + ".*";
+            }
+            projection.append(text);
             if (i != ctx.exp().size() - 1) {
                 projection.append(",");
             }
             i++;
         }
-
         SQLSentence tableCreation1 = fourElements.get(0);
-        SQLSentence tableCreation2 = fourElements.get(2);
-        String joinTableName = tableCreation1.tableName + "_" + tableCreation2.tableName;
-        if (tableCreation1.tableName.compareTo(tableCreation2.tableName) > 0) {
-            joinTableName = tableCreation2.tableName + "_" + tableCreation1.tableName;
-        }
-        StringBuilder result = new StringBuilder();
-
-        result.append("SELECT ");
-        for (PropertyNeo4J props : tableCreation1.getProperties()) {
-            result.append(projection);
+        String result;
+        if (fourElements.size() < 3) {
+            result = singleSelect(tableCreation1, ctx, projection.toString(), where.getTranslation());
+        } else {
+            result = doubleSelect(tableCreation1, fourElements.get(2), ctx,
+                    projection.toString(), where.getTranslation(),
+                    fourElements.get(4).getTranslation());
         }
 
-        result.append(" FROM ");
-        result.append(tableCreation1.getTableName());
-        result.append(" AS ");
-        result.append(tableCreation1.getAlias());
-        result.append(" INNER JOIN ");
-        result.append(joinTableName);
-        result.append(" ON ");
-        result.append(tableCreation1.getAlias());
-        result.append(".");
-        result.append(tableCreation1.getTableName().toLowerCase());
-        result.append("_id = ");
-
-        where.setTranslation(where + projection.toString());
-        result.append(" WHERE ");
         return (T) result;
     }
 
@@ -97,9 +85,16 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
     @Override
     public T visitBasic_query(Neo4JParser.Basic_queryContext ctx) {
         List<SQLSentence> leftTable = (List<SQLSentence>) visit(ctx.node_def(0));
+        if (ctx.node_def(1) == null) {
+            return (T) leftTable;
+        }
         List<SQLSentence> rightTable = (List<SQLSentence>) visit(ctx.node_def(1));
         leftTable.addAll(rightTable);
-        return (T) new ArrayList<SQLSentence>(leftTable);
+        String label = (String) visit(ctx.relation_type());
+        SQLSentence sql = new SQLSentence();
+        sql.setTranslation(label);
+        leftTable.add(sql);
+        return (T) new ArrayList<>(leftTable);
     }
 
     @Override
@@ -174,9 +169,9 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         joinTableName = origin + "_" + destinantion;
 
         SortedSet<PropertyNeo4J> props = new TreeSet<>();
-        props.add(new PropertyNeo4J("origin", origin, "LONG", true));
-        props.add(new PropertyNeo4J("destination", destinantion, "LONG", true));
-        props.add(new PropertyNeo4J("label", "Label", "LONG", true));
+        props.add(new PropertyNeo4J("origin", origin, "LONG", "=", true));
+        props.add(new PropertyNeo4J("destination", destinantion, "LONG", "=", true));
+        props.add(new PropertyNeo4J("label", "Label", "LONG", "=", true));
         result.add(new TableDefinition("", joinTableName, props));
         result.add(new ComplexInsertSentence(joinTableName, origin, destinantion,
                 originProps, destinantionProps, label));
@@ -195,6 +190,9 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
 
     @Override
     public T visitComplex_relation(Neo4JParser.Complex_relationContext ctx) {
+        if (ctx.LABEL() == null) {
+            return (T) "";
+        }
         return (T) ctx.LABEL().getText();
     }
 
@@ -227,7 +225,18 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         String name = ctx.ID().getText();
         String value = ctx.exp().getText();
         String type = getType(value);
-        prop = new PropertyNeo4J(name, value, type);
+        prop = new PropertyNeo4J(name, value, type, "=");
+        return (T) prop;
+    }
+
+    @Override
+    public T visitQuery_cond(Neo4JParser.Query_condContext ctx) {
+        PropertyNeo4J prop;
+        String name = ctx.ID().getText();
+        String value = ctx.exp().getText();
+        String type = "";
+        String relop = ctx.rel_opt().getText();
+        prop = new PropertyNeo4J(name, value, type, relop);
         return (T) prop;
     }
 
@@ -246,8 +255,121 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         if (NUMBER_PATTERN.matcher(value).matches()) {
             return "FLOAT(64)";
         }
+        System.out.println("value " + value);
         throw new IllegalStateException("type can not be infered");
 
+    }
+
+    private String singleSelect(SQLSentence tableCreation1,
+            Neo4JParser.Select_sentenceContext ctx, String projection, String where) {
+
+        StringBuilder result = new StringBuilder();
+        if (ctx.RETURN() != null) {
+            result.append("SELECT ");
+            result.append(projection);
+            result.append(" FROM ");
+            result.append(tableCreation1.getTableName());
+            result.append(" AS ");
+            result.append(tableCreation1.getAlias());
+        }
+        if (ctx.DELETE() != null) {
+            result.append("DELETE FROM ");
+            result.append(tableCreation1.getTableName());
+            result.append(" AS ");
+            result.append(tableCreation1.getAlias());
+        }
+        String conditions1 = SQLSentence.getConditions(tableCreation1.alias,
+                tableCreation1.getProperties());
+        String total = "";
+        if (!conditions1.isEmpty()) {
+            total += conditions1 + " AND ";
+        }
+        String where2 = total + where;
+        if (!where2.isEmpty()) {
+            result.append(" WHERE ");
+            result.append(where2);
+        }
+        if (ctx.SET() != null) {
+            result.append("UPDATE ");
+            result.append(tableCreation1.getTableName());
+            result.append(" AS ");
+            result.append(tableCreation1.getAlias());
+            if (!conditions1.isEmpty()) {
+                throw new IllegalStateException("bad sintaxis");
+            }
+            result.append(" SET ");
+            result.append(projection);
+        }
+
+        return result.toString();
+
+    }
+
+    private String doubleSelect(SQLSentence tableCreation1, SQLSentence tableCreation2, Neo4JParser.Select_sentenceContext ctx, String projection, String where, String label) {
+        String joinTableName = tableCreation1.tableName + "_" + tableCreation2.tableName;
+        if (tableCreation1.tableName.compareTo(tableCreation2.tableName) > 0) {
+            joinTableName = tableCreation2.tableName + "_" + tableCreation1.tableName;
+        }
+        StringBuilder result = new StringBuilder();
+        String labelCond = joinTableName + ".label=";
+        if (!label.isEmpty()) {
+            result.append("SET @label := (select Label.label_id from Label where Label.label_name=\"");
+            result.append(label);
+            result.append("\" limit 1);");
+            labelCond += "@label";
+        } else {
+            labelCond = "";
+        }
+        result.append("SELECT ");
+        result.append(projection);
+        result.append(" FROM ");
+        result.append(tableCreation1.getTableName());
+        result.append(" AS ");
+        result.append(tableCreation1.getAlias());
+        result.append(" INNER JOIN ");
+        result.append(joinTableName);
+        result.append(" ON ");
+        result.append(tableCreation1.getAlias());
+        result.append(".");
+        result.append(tableCreation1.getTableName().toLowerCase());
+        result.append("_id = ");
+        result.append(joinTableName);
+        result.append(".origin ");
+
+        result.append(" INNER JOIN ");
+        result.append(joinTableName);
+        result.append(" AS ");
+        result.append(tableCreation2.getAlias());
+        result.append(" ON ");
+        result.append(tableCreation2.getAlias());
+        result.append(".");
+        result.append(tableCreation2.getTableName().toLowerCase());
+        result.append("_id = ");
+        result.append(joinTableName);
+        result.append(".destination");
+
+        String conditions1 = SQLSentence.getConditions(tableCreation1.alias, tableCreation1.getProperties());
+        String conditions2 = SQLSentence.getConditions(tableCreation2.alias, tableCreation2.getProperties());
+        String total = "";
+        if (!conditions1.isEmpty()) {
+            total += conditions1;
+            if (!conditions2.isEmpty()) {
+                total += " AND " + conditions2;
+            } else {
+                total += " AND ";
+            }
+        }
+        String where2 = total + where;
+        if (where2.isEmpty()) {
+            where2 = labelCond;
+        } else {
+            where2 += " AND " + labelCond;
+        }
+        if (!where2.isEmpty()) {
+            result.append(" WHERE ");
+            result.append(where2);
+        }
+        return result.toString();
     }
 
 }

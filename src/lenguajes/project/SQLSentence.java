@@ -18,7 +18,6 @@ public class SQLSentence {
     protected SortedSet<PropertyNeo4J> properties;
     protected String translation;
 
-
     public String getTableName() {
         return tableName;
     }
@@ -58,7 +57,7 @@ public class SQLSentence {
             sb.append(tableName);
             sb.append(".");
             sb.append(prop.getName());
-            sb.append("=");
+            sb.append(prop.getOperator());
             sb.append(prop.getValue());
             if (i != props.size() - 1) {
                 sb.append(" AND ");
