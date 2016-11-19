@@ -336,7 +336,7 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         result.append(".origin ");
 
         result.append(" INNER JOIN ");
-        result.append(joinTableName);
+        result.append(tableCreation2.getTableName().toLowerCase());
         result.append(" AS ");
         result.append(tableCreation2.getAlias());
         result.append(" ON ");
