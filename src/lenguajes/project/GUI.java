@@ -298,10 +298,12 @@ public class GUI extends javax.swing.JFrame {
         WebElement txArea = child.findElement(By.cssSelector("div > div > textarea"));
         System.out.println(txArea.toString());
         System.out.println(txArea.getTagName() + " text: " + txArea.getText());
+        txArea.click();
         txArea.clear();
-       /* txArea.sendKeys(Keys.TAB);
-        txArea.sendKeys(cypherText);
-               */
+        txArea.sendKeys(Keys.HOME + cypherText);
+    /*    txArea.sendKeys(Keys.TAB);
+        txArea.sendKeys(cypherText);*/
+               
         driver.findElement(By.xpath("//div[@id='stream']/div/div/div/div/div/ul/li[6]/a")).click();
         driver.findElement(By.cssSelector("i.fa.fa-play")).click();
         driver.findElement(By.xpath("//div[@id='stream']/div/div/div/div/div/ul/li[6]/a")).click();

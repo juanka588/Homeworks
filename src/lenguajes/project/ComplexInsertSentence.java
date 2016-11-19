@@ -21,7 +21,7 @@ class ComplexInsertSentence extends SQLSentence {
                 + " label_name VARCHAR(255) UNIQUE, PRIMARY KEY (label_id,label_name));");
         sb.append("INSERT INTO Label (label_name) VALUES (\"");
         sb.append(label);
-        sb.append("\";");
+        sb.append("\");");
         sb.append("SET @label := (select Label.label_id from Label where Label.label_name=\"");
         sb.append(label);
         sb.append("\" limit 1);");
