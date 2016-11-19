@@ -282,25 +282,24 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
                 tableCreation1.getProperties());
         String total = "";
         if (!conditions1.isEmpty()) {
-            total += conditions1 + " AND ";
-        }
-        String where2 = total + where;
-        if (!where2.isEmpty()) {
-            result.append(" WHERE ");
-            result.append(where2);
+            total += conditions1;
+            if (!where.isEmpty()) {
+                total += " AND ";
+            }
         }
         if (ctx.SET() != null) {
             result.append("UPDATE ");
             result.append(tableCreation1.getTableName());
             result.append(" AS ");
             result.append(tableCreation1.getAlias());
-            if (!conditions1.isEmpty()) {
-                throw new IllegalStateException("bad sintaxis");
-            }
             result.append(" SET ");
             result.append(projection);
         }
-
+        String where2 = total + where;
+        if (!where2.isEmpty()) {
+            result.append(" WHERE ");
+            result.append(where2);
+        }
         return result.toString();
 
     }
