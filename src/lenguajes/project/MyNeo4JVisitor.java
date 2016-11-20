@@ -172,9 +172,9 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         joinTableName = origin + "_" + destinantion;
 
         SortedSet<PropertyNeo4J> props = new TreeSet<>();
-        props.add(new PropertyNeo4J("origin", origin, "LONG", "=", true));
-        props.add(new PropertyNeo4J("destination", destinantion, "LONG", "=", true));
-        props.add(new PropertyNeo4J("label", "Label", "LONG", "=", true));
+        props.add(new PropertyNeo4J("origin", origin, "INT(11) NOT NULL", "=", true));
+        props.add(new PropertyNeo4J("destination", destinantion, "INT(11) NOT NULL", "=", true));
+        props.add(new PropertyNeo4J("label", "Label", "INT(11) NOT NULL", "=", true));
         result.add(new TableDefinition("", joinTableName, props));
         result.add(new ComplexInsertSentence(joinTableName, origin, destinantion,
                 originProps, destinantionProps, label));

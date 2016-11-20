@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class SQLViewer extends javax.swing.JFrame {
 
-    public static final String URL = "jdbc:mysql://localhost:3306/test?allowMultiQueries=true",
+    public static final String URL = "jdbc:mysql://localhost:3306/test?t?allowMultiQueries=true&amp;characterEncoding=UTF-8",
             USER = "root", PASSWORD = "12345";
 
     public static String query;
@@ -54,26 +54,27 @@ public class SQLViewer extends javax.swing.JFrame {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             Connection con = (Connection) DriverManager.getConnection(URL, USER, PASSWORD);
-
             Statement stat = (Statement) con.createStatement();
             ResultSet rs = null;
-            boolean execute = stat.execute(query);
-            if (execute) {
-                System.out.println("executed " + query);
-                rs = stat.getResultSet();
-                ResultSetMetaData rsmd = rs.getMetaData();
-                int numberOfColums = rsmd.getColumnCount();
-                for (int i = 1; i <= numberOfColums; i++) {
-                    model.addColumn(rsmd.getColumnLabel(i));
-                }
-
-                while (rs.next()) {
-                    Object[] row = new Object[numberOfColums];
-
-                    for (int i = 0; i < numberOfColums; i++) {
-                        row[i] = rs.getObject(i + 1);
+            for (String split : query.split(";")) {
+                if (!split.isEmpty()) {
+                    boolean execute = stat.execute(split);
+                    if (execute) {
+                        System.out.println("executed " + split);
+                        rs = stat.getResultSet();
+                        ResultSetMetaData rsmd = rs.getMetaData();
+                        int numberOfColums = rsmd.getColumnCount();
+                        for (int i = 1; i <= numberOfColums; i++) {
+                            model.addColumn(rsmd.getColumnLabel(i));
+                        }
+                        while (rs.next()) {
+                            Object[] row = new Object[numberOfColums];
+                            for (int i = 0; i < numberOfColums; i++) {
+                                row[i] = rs.getObject(i + 1);
+                            }
+                            model.addRow(row);
+                        }
                     }
-                    model.addRow(row);
                 }
             }
             rs.close();

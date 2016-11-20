@@ -1,1 +1,1 @@
-match (p:Person) set p.age=50
+match (p:Person{name="juan"}) set p.age=50

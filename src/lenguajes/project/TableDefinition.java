@@ -30,17 +30,16 @@ public class TableDefinition extends SQLSentence implements Comparable<TableDefi
             result.append(property.getName());
             result.append(" ");
             result.append(property.getType());
-            result.append(",");
+
             if (property.isForeing()) {
-                result.append(" FOREIGN KEY (");
-                result.append(property.getName());
-                result.append(") REFERENCES ");
+                result.append(" REFERENCES ");
                 //trick
                 result.append(property.getValue());
                 result.append("(");
                 result.append(property.getValue().toLowerCase());
-                result.append("_id),");
+                result.append("_id)");
             }
+            result.append(",");
         }
         result.append(" PRIMARY KEY (");
         result.append(id);

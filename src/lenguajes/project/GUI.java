@@ -63,7 +63,7 @@ public class GUI extends javax.swing.JFrame {
     public GUI() {
         initComponents();
         setKeyBindings();
-     /*   System.setProperty("webdriver.gecko.driver", "D:\\Selenium\\Firefox driver\\geckodriver.exe");
+        System.setProperty("webdriver.gecko.driver", "D:\\Selenium\\Firefox driver\\geckodriver.exe");
         driver = new FirefoxDriver();
         baseUrl = "http://localhost:7474";
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -74,7 +74,6 @@ public class GUI extends javax.swing.JFrame {
         element.clear();
         element.sendKeys("12345");
         driver.findElement(By.id("connect_button")).click();
-        */
         drawComponents();
     }
 
@@ -181,7 +180,7 @@ public class GUI extends javax.swing.JFrame {
         translation = (String) loader.visit(tree);
         System.out.println("translation " + translation);
         output.setText(translation.replaceAll(";", ";\n").replaceAll(",", ",\n"));
-       // openBrowser(cypherText);
+        openBrowser(cypherText);
         drawComponents();
 
     }//GEN-LAST:event_jButton1ActionPerformed
