@@ -43,7 +43,7 @@ public class InsertSentence extends SQLSentence {
         insert.append(")");
         values.append(")");
         insert.append(values);
-        insert.append(";");
+        insert.append("; ");
         this.translation = insert.toString();
     }
 

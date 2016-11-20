@@ -25,7 +25,7 @@ public class TableDefinition extends SQLSentence implements Comparable<TableDefi
         //add id
         String id = tableName.toLowerCase() + "_id";
         result.append(id);
-        result.append(" LONG NOT NULL AUTO_INCREMENT,");
+        result.append(" INT(11) auto_increment,");
         for (PropertyNeo4J property : properties) {
             result.append(property.getName());
             result.append(" ");
@@ -44,7 +44,7 @@ public class TableDefinition extends SQLSentence implements Comparable<TableDefi
         }
         result.append(" PRIMARY KEY (");
         result.append(id);
-        result.append("));");
+        result.append(")); ");
         this.translation = result.toString();
     }
 

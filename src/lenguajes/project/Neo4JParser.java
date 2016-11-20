@@ -215,10 +215,6 @@ public class Neo4JParser extends Parser {
 	}
 
 	public static class Select_sentenceContext extends ParserRuleContext {
-		public TerminalNode MATCH() { return getToken(Neo4JParser.MATCH, 0); }
-		public Basic_queryContext basic_query() {
-			return getRuleContext(Basic_queryContext.class,0);
-		}
 		public Opt_whereContext opt_where() {
 			return getRuleContext(Opt_whereContext.class,0);
 		}
@@ -232,6 +228,16 @@ public class Neo4JParser extends Parser {
 		public TerminalNode SET() { return getToken(Neo4JParser.SET, 0); }
 		public TerminalNode DELETE() { return getToken(Neo4JParser.DELETE, 0); }
 		public TerminalNode TOKEN_FIN_LINEA() { return getToken(Neo4JParser.TOKEN_FIN_LINEA, 0); }
+		public List<TerminalNode> MATCH() { return getTokens(Neo4JParser.MATCH); }
+		public TerminalNode MATCH(int i) {
+			return getToken(Neo4JParser.MATCH, i);
+		}
+		public List<Basic_queryContext> basic_query() {
+			return getRuleContexts(Basic_queryContext.class);
+		}
+		public Basic_queryContext basic_query(int i) {
+			return getRuleContext(Basic_queryContext.class,i);
+		}
 		public List<TerminalNode> TOKEN_COMA() { return getTokens(Neo4JParser.TOKEN_COMA); }
 		public TerminalNode TOKEN_COMA(int i) {
 			return getToken(Neo4JParser.TOKEN_COMA, i);
@@ -262,42 +268,54 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(78);
-			match(MATCH);
-			setState(79);
-			basic_query();
-			setState(80);
+			setState(80); 
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			do {
+				{
+				{
+				setState(78);
+				match(MATCH);
+				setState(79);
+				basic_query();
+				}
+				}
+				setState(82); 
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			} while ( _la==MATCH );
+			setState(84);
 			opt_where();
-			setState(81);
+			setState(85);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << RETURN) | (1L << SET) | (1L << DELETE))) != 0)) ) {
 			_errHandler.recoverInline(this);
 			} else {
 				consume();
 			}
-			setState(82);
+			setState(86);
 			exp(0);
-			setState(87);
+			setState(91);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==TOKEN_COMA) {
 				{
 				{
-				setState(83);
+				setState(87);
 				match(TOKEN_COMA);
-				setState(84);
+				setState(88);
 				exp(0);
 				}
 				}
-				setState(89);
+				setState(93);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(92);
+			setState(96);
 			switch (_input.LA(1)) {
 			case TOKEN_FIN_LINEA:
 				{
-				setState(90);
+				setState(94);
 				match(TOKEN_FIN_LINEA);
 				}
 				break;
@@ -358,15 +376,15 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(94);
-			node_def();
 			setState(98);
+			node_def();
+			setState(102);
 			_la = _input.LA(1);
 			if (((((_la - 70)) & ~0x3f) == 0 && ((1L << (_la - 70)) & ((1L << (TOKEN_MENOS - 70)) | (1L << (TOKEN_RELATION - 70)) | (1L << (TOKEN_DIRECTED_RELATION - 70)))) != 0)) {
 				{
-				setState(95);
+				setState(99);
 				relation_type();
-				setState(96);
+				setState(100);
 				node_def();
 				}
 			}
@@ -420,28 +438,28 @@ public class Neo4JParser extends Parser {
 		enterRule(_localctx, 6, RULE_opt_where);
 		int _la;
 		try {
-			setState(110);
+			setState(114);
 			switch (_input.LA(1)) {
 			case WHERE:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(100);
+				setState(104);
 				match(WHERE);
-				setState(101);
+				setState(105);
 				exp(0);
-				setState(106);
+				setState(110);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==TOKEN_COMA) {
 					{
 					{
-					setState(102);
+					setState(106);
 					match(TOKEN_COMA);
-					setState(103);
+					setState(107);
 					exp(0);
 					}
 					}
-					setState(108);
+					setState(112);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
@@ -500,15 +518,15 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(112);
-			match(CREATE);
-			setState(113);
-			opt_create();
 			setState(116);
+			match(CREATE);
+			setState(117);
+			opt_create();
+			setState(120);
 			switch (_input.LA(1)) {
 			case TOKEN_FIN_LINEA:
 				{
-				setState(114);
+				setState(118);
 				match(TOKEN_FIN_LINEA);
 				}
 				break;
@@ -602,28 +620,28 @@ public class Neo4JParser extends Parser {
 		enterRule(_localctx, 10, RULE_opt_create);
 		int _la;
 		try {
-			setState(134);
+			setState(138);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,11,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,12,_ctx) ) {
 			case 1:
 				_localctx = new Create_multipleContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(118);
+				setState(122);
 				node_def();
-				setState(123);
+				setState(127);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==TOKEN_COMA) {
 					{
 					{
-					setState(119);
+					setState(123);
 					match(TOKEN_COMA);
-					setState(120);
+					setState(124);
 					node_def();
 					}
 					}
-					setState(125);
+					setState(129);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
@@ -633,21 +651,21 @@ public class Neo4JParser extends Parser {
 				_localctx = new Create_relationContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(126);
+				setState(130);
 				relation_def();
-				setState(131);
+				setState(135);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				while (_la==TOKEN_COMA) {
 					{
 					{
-					setState(127);
+					setState(131);
 					match(TOKEN_COMA);
-					setState(128);
+					setState(132);
 					relation_def();
 					}
 					}
-					setState(133);
+					setState(137);
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				}
@@ -701,11 +719,11 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(136);
+			setState(140);
 			node_def();
-			setState(137);
+			setState(141);
 			relation_type();
-			setState(138);
+			setState(142);
 			node_def();
 			}
 		}
@@ -799,13 +817,13 @@ public class Neo4JParser extends Parser {
 		enterRule(_localctx, 14, RULE_relation_type);
 		int _la;
 		try {
-			setState(155);
+			setState(159);
 			switch (_input.LA(1)) {
 			case TOKEN_RELATION:
 				_localctx = new Simple_relationContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(140);
+				setState(144);
 				match(TOKEN_RELATION);
 				}
 				break;
@@ -813,7 +831,7 @@ public class Neo4JParser extends Parser {
 				_localctx = new Directed_relationContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(141);
+				setState(145);
 				match(TOKEN_DIRECTED_RELATION);
 				}
 				break;
@@ -821,36 +839,36 @@ public class Neo4JParser extends Parser {
 				_localctx = new Complex_relationContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(142);
-				match(TOKEN_MENOS);
-				setState(143);
-				match(TOKEN_COR_IZR);
 				setState(146);
+				match(TOKEN_MENOS);
+				setState(147);
+				match(TOKEN_COR_IZR);
+				setState(150);
 				_la = _input.LA(1);
 				if (_la==TOKEN_DOSP) {
 					{
-					setState(144);
+					setState(148);
 					match(TOKEN_DOSP);
-					setState(145);
+					setState(149);
 					match(LABEL);
 					}
 				}
 
-				setState(148);
+				setState(152);
 				match(TOKEN_COR_DER);
-				setState(149);
+				setState(153);
 				match(TOKEN_MENOS);
-				setState(151); 
+				setState(155); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(150);
+					setState(154);
 					match(TOKEN_MAYOR);
 					}
 					}
-					setState(153); 
+					setState(157); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
 				} while ( _la==TOKEN_MAYOR );
@@ -902,11 +920,11 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(157);
+			setState(161);
 			match(TOKEN_PAR_IZR);
-			setState(158);
+			setState(162);
 			definition();
-			setState(159);
+			setState(163);
 			match(TOKEN_PAR_DER);
 			}
 		}
@@ -954,17 +972,17 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(161);
-			match(ID);
-			setState(162);
-			match(TOKEN_DOSP);
-			setState(163);
-			match(LABEL);
 			setState(165);
+			match(ID);
+			setState(166);
+			match(TOKEN_DOSP);
+			setState(167);
+			match(LABEL);
+			setState(169);
 			_la = _input.LA(1);
 			if (_la==TOKEN_LLAVE_IZR) {
 				{
-				setState(164);
+				setState(168);
 				props_list();
 				}
 			}
@@ -1021,27 +1039,27 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(167);
+			setState(171);
 			match(TOKEN_LLAVE_IZR);
-			setState(168);
+			setState(172);
 			prop();
-			setState(173);
+			setState(177);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			while (_la==TOKEN_COMA) {
 				{
 				{
-				setState(169);
+				setState(173);
 				match(TOKEN_COMA);
-				setState(170);
+				setState(174);
 				prop();
 				}
 				}
-				setState(175);
+				setState(179);
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 			}
-			setState(176);
+			setState(180);
 			match(TOKEN_LLAVE_DER);
 			}
 		}
@@ -1116,18 +1134,18 @@ public class Neo4JParser extends Parser {
 		PropContext _localctx = new PropContext(_ctx, getState());
 		enterRule(_localctx, 22, RULE_prop);
 		try {
-			setState(185);
+			setState(189);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,17,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,18,_ctx) ) {
 			case 1:
 				_localctx = new PropertyContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(178);
+				setState(182);
 				match(ID);
-				setState(179);
+				setState(183);
 				match(TOKEN_DOSP);
-				setState(180);
+				setState(184);
 				exp(0);
 				}
 				break;
@@ -1135,11 +1153,11 @@ public class Neo4JParser extends Parser {
 				_localctx = new Query_condContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(181);
+				setState(185);
 				match(ID);
-				setState(182);
+				setState(186);
 				rel_opt();
-				setState(183);
+				setState(187);
 				exp(0);
 				}
 				break;
@@ -1255,30 +1273,30 @@ public class Neo4JParser extends Parser {
 			_ctx = _localctx;
 			_prevctx = _localctx;
 
-			setState(188);
+			setState(192);
 			b_term(0);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(199);
+			setState(203);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,19,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,20,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					setState(197);
+					setState(201);
 					_errHandler.sync(this);
-					switch ( getInterpreter().adaptivePredict(_input,18,_ctx) ) {
+					switch ( getInterpreter().adaptivePredict(_input,19,_ctx) ) {
 					case 1:
 						{
 						_localctx = new Or_operationContext(new ExpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_exp);
-						setState(190);
+						setState(194);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-						setState(191);
+						setState(195);
 						token_o();
-						setState(192);
+						setState(196);
 						b_term(0);
 						}
 						break;
@@ -1286,20 +1304,20 @@ public class Neo4JParser extends Parser {
 						{
 						_localctx = new Xor_operationContext(new ExpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_exp);
-						setState(194);
+						setState(198);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(195);
+						setState(199);
 						match(TOKEN_XOR);
-						setState(196);
+						setState(200);
 						b_term(0);
 						}
 						break;
 					}
 					} 
 				}
-				setState(201);
+				setState(205);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,19,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,20,_ctx);
 			}
 			}
 		}
@@ -1390,13 +1408,13 @@ public class Neo4JParser extends Parser {
 			_ctx = _localctx;
 			_prevctx = _localctx;
 
-			setState(203);
+			setState(207);
 			eq_factor();
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(211);
+			setState(215);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,20,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,21,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
@@ -1405,18 +1423,18 @@ public class Neo4JParser extends Parser {
 					{
 					_localctx = new And_operationContext(new B_termContext(_parentctx, _parentState));
 					pushNewRecursionContext(_localctx, _startState, RULE_b_term);
-					setState(205);
+					setState(209);
 					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-					setState(206);
+					setState(210);
 					token_y();
-					setState(207);
+					setState(211);
 					eq_factor();
 					}
 					} 
 				}
-				setState(213);
+				setState(217);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,20,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,21,_ctx);
 			}
 			}
 		}
@@ -1491,18 +1509,18 @@ public class Neo4JParser extends Parser {
 		Eq_factorContext _localctx = new Eq_factorContext(_ctx, getState());
 		enterRule(_localctx, 28, RULE_eq_factor);
 		try {
-			setState(219);
+			setState(223);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,21,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,22,_ctx) ) {
 			case 1:
 				_localctx = new Equals_operationContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(214);
+				setState(218);
 				b_factor();
-				setState(215);
+				setState(219);
 				dif_opt();
-				setState(216);
+				setState(220);
 				b_factor();
 				}
 				break;
@@ -1510,7 +1528,7 @@ public class Neo4JParser extends Parser {
 				_localctx = new Eq_factor_singleContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(218);
+				setState(222);
 				b_factor();
 				}
 				break;
@@ -1556,7 +1574,7 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(221);
+			setState(225);
 			_la = _input.LA(1);
 			if ( !(_la==TOKEN_IGUAL || _la==TOKEN_DIF) ) {
 			_errHandler.recoverInline(this);
@@ -1636,18 +1654,18 @@ public class Neo4JParser extends Parser {
 		B_factorContext _localctx = new B_factorContext(_ctx, getState());
 		enterRule(_localctx, 32, RULE_b_factor);
 		try {
-			setState(228);
+			setState(232);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,22,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,23,_ctx) ) {
 			case 1:
 				_localctx = new Rel_operationContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(223);
+				setState(227);
 				exp_num(0);
-				setState(224);
+				setState(228);
 				rel_opt();
-				setState(225);
+				setState(229);
 				exp_num(0);
 				}
 				break;
@@ -1655,7 +1673,7 @@ public class Neo4JParser extends Parser {
 				_localctx = new B_factor_singleContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(227);
+				setState(231);
 				exp_num(0);
 				}
 				break;
@@ -1705,7 +1723,7 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(230);
+			setState(234);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << TOKEN_IGUAL) | (1L << TOKEN_REGEX) | (1L << TOKEN_MAYOR) | (1L << TOKEN_MAYOR_IGUAL) | (1L << TOKEN_MENOR) | (1L << TOKEN_MENOR_IGUAL))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -1801,13 +1819,13 @@ public class Neo4JParser extends Parser {
 			_ctx = _localctx;
 			_prevctx = _localctx;
 
-			setState(233);
+			setState(237);
 			mod_term(0);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(241);
+			setState(245);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,24,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
@@ -1816,18 +1834,18 @@ public class Neo4JParser extends Parser {
 					{
 					_localctx = new Sum_operationContext(new Exp_numContext(_parentctx, _parentState));
 					pushNewRecursionContext(_localctx, _startState, RULE_exp_num);
-					setState(235);
+					setState(239);
 					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-					setState(236);
+					setState(240);
 					sum_opt();
-					setState(237);
+					setState(241);
 					mod_term(0);
 					}
 					} 
 				}
-				setState(243);
+				setState(247);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,23,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,24,_ctx);
 			}
 			}
 		}
@@ -1871,7 +1889,7 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(244);
+			setState(248);
 			_la = _input.LA(1);
 			if ( !(_la==TOKEN_MAS || _la==TOKEN_MENOS) ) {
 			_errHandler.recoverInline(this);
@@ -1967,13 +1985,13 @@ public class Neo4JParser extends Parser {
 			_ctx = _localctx;
 			_prevctx = _localctx;
 
-			setState(247);
+			setState(251);
 			s_term(0);
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(255);
+			setState(259);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,24,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,25,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
@@ -1982,18 +2000,18 @@ public class Neo4JParser extends Parser {
 					{
 					_localctx = new Mul_mod_operationContext(new Mod_termContext(_parentctx, _parentState));
 					pushNewRecursionContext(_localctx, _startState, RULE_mod_term);
-					setState(249);
+					setState(253);
 					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-					setState(250);
+					setState(254);
 					mul_opt();
-					setState(251);
+					setState(255);
 					s_term(0);
 					}
 					} 
 				}
-				setState(257);
+				setState(261);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,24,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,25,_ctx);
 			}
 			}
 		}
@@ -2037,26 +2055,26 @@ public class Neo4JParser extends Parser {
 		Mul_optContext _localctx = new Mul_optContext(_ctx, getState());
 		enterRule(_localctx, 42, RULE_mul_opt);
 		try {
-			setState(261);
+			setState(265);
 			switch (_input.LA(1)) {
 			case TOKEN_MUL:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(258);
+				setState(262);
 				match(TOKEN_MUL);
 				}
 				break;
 			case TOKEN_DIV:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(259);
+				setState(263);
 				match(TOKEN_DIV);
 				}
 				break;
 			case T__0:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(260);
+				setState(264);
 				token_mod();
 				}
 				break;
@@ -2149,13 +2167,13 @@ public class Neo4JParser extends Parser {
 			_ctx = _localctx;
 			_prevctx = _localctx;
 
-			setState(264);
+			setState(268);
 			not_factor();
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(271);
+			setState(275);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,26,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,27,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
@@ -2164,18 +2182,18 @@ public class Neo4JParser extends Parser {
 					{
 					_localctx = new Pot_operationContext(new S_termContext(_parentctx, _parentState));
 					pushNewRecursionContext(_localctx, _startState, RULE_s_term);
-					setState(266);
+					setState(270);
 					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-					setState(267);
+					setState(271);
 					match(TOKEN_POT);
-					setState(268);
+					setState(272);
 					not_factor();
 					}
 					} 
 				}
-				setState(273);
+				setState(277);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,26,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,27,_ctx);
 			}
 			}
 		}
@@ -2247,16 +2265,16 @@ public class Neo4JParser extends Parser {
 		Not_factorContext _localctx = new Not_factorContext(_ctx, getState());
 		enterRule(_localctx, 46, RULE_not_factor);
 		try {
-			setState(278);
+			setState(282);
 			switch (_input.LA(1)) {
 			case T__3:
 			case NOT:
 				_localctx = new Negation_operationContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(274);
+				setState(278);
 				token_neg();
-				setState(275);
+				setState(279);
 				not_factor();
 				}
 				break;
@@ -2276,7 +2294,7 @@ public class Neo4JParser extends Parser {
 				_localctx = new Not_factor_singleContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(277);
+				setState(281);
 				factor();
 				}
 				break;
@@ -2337,83 +2355,83 @@ public class Neo4JParser extends Parser {
 		FactorContext _localctx = new FactorContext(_ctx, getState());
 		enterRule(_localctx, 48, RULE_factor);
 		try {
-			setState(298);
+			setState(302);
 			_errHandler.sync(this);
-			switch ( getInterpreter().adaptivePredict(_input,28,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,29,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(280);
+				setState(284);
 				match(TOKEN_CADENA);
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(281);
+				setState(285);
 				match(TOKEN_REAL);
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(282);
+				setState(286);
 				match(TOKEN_ENTERO);
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(283);
+				setState(287);
 				match(TRUE);
 				}
 				break;
 			case 5:
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(284);
+				setState(288);
 				match(FALSE);
 				}
 				break;
 			case 6:
 				enterOuterAlt(_localctx, 6);
 				{
-				setState(285);
+				setState(289);
 				match(TOKEN_PAR_IZR);
-				setState(286);
+				setState(290);
 				exp(0);
-				setState(287);
+				setState(291);
 				match(TOKEN_PAR_DER);
 				}
 				break;
 			case 7:
 				enterOuterAlt(_localctx, 7);
 				{
-				setState(289);
+				setState(293);
 				match(ID);
-				setState(290);
+				setState(294);
 				match(TOKEN_PUNTO);
-				setState(291);
+				setState(295);
 				match(ID);
 				}
 				break;
 			case 8:
 				enterOuterAlt(_localctx, 8);
 				{
-				setState(292);
+				setState(296);
 				function_sentence();
-				setState(293);
+				setState(297);
 				match(TOKEN_PAR_IZR);
-				setState(294);
+				setState(298);
 				exp(0);
-				setState(295);
+				setState(299);
 				match(TOKEN_PAR_DER);
 				}
 				break;
 			case 9:
 				enterOuterAlt(_localctx, 9);
 				{
-				setState(297);
+				setState(301);
 				match(ID);
 				}
 				break;
@@ -2463,7 +2481,7 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(300);
+			setState(304);
 			_la = _input.LA(1);
 			if ( !((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << AVG) | (1L << SUM) | (1L << DISTINCT) | (1L << MAX) | (1L << MIN) | (1L << COUNT))) != 0)) ) {
 			_errHandler.recoverInline(this);
@@ -2512,11 +2530,11 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(302);
+			setState(306);
 			match(RELATIONSHIP);
-			setState(303);
+			setState(307);
 			match(TOKEN_DOSP);
-			setState(304);
+			setState(308);
 			match(RELS);
 			}
 		}
@@ -2560,11 +2578,11 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(306);
+			setState(310);
 			match(NODE);
-			setState(307);
+			setState(311);
 			match(TOKEN_DOSP);
-			setState(308);
+			setState(312);
 			match(NODES);
 			}
 		}
@@ -2605,7 +2623,7 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(310);
+			setState(314);
 			match(T__0);
 			}
 		}
@@ -2648,7 +2666,7 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(312);
+			setState(316);
 			_la = _input.LA(1);
 			if ( !(_la==T__1 || _la==AND) ) {
 			_errHandler.recoverInline(this);
@@ -2696,7 +2714,7 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(314);
+			setState(318);
 			_la = _input.LA(1);
 			if ( !(_la==T__2 || _la==OR) ) {
 			_errHandler.recoverInline(this);
@@ -2744,7 +2762,7 @@ public class Neo4JParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(316);
+			setState(320);
 			_la = _input.LA(1);
 			if ( !(_la==T__3 || _la==NOT) ) {
 			_errHandler.recoverInline(this);
@@ -2818,114 +2836,116 @@ public class Neo4JParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3S\u0141\4\2\t\2\4"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3S\u0145\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
 		"\4\32\t\32\4\33\t\33\4\34\t\34\4\35\t\35\4\36\t\36\4\37\t\37\4 \t \4!"+
 		"\t!\3\2\7\2D\n\2\f\2\16\2G\13\2\3\2\7\2J\n\2\f\2\16\2M\13\2\5\2O\n\2\3"+
-		"\3\3\3\3\3\3\3\3\3\3\3\3\3\7\3X\n\3\f\3\16\3[\13\3\3\3\3\3\5\3_\n\3\3"+
-		"\4\3\4\3\4\3\4\5\4e\n\4\3\5\3\5\3\5\3\5\7\5k\n\5\f\5\16\5n\13\5\3\5\5"+
-		"\5q\n\5\3\6\3\6\3\6\3\6\5\6w\n\6\3\7\3\7\3\7\7\7|\n\7\f\7\16\7\177\13"+
-		"\7\3\7\3\7\3\7\7\7\u0084\n\7\f\7\16\7\u0087\13\7\5\7\u0089\n\7\3\b\3\b"+
-		"\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\t\5\t\u0095\n\t\3\t\3\t\3\t\6\t\u009a\n"+
-		"\t\r\t\16\t\u009b\5\t\u009e\n\t\3\n\3\n\3\n\3\n\3\13\3\13\3\13\3\13\5"+
-		"\13\u00a8\n\13\3\f\3\f\3\f\3\f\7\f\u00ae\n\f\f\f\16\f\u00b1\13\f\3\f\3"+
-		"\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u00bc\n\r\3\16\3\16\3\16\3\16\3\16"+
-		"\3\16\3\16\3\16\3\16\3\16\7\16\u00c8\n\16\f\16\16\16\u00cb\13\16\3\17"+
-		"\3\17\3\17\3\17\3\17\3\17\3\17\7\17\u00d4\n\17\f\17\16\17\u00d7\13\17"+
-		"\3\20\3\20\3\20\3\20\3\20\5\20\u00de\n\20\3\21\3\21\3\22\3\22\3\22\3\22"+
-		"\3\22\5\22\u00e7\n\22\3\23\3\23\3\24\3\24\3\24\3\24\3\24\3\24\3\24\7\24"+
-		"\u00f2\n\24\f\24\16\24\u00f5\13\24\3\25\3\25\3\26\3\26\3\26\3\26\3\26"+
-		"\3\26\3\26\7\26\u0100\n\26\f\26\16\26\u0103\13\26\3\27\3\27\3\27\5\27"+
-		"\u0108\n\27\3\30\3\30\3\30\3\30\3\30\3\30\7\30\u0110\n\30\f\30\16\30\u0113"+
-		"\13\30\3\31\3\31\3\31\3\31\5\31\u0119\n\31\3\32\3\32\3\32\3\32\3\32\3"+
-		"\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\5\32\u012d"+
-		"\n\32\3\33\3\33\3\34\3\34\3\34\3\34\3\35\3\35\3\35\3\35\3\36\3\36\3\37"+
-		"\3\37\3 \3 \3!\3!\3!\2\7\32\34&*.\"\2\4\6\b\n\f\16\20\22\24\26\30\32\34"+
-		"\36 \"$&(*,.\60\62\64\668:<>@\2\n\5\2\t\t%%\'\'\4\2\64\64\67\67\4\2\64"+
-		"\658;\3\2GH\5\2\n\n\f\17\35\35\4\2\4\4\13\13\4\2\5\5\22\22\4\2\6\6\23"+
-		"\23\u0146\2N\3\2\2\2\4P\3\2\2\2\6`\3\2\2\2\bp\3\2\2\2\nr\3\2\2\2\f\u0088"+
-		"\3\2\2\2\16\u008a\3\2\2\2\20\u009d\3\2\2\2\22\u009f\3\2\2\2\24\u00a3\3"+
-		"\2\2\2\26\u00a9\3\2\2\2\30\u00bb\3\2\2\2\32\u00bd\3\2\2\2\34\u00cc\3\2"+
-		"\2\2\36\u00dd\3\2\2\2 \u00df\3\2\2\2\"\u00e6\3\2\2\2$\u00e8\3\2\2\2&\u00ea"+
-		"\3\2\2\2(\u00f6\3\2\2\2*\u00f8\3\2\2\2,\u0107\3\2\2\2.\u0109\3\2\2\2\60"+
-		"\u0118\3\2\2\2\62\u012c\3\2\2\2\64\u012e\3\2\2\2\66\u0130\3\2\2\28\u0134"+
-		"\3\2\2\2:\u0138\3\2\2\2<\u013a\3\2\2\2>\u013c\3\2\2\2@\u013e\3\2\2\2B"+
-		"D\5\n\6\2CB\3\2\2\2DG\3\2\2\2EC\3\2\2\2EF\3\2\2\2FO\3\2\2\2GE\3\2\2\2"+
-		"HJ\5\4\3\2IH\3\2\2\2JM\3\2\2\2KI\3\2\2\2KL\3\2\2\2LO\3\2\2\2MK\3\2\2\2"+
-		"NE\3\2\2\2NK\3\2\2\2O\3\3\2\2\2PQ\7\7\2\2QR\5\6\4\2RS\5\b\5\2ST\t\2\2"+
-		"\2TY\5\32\16\2UV\7B\2\2VX\5\32\16\2WU\3\2\2\2X[\3\2\2\2YW\3\2\2\2YZ\3"+
-		"\2\2\2Z^\3\2\2\2[Y\3\2\2\2\\_\7D\2\2]_\3\2\2\2^\\\3\2\2\2^]\3\2\2\2_\5"+
-		"\3\2\2\2`d\5\22\n\2ab\5\20\t\2bc\5\22\n\2ce\3\2\2\2da\3\2\2\2de\3\2\2"+
-		"\2e\7\3\2\2\2fg\7\33\2\2gl\5\32\16\2hi\7B\2\2ik\5\32\16\2jh\3\2\2\2kn"+
-		"\3\2\2\2lj\3\2\2\2lm\3\2\2\2mq\3\2\2\2nl\3\2\2\2oq\3\2\2\2pf\3\2\2\2p"+
-		"o\3\2\2\2q\t\3\2\2\2rs\7\b\2\2sv\5\f\7\2tw\7D\2\2uw\3\2\2\2vt\3\2\2\2"+
-		"vu\3\2\2\2w\13\3\2\2\2x}\5\22\n\2yz\7B\2\2z|\5\22\n\2{y\3\2\2\2|\177\3"+
-		"\2\2\2}{\3\2\2\2}~\3\2\2\2~\u0089\3\2\2\2\177}\3\2\2\2\u0080\u0085\5\16"+
-		"\b\2\u0081\u0082\7B\2\2\u0082\u0084\5\16\b\2\u0083\u0081\3\2\2\2\u0084"+
-		"\u0087\3\2\2\2\u0085\u0083\3\2\2\2\u0085\u0086\3\2\2\2\u0086\u0089\3\2"+
-		"\2\2\u0087\u0085\3\2\2\2\u0088x\3\2\2\2\u0088\u0080\3\2\2\2\u0089\r\3"+
-		"\2\2\2\u008a\u008b\5\22\n\2\u008b\u008c\5\20\t\2\u008c\u008d\5\22\n\2"+
-		"\u008d\17\3\2\2\2\u008e\u009e\7I\2\2\u008f\u009e\7J\2\2\u0090\u0091\7"+
-		"H\2\2\u0091\u0094\7>\2\2\u0092\u0093\7N\2\2\u0093\u0095\7\63\2\2\u0094"+
-		"\u0092\3\2\2\2\u0094\u0095\3\2\2\2\u0095\u0096\3\2\2\2\u0096\u0097\7?"+
-		"\2\2\u0097\u0099\7H\2\2\u0098\u009a\78\2\2\u0099\u0098\3\2\2\2\u009a\u009b"+
-		"\3\2\2\2\u009b\u0099\3\2\2\2\u009b\u009c\3\2\2\2\u009c\u009e\3\2\2\2\u009d"+
-		"\u008e\3\2\2\2\u009d\u008f\3\2\2\2\u009d\u0090\3\2\2\2\u009e\21\3\2\2"+
-		"\2\u009f\u00a0\7<\2\2\u00a0\u00a1\5\24\13\2\u00a1\u00a2\7=\2\2\u00a2\23"+
-		"\3\2\2\2\u00a3\u00a4\7\62\2\2\u00a4\u00a5\7N\2\2\u00a5\u00a7\7\63\2\2"+
-		"\u00a6\u00a8\5\26\f\2\u00a7\u00a6\3\2\2\2\u00a7\u00a8\3\2\2\2\u00a8\25"+
-		"\3\2\2\2\u00a9\u00aa\7@\2\2\u00aa\u00af\5\30\r\2\u00ab\u00ac\7B\2\2\u00ac"+
-		"\u00ae\5\30\r\2\u00ad\u00ab\3\2\2\2\u00ae\u00b1\3\2\2\2\u00af\u00ad\3"+
-		"\2\2\2\u00af\u00b0\3\2\2\2\u00b0\u00b2\3\2\2\2\u00b1\u00af\3\2\2\2\u00b2"+
-		"\u00b3\7A\2\2\u00b3\27\3\2\2\2\u00b4\u00b5\7\62\2\2\u00b5\u00b6\7N\2\2"+
-		"\u00b6\u00bc\5\32\16\2\u00b7\u00b8\7\62\2\2\u00b8\u00b9\5$\23\2\u00b9"+
-		"\u00ba\5\32\16\2\u00ba\u00bc\3\2\2\2\u00bb\u00b4\3\2\2\2\u00bb\u00b7\3"+
-		"\2\2\2\u00bc\31\3\2\2\2\u00bd\u00be\b\16\1\2\u00be\u00bf\5\34\17\2\u00bf"+
-		"\u00c9\3\2\2\2\u00c0\u00c1\f\5\2\2\u00c1\u00c2\5> \2\u00c2\u00c3\5\34"+
-		"\17\2\u00c3\u00c8\3\2\2\2\u00c4\u00c5\f\4\2\2\u00c5\u00c6\7M\2\2\u00c6"+
-		"\u00c8\5\34\17\2\u00c7\u00c0\3\2\2\2\u00c7\u00c4\3\2\2\2\u00c8\u00cb\3"+
-		"\2\2\2\u00c9\u00c7\3\2\2\2\u00c9\u00ca\3\2\2\2\u00ca\33\3\2\2\2\u00cb"+
-		"\u00c9\3\2\2\2\u00cc\u00cd\b\17\1\2\u00cd\u00ce\5\36\20\2\u00ce\u00d5"+
-		"\3\2\2\2\u00cf\u00d0\f\4\2\2\u00d0\u00d1\5<\37\2\u00d1\u00d2\5\36\20\2"+
-		"\u00d2\u00d4\3\2\2\2\u00d3\u00cf\3\2\2\2\u00d4\u00d7\3\2\2\2\u00d5\u00d3"+
-		"\3\2\2\2\u00d5\u00d6\3\2\2\2\u00d6\35\3\2\2\2\u00d7\u00d5\3\2\2\2\u00d8"+
-		"\u00d9\5\"\22\2\u00d9\u00da\5 \21\2\u00da\u00db\5\"\22\2\u00db\u00de\3"+
-		"\2\2\2\u00dc\u00de\5\"\22\2\u00dd\u00d8\3\2\2\2\u00dd\u00dc\3\2\2\2\u00de"+
-		"\37\3\2\2\2\u00df\u00e0\t\3\2\2\u00e0!\3\2\2\2\u00e1\u00e2\5&\24\2\u00e2"+
-		"\u00e3\5$\23\2\u00e3\u00e4\5&\24\2\u00e4\u00e7\3\2\2\2\u00e5\u00e7\5&"+
-		"\24\2\u00e6\u00e1\3\2\2\2\u00e6\u00e5\3\2\2\2\u00e7#\3\2\2\2\u00e8\u00e9"+
-		"\t\4\2\2\u00e9%\3\2\2\2\u00ea\u00eb\b\24\1\2\u00eb\u00ec\5*\26\2\u00ec"+
-		"\u00f3\3\2\2\2\u00ed\u00ee\f\4\2\2\u00ee\u00ef\5(\25\2\u00ef\u00f0\5*"+
-		"\26\2\u00f0\u00f2\3\2\2\2\u00f1\u00ed\3\2\2\2\u00f2\u00f5\3\2\2\2\u00f3"+
-		"\u00f1\3\2\2\2\u00f3\u00f4\3\2\2\2\u00f4\'\3\2\2\2\u00f5\u00f3\3\2\2\2"+
-		"\u00f6\u00f7\t\5\2\2\u00f7)\3\2\2\2\u00f8\u00f9\b\26\1\2\u00f9\u00fa\5"+
-		".\30\2\u00fa\u0101\3\2\2\2\u00fb\u00fc\f\4\2\2\u00fc\u00fd\5,\27\2\u00fd"+
-		"\u00fe\5.\30\2\u00fe\u0100\3\2\2\2\u00ff\u00fb\3\2\2\2\u0100\u0103\3\2"+
-		"\2\2\u0101\u00ff\3\2\2\2\u0101\u0102\3\2\2\2\u0102+\3\2\2\2\u0103\u0101"+
-		"\3\2\2\2\u0104\u0108\7E\2\2\u0105\u0108\7F\2\2\u0106\u0108\5:\36\2\u0107"+
-		"\u0104\3\2\2\2\u0107\u0105\3\2\2\2\u0107\u0106\3\2\2\2\u0108-\3\2\2\2"+
-		"\u0109\u010a\b\30\1\2\u010a\u010b\5\60\31\2\u010b\u0111\3\2\2\2\u010c"+
-		"\u010d\f\4\2\2\u010d\u010e\7K\2\2\u010e\u0110\5\60\31\2\u010f\u010c\3"+
-		"\2\2\2\u0110\u0113\3\2\2\2\u0111\u010f\3\2\2\2\u0111\u0112\3\2\2\2\u0112"+
-		"/\3\2\2\2\u0113\u0111\3\2\2\2\u0114\u0115\5@!\2\u0115\u0116\5\60\31\2"+
-		"\u0116\u0119\3\2\2\2\u0117\u0119\5\62\32\2\u0118\u0114\3\2\2\2\u0118\u0117"+
-		"\3\2\2\2\u0119\61\3\2\2\2\u011a\u012d\7O\2\2\u011b\u012d\7P\2\2\u011c"+
-		"\u012d\7Q\2\2\u011d\u012d\7\30\2\2\u011e\u012d\7\31\2\2\u011f\u0120\7"+
-		"<\2\2\u0120\u0121\5\32\16\2\u0121\u0122\7=\2\2\u0122\u012d\3\2\2\2\u0123"+
-		"\u0124\7\62\2\2\u0124\u0125\7L\2\2\u0125\u012d\7\62\2\2\u0126\u0127\5"+
-		"\64\33\2\u0127\u0128\7<\2\2\u0128\u0129\5\32\16\2\u0129\u012a\7=\2\2\u012a"+
-		"\u012d\3\2\2\2\u012b\u012d\7\62\2\2\u012c\u011a\3\2\2\2\u012c\u011b\3"+
-		"\2\2\2\u012c\u011c\3\2\2\2\u012c\u011d\3\2\2\2\u012c\u011e\3\2\2\2\u012c"+
-		"\u011f\3\2\2\2\u012c\u0123\3\2\2\2\u012c\u0126\3\2\2\2\u012c\u012b\3\2"+
-		"\2\2\u012d\63\3\2\2\2\u012e\u012f\t\6\2\2\u012f\65\3\2\2\2\u0130\u0131"+
-		"\7\37\2\2\u0131\u0132\7N\2\2\u0132\u0133\7\36\2\2\u0133\67\3\2\2\2\u0134"+
-		"\u0135\7 \2\2\u0135\u0136\7N\2\2\u0136\u0137\7!\2\2\u01379\3\2\2\2\u0138"+
-		"\u0139\7\3\2\2\u0139;\3\2\2\2\u013a\u013b\t\7\2\2\u013b=\3\2\2\2\u013c"+
-		"\u013d\t\b\2\2\u013d?\3\2\2\2\u013e\u013f\t\t\2\2\u013fA\3\2\2\2\37EK"+
-		"NY^dlpv}\u0085\u0088\u0094\u009b\u009d\u00a7\u00af\u00bb\u00c7\u00c9\u00d5"+
-		"\u00dd\u00e6\u00f3\u0101\u0107\u0111\u0118\u012c";
+		"\3\3\3\6\3S\n\3\r\3\16\3T\3\3\3\3\3\3\3\3\3\3\7\3\\\n\3\f\3\16\3_\13\3"+
+		"\3\3\3\3\5\3c\n\3\3\4\3\4\3\4\3\4\5\4i\n\4\3\5\3\5\3\5\3\5\7\5o\n\5\f"+
+		"\5\16\5r\13\5\3\5\5\5u\n\5\3\6\3\6\3\6\3\6\5\6{\n\6\3\7\3\7\3\7\7\7\u0080"+
+		"\n\7\f\7\16\7\u0083\13\7\3\7\3\7\3\7\7\7\u0088\n\7\f\7\16\7\u008b\13\7"+
+		"\5\7\u008d\n\7\3\b\3\b\3\b\3\b\3\t\3\t\3\t\3\t\3\t\3\t\5\t\u0099\n\t\3"+
+		"\t\3\t\3\t\6\t\u009e\n\t\r\t\16\t\u009f\5\t\u00a2\n\t\3\n\3\n\3\n\3\n"+
+		"\3\13\3\13\3\13\3\13\5\13\u00ac\n\13\3\f\3\f\3\f\3\f\7\f\u00b2\n\f\f\f"+
+		"\16\f\u00b5\13\f\3\f\3\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\5\r\u00c0\n\r\3\16"+
+		"\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\3\16\7\16\u00cc\n\16\f\16\16"+
+		"\16\u00cf\13\16\3\17\3\17\3\17\3\17\3\17\3\17\3\17\7\17\u00d8\n\17\f\17"+
+		"\16\17\u00db\13\17\3\20\3\20\3\20\3\20\3\20\5\20\u00e2\n\20\3\21\3\21"+
+		"\3\22\3\22\3\22\3\22\3\22\5\22\u00eb\n\22\3\23\3\23\3\24\3\24\3\24\3\24"+
+		"\3\24\3\24\3\24\7\24\u00f6\n\24\f\24\16\24\u00f9\13\24\3\25\3\25\3\26"+
+		"\3\26\3\26\3\26\3\26\3\26\3\26\7\26\u0104\n\26\f\26\16\26\u0107\13\26"+
+		"\3\27\3\27\3\27\5\27\u010c\n\27\3\30\3\30\3\30\3\30\3\30\3\30\7\30\u0114"+
+		"\n\30\f\30\16\30\u0117\13\30\3\31\3\31\3\31\3\31\5\31\u011d\n\31\3\32"+
+		"\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32\3\32"+
+		"\3\32\3\32\3\32\5\32\u0131\n\32\3\33\3\33\3\34\3\34\3\34\3\34\3\35\3\35"+
+		"\3\35\3\35\3\36\3\36\3\37\3\37\3 \3 \3!\3!\3!\2\7\32\34&*.\"\2\4\6\b\n"+
+		"\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\60\62\64\668:<>@\2\n\5\2\t\t%%"+
+		"\'\'\4\2\64\64\67\67\4\2\64\658;\3\2GH\5\2\n\n\f\17\35\35\4\2\4\4\13\13"+
+		"\4\2\5\5\22\22\4\2\6\6\23\23\u014b\2N\3\2\2\2\4R\3\2\2\2\6d\3\2\2\2\b"+
+		"t\3\2\2\2\nv\3\2\2\2\f\u008c\3\2\2\2\16\u008e\3\2\2\2\20\u00a1\3\2\2\2"+
+		"\22\u00a3\3\2\2\2\24\u00a7\3\2\2\2\26\u00ad\3\2\2\2\30\u00bf\3\2\2\2\32"+
+		"\u00c1\3\2\2\2\34\u00d0\3\2\2\2\36\u00e1\3\2\2\2 \u00e3\3\2\2\2\"\u00ea"+
+		"\3\2\2\2$\u00ec\3\2\2\2&\u00ee\3\2\2\2(\u00fa\3\2\2\2*\u00fc\3\2\2\2,"+
+		"\u010b\3\2\2\2.\u010d\3\2\2\2\60\u011c\3\2\2\2\62\u0130\3\2\2\2\64\u0132"+
+		"\3\2\2\2\66\u0134\3\2\2\28\u0138\3\2\2\2:\u013c\3\2\2\2<\u013e\3\2\2\2"+
+		">\u0140\3\2\2\2@\u0142\3\2\2\2BD\5\n\6\2CB\3\2\2\2DG\3\2\2\2EC\3\2\2\2"+
+		"EF\3\2\2\2FO\3\2\2\2GE\3\2\2\2HJ\5\4\3\2IH\3\2\2\2JM\3\2\2\2KI\3\2\2\2"+
+		"KL\3\2\2\2LO\3\2\2\2MK\3\2\2\2NE\3\2\2\2NK\3\2\2\2O\3\3\2\2\2PQ\7\7\2"+
+		"\2QS\5\6\4\2RP\3\2\2\2ST\3\2\2\2TR\3\2\2\2TU\3\2\2\2UV\3\2\2\2VW\5\b\5"+
+		"\2WX\t\2\2\2X]\5\32\16\2YZ\7B\2\2Z\\\5\32\16\2[Y\3\2\2\2\\_\3\2\2\2]["+
+		"\3\2\2\2]^\3\2\2\2^b\3\2\2\2_]\3\2\2\2`c\7D\2\2ac\3\2\2\2b`\3\2\2\2ba"+
+		"\3\2\2\2c\5\3\2\2\2dh\5\22\n\2ef\5\20\t\2fg\5\22\n\2gi\3\2\2\2he\3\2\2"+
+		"\2hi\3\2\2\2i\7\3\2\2\2jk\7\33\2\2kp\5\32\16\2lm\7B\2\2mo\5\32\16\2nl"+
+		"\3\2\2\2or\3\2\2\2pn\3\2\2\2pq\3\2\2\2qu\3\2\2\2rp\3\2\2\2su\3\2\2\2t"+
+		"j\3\2\2\2ts\3\2\2\2u\t\3\2\2\2vw\7\b\2\2wz\5\f\7\2x{\7D\2\2y{\3\2\2\2"+
+		"zx\3\2\2\2zy\3\2\2\2{\13\3\2\2\2|\u0081\5\22\n\2}~\7B\2\2~\u0080\5\22"+
+		"\n\2\177}\3\2\2\2\u0080\u0083\3\2\2\2\u0081\177\3\2\2\2\u0081\u0082\3"+
+		"\2\2\2\u0082\u008d\3\2\2\2\u0083\u0081\3\2\2\2\u0084\u0089\5\16\b\2\u0085"+
+		"\u0086\7B\2\2\u0086\u0088\5\16\b\2\u0087\u0085\3\2\2\2\u0088\u008b\3\2"+
+		"\2\2\u0089\u0087\3\2\2\2\u0089\u008a\3\2\2\2\u008a\u008d\3\2\2\2\u008b"+
+		"\u0089\3\2\2\2\u008c|\3\2\2\2\u008c\u0084\3\2\2\2\u008d\r\3\2\2\2\u008e"+
+		"\u008f\5\22\n\2\u008f\u0090\5\20\t\2\u0090\u0091\5\22\n\2\u0091\17\3\2"+
+		"\2\2\u0092\u00a2\7I\2\2\u0093\u00a2\7J\2\2\u0094\u0095\7H\2\2\u0095\u0098"+
+		"\7>\2\2\u0096\u0097\7N\2\2\u0097\u0099\7\63\2\2\u0098\u0096\3\2\2\2\u0098"+
+		"\u0099\3\2\2\2\u0099\u009a\3\2\2\2\u009a\u009b\7?\2\2\u009b\u009d\7H\2"+
+		"\2\u009c\u009e\78\2\2\u009d\u009c\3\2\2\2\u009e\u009f\3\2\2\2\u009f\u009d"+
+		"\3\2\2\2\u009f\u00a0\3\2\2\2\u00a0\u00a2\3\2\2\2\u00a1\u0092\3\2\2\2\u00a1"+
+		"\u0093\3\2\2\2\u00a1\u0094\3\2\2\2\u00a2\21\3\2\2\2\u00a3\u00a4\7<\2\2"+
+		"\u00a4\u00a5\5\24\13\2\u00a5\u00a6\7=\2\2\u00a6\23\3\2\2\2\u00a7\u00a8"+
+		"\7\62\2\2\u00a8\u00a9\7N\2\2\u00a9\u00ab\7\63\2\2\u00aa\u00ac\5\26\f\2"+
+		"\u00ab\u00aa\3\2\2\2\u00ab\u00ac\3\2\2\2\u00ac\25\3\2\2\2\u00ad\u00ae"+
+		"\7@\2\2\u00ae\u00b3\5\30\r\2\u00af\u00b0\7B\2\2\u00b0\u00b2\5\30\r\2\u00b1"+
+		"\u00af\3\2\2\2\u00b2\u00b5\3\2\2\2\u00b3\u00b1\3\2\2\2\u00b3\u00b4\3\2"+
+		"\2\2\u00b4\u00b6\3\2\2\2\u00b5\u00b3\3\2\2\2\u00b6\u00b7\7A\2\2\u00b7"+
+		"\27\3\2\2\2\u00b8\u00b9\7\62\2\2\u00b9\u00ba\7N\2\2\u00ba\u00c0\5\32\16"+
+		"\2\u00bb\u00bc\7\62\2\2\u00bc\u00bd\5$\23\2\u00bd\u00be\5\32\16\2\u00be"+
+		"\u00c0\3\2\2\2\u00bf\u00b8\3\2\2\2\u00bf\u00bb\3\2\2\2\u00c0\31\3\2\2"+
+		"\2\u00c1\u00c2\b\16\1\2\u00c2\u00c3\5\34\17\2\u00c3\u00cd\3\2\2\2\u00c4"+
+		"\u00c5\f\5\2\2\u00c5\u00c6\5> \2\u00c6\u00c7\5\34\17\2\u00c7\u00cc\3\2"+
+		"\2\2\u00c8\u00c9\f\4\2\2\u00c9\u00ca\7M\2\2\u00ca\u00cc\5\34\17\2\u00cb"+
+		"\u00c4\3\2\2\2\u00cb\u00c8\3\2\2\2\u00cc\u00cf\3\2\2\2\u00cd\u00cb\3\2"+
+		"\2\2\u00cd\u00ce\3\2\2\2\u00ce\33\3\2\2\2\u00cf\u00cd\3\2\2\2\u00d0\u00d1"+
+		"\b\17\1\2\u00d1\u00d2\5\36\20\2\u00d2\u00d9\3\2\2\2\u00d3\u00d4\f\4\2"+
+		"\2\u00d4\u00d5\5<\37\2\u00d5\u00d6\5\36\20\2\u00d6\u00d8\3\2\2\2\u00d7"+
+		"\u00d3\3\2\2\2\u00d8\u00db\3\2\2\2\u00d9\u00d7\3\2\2\2\u00d9\u00da\3\2"+
+		"\2\2\u00da\35\3\2\2\2\u00db\u00d9\3\2\2\2\u00dc\u00dd\5\"\22\2\u00dd\u00de"+
+		"\5 \21\2\u00de\u00df\5\"\22\2\u00df\u00e2\3\2\2\2\u00e0\u00e2\5\"\22\2"+
+		"\u00e1\u00dc\3\2\2\2\u00e1\u00e0\3\2\2\2\u00e2\37\3\2\2\2\u00e3\u00e4"+
+		"\t\3\2\2\u00e4!\3\2\2\2\u00e5\u00e6\5&\24\2\u00e6\u00e7\5$\23\2\u00e7"+
+		"\u00e8\5&\24\2\u00e8\u00eb\3\2\2\2\u00e9\u00eb\5&\24\2\u00ea\u00e5\3\2"+
+		"\2\2\u00ea\u00e9\3\2\2\2\u00eb#\3\2\2\2\u00ec\u00ed\t\4\2\2\u00ed%\3\2"+
+		"\2\2\u00ee\u00ef\b\24\1\2\u00ef\u00f0\5*\26\2\u00f0\u00f7\3\2\2\2\u00f1"+
+		"\u00f2\f\4\2\2\u00f2\u00f3\5(\25\2\u00f3\u00f4\5*\26\2\u00f4\u00f6\3\2"+
+		"\2\2\u00f5\u00f1\3\2\2\2\u00f6\u00f9\3\2\2\2\u00f7\u00f5\3\2\2\2\u00f7"+
+		"\u00f8\3\2\2\2\u00f8\'\3\2\2\2\u00f9\u00f7\3\2\2\2\u00fa\u00fb\t\5\2\2"+
+		"\u00fb)\3\2\2\2\u00fc\u00fd\b\26\1\2\u00fd\u00fe\5.\30\2\u00fe\u0105\3"+
+		"\2\2\2\u00ff\u0100\f\4\2\2\u0100\u0101\5,\27\2\u0101\u0102\5.\30\2\u0102"+
+		"\u0104\3\2\2\2\u0103\u00ff\3\2\2\2\u0104\u0107\3\2\2\2\u0105\u0103\3\2"+
+		"\2\2\u0105\u0106\3\2\2\2\u0106+\3\2\2\2\u0107\u0105\3\2\2\2\u0108\u010c"+
+		"\7E\2\2\u0109\u010c\7F\2\2\u010a\u010c\5:\36\2\u010b\u0108\3\2\2\2\u010b"+
+		"\u0109\3\2\2\2\u010b\u010a\3\2\2\2\u010c-\3\2\2\2\u010d\u010e\b\30\1\2"+
+		"\u010e\u010f\5\60\31\2\u010f\u0115\3\2\2\2\u0110\u0111\f\4\2\2\u0111\u0112"+
+		"\7K\2\2\u0112\u0114\5\60\31\2\u0113\u0110\3\2\2\2\u0114\u0117\3\2\2\2"+
+		"\u0115\u0113\3\2\2\2\u0115\u0116\3\2\2\2\u0116/\3\2\2\2\u0117\u0115\3"+
+		"\2\2\2\u0118\u0119\5@!\2\u0119\u011a\5\60\31\2\u011a\u011d\3\2\2\2\u011b"+
+		"\u011d\5\62\32\2\u011c\u0118\3\2\2\2\u011c\u011b\3\2\2\2\u011d\61\3\2"+
+		"\2\2\u011e\u0131\7O\2\2\u011f\u0131\7P\2\2\u0120\u0131\7Q\2\2\u0121\u0131"+
+		"\7\30\2\2\u0122\u0131\7\31\2\2\u0123\u0124\7<\2\2\u0124\u0125\5\32\16"+
+		"\2\u0125\u0126\7=\2\2\u0126\u0131\3\2\2\2\u0127\u0128\7\62\2\2\u0128\u0129"+
+		"\7L\2\2\u0129\u0131\7\62\2\2\u012a\u012b\5\64\33\2\u012b\u012c\7<\2\2"+
+		"\u012c\u012d\5\32\16\2\u012d\u012e\7=\2\2\u012e\u0131\3\2\2\2\u012f\u0131"+
+		"\7\62\2\2\u0130\u011e\3\2\2\2\u0130\u011f\3\2\2\2\u0130\u0120\3\2\2\2"+
+		"\u0130\u0121\3\2\2\2\u0130\u0122\3\2\2\2\u0130\u0123\3\2\2\2\u0130\u0127"+
+		"\3\2\2\2\u0130\u012a\3\2\2\2\u0130\u012f\3\2\2\2\u0131\63\3\2\2\2\u0132"+
+		"\u0133\t\6\2\2\u0133\65\3\2\2\2\u0134\u0135\7\37\2\2\u0135\u0136\7N\2"+
+		"\2\u0136\u0137\7\36\2\2\u0137\67\3\2\2\2\u0138\u0139\7 \2\2\u0139\u013a"+
+		"\7N\2\2\u013a\u013b\7!\2\2\u013b9\3\2\2\2\u013c\u013d\7\3\2\2\u013d;\3"+
+		"\2\2\2\u013e\u013f\t\7\2\2\u013f=\3\2\2\2\u0140\u0141\t\b\2\2\u0141?\3"+
+		"\2\2\2\u0142\u0143\t\t\2\2\u0143A\3\2\2\2 EKNT]bhptz\u0081\u0089\u008c"+
+		"\u0098\u009f\u00a1\u00ab\u00b3\u00bf\u00cb\u00cd\u00d9\u00e1\u00ea\u00f7"+
+		"\u0105\u010b\u0115\u011c\u0130";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

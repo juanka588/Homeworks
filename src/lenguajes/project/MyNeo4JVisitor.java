@@ -36,7 +36,10 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
     //MATCH basic_query opt_where RETURN exp (TOKEN_COMA exp)* (TOKEN_FIN_LINEA|);
     @Override
     public T visitSelect_sentence(Neo4JParser.Select_sentenceContext ctx) {
-        List<SQLSentence> fourElements = (List<SQLSentence>) visit(ctx.basic_query());
+        List<SQLSentence> fourElements = null;
+        for (Neo4JParser.Basic_queryContext basic_query : ctx.basic_query()) {
+            fourElements = (ArrayList<SQLSentence>) visit(basic_query);
+        }
         SQLSentence where = (SQLSentence) visit(ctx.opt_where());
         StringBuilder projection = new StringBuilder("");
         int i = 0;
@@ -55,10 +58,10 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         }
         SQLSentence tableCreation1 = fourElements.get(0);
         String result;
-        if (fourElements.size() < 3) {
+        if (fourElements.size() == 2) {
             result = singleSelect(tableCreation1, ctx, projection.toString(), where.getTranslation());
         } else {
-            result = doubleSelect(tableCreation1, fourElements.get(2), ctx,
+            result = doubleSelect(tableCreation1, fourElements.get(2),
                     projection.toString(), where.getTranslation(),
                     fourElements.get(4).getTranslation());
         }
@@ -304,7 +307,8 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
 
     }
 
-    private String doubleSelect(SQLSentence tableCreation1, SQLSentence tableCreation2, Neo4JParser.Select_sentenceContext ctx, String projection, String where, String label) {
+    private String doubleSelect(SQLSentence tableCreation1, SQLSentence tableCreation2,
+            String projection, String where, String label) {
         String joinTableName = tableCreation1.tableName + "_" + tableCreation2.tableName;
         if (tableCreation1.tableName.compareTo(tableCreation2.tableName) > 0) {
             joinTableName = tableCreation2.tableName + "_" + tableCreation1.tableName;
@@ -336,7 +340,7 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
         result.append(".origin ");
 
         result.append(" INNER JOIN ");
-        result.append(tableCreation2.getTableName().toLowerCase());
+        result.append(tableCreation2.getTableName());
         result.append(" AS ");
         result.append(tableCreation2.getAlias());
         result.append(" ON ");
