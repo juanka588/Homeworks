@@ -332,14 +332,13 @@ public class GUI extends javax.swing.JFrame {
     private void openBrowser(String cypherText) {
         //"div.cm-s-neo > div > textarea" cm-s-neo
         WebElement element = driver.findElement(By.className("view-editor"));
-        WebElement custom = element.findElement(By.className("ng-pristine"));
+        WebElement custom = element.findElement(By.className("ng-valid"));
         System.out.println(custom.toString());
-        WebElement child = custom.findElement(By.className("cm-s-neo"));
+        WebElement child = custom.findElement(By.className("CodeMirror"));
         System.out.println(child.toString());
-        WebElement txArea = child.findElement(By.cssSelector("div > div > textarea"));
+        WebElement txArea = child.findElement(By.cssSelector("div > textarea"));
         System.out.println(txArea.toString());
-        System.out.println(txArea.getTagName() + " text: " + txArea.getText());
-        txArea.click();
+        System.out.println(txArea.getTagName()+" "+txArea.getAttribute("style") + " text: " + txArea.getText());
         txArea.clear();
         txArea.sendKeys(Keys.HOME + cypherText + " return *");
         /*    txArea.sendKeys(Keys.TAB);

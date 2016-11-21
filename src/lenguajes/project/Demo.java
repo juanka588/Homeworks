@@ -28,7 +28,6 @@ public class Demo  extends JFrame{
         textArea.setCodeFoldingEnabled(true);
         RTextScrollPane sp = new RTextScrollPane(textArea);
         cp.add(sp);
-
         setContentPane(cp);
         setTitle("Text Editor Demo");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
