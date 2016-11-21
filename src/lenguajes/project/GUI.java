@@ -32,6 +32,8 @@ import javax.swing.KeyStroke;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -39,7 +41,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import sun.swing.ImageIconUIResource;
 
 /**
  *
@@ -62,6 +63,10 @@ public class GUI extends javax.swing.JFrame {
      */
     public GUI() {
         initComponents();
+        RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
+        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
+        textArea.setCodeFoldingEnabled(true);
+        this.getRootPane().add(textArea);
         setKeyBindings();
         System.setProperty("webdriver.gecko.driver", "D:\\Selenium\\Firefox driver\\geckodriver.exe");
         driver = new FirefoxDriver();
@@ -336,7 +341,7 @@ public class GUI extends javax.swing.JFrame {
         System.out.println(txArea.getTagName() + " text: " + txArea.getText());
         txArea.click();
         txArea.clear();
-        txArea.sendKeys(Keys.HOME + cypherText);
+        txArea.sendKeys(Keys.HOME + cypherText + " return *");
         /*    txArea.sendKeys(Keys.TAB);
          txArea.sendKeys(cypherText);*/
 
