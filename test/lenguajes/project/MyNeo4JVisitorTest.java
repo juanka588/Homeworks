@@ -107,13 +107,13 @@ public class MyNeo4JVisitorTest {
         MyNeo4JVisitor<Object> loader = new MyNeo4JVisitor<>();
         String translation = (String) loader.visit(tree);
         
-        assertEquals("CREATE TABLE IF NOT EXISTS Person_Person (person_person_id LONG NOT NULL AUTO_INCREMENT,destination LONG, FOREIGN KEY (destination) REFERENCES Person(person_id),label LONG, FOREIGN KEY (label) REFERENCES Label(label_id),origin LONG, FOREIGN KEY (origin) REFERENCES Person(person_id), PRIMARY KEY (person_person_id));"
+        assertEquals("CREATE TABLE IF NOT EXISTS Person_Pet (person_pet_id LONG NOT NULL AUTO_INCREMENT,destination LONG, FOREIGN KEY (destination) REFERENCES Person(person_id),label LONG, FOREIGN KEY (label) REFERENCES Label(label_id),origin LONG, FOREIGN KEY (origin) REFERENCES Person(person_id), PRIMARY KEY (person_pet_id));"
                 + "CREATE TABLE IF NOT EXISTS Label (label_id LONG AUTOINCREMENT, label_name VARCHAR(255) UNIQUE, PRIMARY KEY (label_id,label_name));"
                 + "INSERT INTO Label (label_name) VALUES (\"OWN\");"
                 + "SET @label := (select Label.label_id from Label where Label.label_name=\"EMPLOYEE\" limit 1);"
                 + "SET @origin :=(select Person.person_id from Person where Person.name=12345 limit 1) ;"
                 + "SET @destination :=(select Person.person_id from Person where Person.name=12345 limit 1) ;"
-                + "INSERT INTO Person_Person (Person_Person.origin,Person_Person.destination,Person_Person.label ) VALUES (@origin,@destination,@label);", translation);
+                + "INSERT INTO Person_Pet (Person_Pet.origin,Person_Person.destination,Person_Pet.label ) VALUES (@origin,@destination,@label);", translation);
     }
     
     @Test
@@ -228,7 +228,7 @@ public class MyNeo4JVisitorTest {
         
         assertEquals("SET @label := (select Label.label_id from Label where Label.label_name=\"ACTED_IN\" limit 1);"
                 + "SELECT p.* FROM Person AS p INNER JOIN Movie_Person ON p.person_id = Movie_Person.origin  "
-                + "INNER JOIN Movie_Person AS m ON m.movie_id = Movie_Person.destination WHERE Movie_Person.label=@label", translation);        
+                + "INNER JOIN Movie AS m ON m.movie_id = Movie_Person.destination WHERE Movie_Person.label=@label", translation);        
     }
     
     @Test
@@ -246,12 +246,12 @@ public class MyNeo4JVisitorTest {
                 + "INNER JOIN Movie_Person AS m ON m.movie_id = Movie_Person.destination WHERE Movie_Person.label=@label SET @label := (select Label.label_id from Label where Label.label_name=\"DIRECTED\" limit 1);"
                 + "SELECT p2.*,m.* FROM Person AS p2, Movie as m "
                 + "INNER JOIN Movie_Person ON p2.person_id = Movie_Person.origin  "
-                + "INNER JOIN Movie_Person AS m ON m.movie_id = Movie_Person.destination WHERE Movie_Person.label=@label", translation);        
+                + "INNER JOIN Movie AS m ON m.movie_id = Movie_Person.destination WHERE Movie_Person.label=@label", translation);        
     }
     
     @Test
     public void testWorkshop4() throws FileNotFoundException, IOException {
-        ANTLRInputStream input = new ANTLRInputStream("match (m:Movie{title:\"The Matrix\"}) set m.relased=\"1999\" return m");
+        ANTLRInputStream input = new ANTLRInputStream("match (m:Movie{title:\"The Matrix\"}) set m.relased=\"1999\"");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -259,12 +259,7 @@ public class MyNeo4JVisitorTest {
         MyNeo4JVisitor<Object> loader = new MyNeo4JVisitor<>();
         String translation = (String) loader.visit(tree);
         
-        assertEquals("SET @label := (select Label.label_id from Label where Label.label_name=\"ACTED_IN\" limit 1);"
-                + "SELECT p.* FROM Person AS p INNER JOIN Movie_Person ON p.person_id = Movie_Person.origin  "
-                + "INNER JOIN Movie_Person AS m ON m.movie_id = Movie_Person.destination WHERE Movie_Person.label=@label SET @label := (select Label.label_id from Label where Label.label_name=\"DIRECTED\" limit 1);"
-                + "SELECT p2.*,m.* FROM Person AS p2, Movie as m "
-                + "INNER JOIN Movie_Person ON p2.person_id = Movie_Person.origin  "
-                + "INNER JOIN Movie_Person AS m ON m.movie_id = Movie_Person.destination WHERE Movie_Person.label=@label", translation);        
+        assertEquals("UPDATE Movie AS m SET m.relased=\"1999\" WHERE m.title=\"The Matrix\"", translation);        
     }
     
     @Test
