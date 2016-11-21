@@ -32,6 +32,8 @@ import javax.swing.KeyStroke;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -39,7 +41,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import sun.swing.ImageIconUIResource;
 
 /**
  *
@@ -54,6 +55,7 @@ public class GUI extends javax.swing.JFrame {
     private Image imagePNG, copy = null;
     private WebDriver driver;
     private String baseUrl;
+    private String translation;
     private double reductionRate;
 
     /**
@@ -61,6 +63,10 @@ public class GUI extends javax.swing.JFrame {
      */
     public GUI() {
         initComponents();
+        RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
+        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
+        textArea.setCodeFoldingEnabled(true);
+        this.getRootPane().add(textArea);
         setKeyBindings();
         System.setProperty("webdriver.gecko.driver", "D:\\Selenium\\Firefox driver\\geckodriver.exe");
         driver = new FirefoxDriver();
@@ -88,12 +94,20 @@ public class GUI extends javax.swing.JFrame {
         input = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
-        output = new javax.swing.JLabel();
         scrollPane = new javax.swing.JScrollPane();
+        jButton2 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        output = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Neo4J Translator");
 
-        input.setText("jTextField1");
+        input.setText("create (n:Person{name:\"juan\"})");
+        input.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputActionPerformed(evt);
+            }
+        });
 
         jButton1.setLabel("Translate");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -104,7 +118,18 @@ public class GUI extends javax.swing.JFrame {
 
         jLabel1.setText("Translation");
 
-        output.setText("jLabel2");
+        jButton2.setText("Ver tabla SQL");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        output.setEditable(false);
+        output.setColumns(20);
+        output.setFont(new java.awt.Font("RomanD", 0, 14)); // NOI18N
+        output.setRows(5);
+        jScrollPane1.setViewportView(output);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -119,28 +144,30 @@ public class GUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(scrollPane, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(output, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(input, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE))
+                            .addComponent(input, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jButton1)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(33, 33, 33)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(input, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(input, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(output, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(scrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(53, Short.MAX_VALUE))
+                .addContainerGap(69, Short.MAX_VALUE))
         );
 
         pack();
@@ -155,13 +182,25 @@ public class GUI extends javax.swing.JFrame {
         Neo4JParser parser = new Neo4JParser(tokens);
         ParseTree tree = parser.init();
         MyNeo4JVisitor<Object> loader = new MyNeo4JVisitor<>();
-        String translation = (String) loader.visit(tree);
+        translation = (String) loader.visit(tree);
         System.out.println("translation " + translation);
-        output.setText(translation);
+        output.setText(translation.replaceAll(";", ";\n").replaceAll(",", ",\n"));
         openBrowser(cypherText);
         drawComponents();
 
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        SQLViewer.cad = "Cypher Translator";
+        SQLViewer.query = translation;
+        SQLViewer viewer = new SQLViewer();
+        viewer.show();
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void inputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_inputActionPerformed
 
     private void zoomIn() {
         if (reductionRate <= MIN_RATE) {
@@ -219,8 +258,10 @@ public class GUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField input;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel output;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea output;
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
 
@@ -291,19 +332,18 @@ public class GUI extends javax.swing.JFrame {
     private void openBrowser(String cypherText) {
         //"div.cm-s-neo > div > textarea" cm-s-neo
         WebElement element = driver.findElement(By.className("view-editor"));
-        WebElement custom = element.findElement(By.className("ng-pristine"));
+        WebElement custom = element.findElement(By.className("ng-valid"));
         System.out.println(custom.toString());
-        WebElement child = custom.findElement(By.className("cm-s-neo"));
+        WebElement child = custom.findElement(By.className("CodeMirror"));
         System.out.println(child.toString());
-        WebElement txArea = child.findElement(By.cssSelector("div > div > textarea"));
+        WebElement txArea = child.findElement(By.cssSelector("div > textarea"));
         System.out.println(txArea.toString());
-        System.out.println(txArea.getTagName() + " text: " + txArea.getText());
-        txArea.click();
+        System.out.println(txArea.getTagName()+" "+txArea.getAttribute("style") + " text: " + txArea.getText());
         txArea.clear();
-        txArea.sendKeys(Keys.HOME + cypherText);
-    /*    txArea.sendKeys(Keys.TAB);
-        txArea.sendKeys(cypherText);*/
-               
+        txArea.sendKeys(Keys.HOME + cypherText + " return *");
+        /*    txArea.sendKeys(Keys.TAB);
+         txArea.sendKeys(cypherText);*/
+
         driver.findElement(By.xpath("//div[@id='stream']/div/div/div/div/div/ul/li[6]/a")).click();
         driver.findElement(By.cssSelector("i.fa.fa-play")).click();
         driver.findElement(By.xpath("//div[@id='stream']/div/div/div/div/div/ul/li[6]/a")).click();

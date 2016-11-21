@@ -1,7 +1,7 @@
 grammar Neo4J;		
 init				:  (create)*|(select_sentence)*;
 
-select_sentence				: MATCH basic_query opt_where (RETURN|SET|DELETE) exp (TOKEN_COMA exp)* (TOKEN_FIN_LINEA|);
+select_sentence				: (MATCH basic_query)+ opt_where (RETURN|SET|DELETE) exp (TOKEN_COMA exp)* (TOKEN_FIN_LINEA|);
 basic_query					: node_def (relation_type node_def)?;
 opt_where					: WHERE exp (TOKEN_COMA exp)*
 							|;

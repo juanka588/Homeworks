@@ -17,14 +17,14 @@ class ComplexInsertSentence extends SQLSentence {
             SortedSet<PropertyNeo4J> originProps, SortedSet<PropertyNeo4J> destinantionProps,
             String label) {
         StringBuilder sb = new StringBuilder();
-        sb.append("CREATE TABLE IF NOT EXISTS Label (label_id LONG AUTOINCREMENT,"
-                + " label_name VARCHAR(255) UNIQUE, PRIMARY KEY (label_id,label_name));");
+        sb.append("CREATE TABLE IF NOT EXISTS Label (label_id INT(11) auto_increment,"
+                + " label_name VARCHAR(255) UNIQUE, PRIMARY KEY (label_id,label_name)); ");
         sb.append("INSERT INTO Label (label_name) VALUES (\"");
         sb.append(label);
-        sb.append("\");");
+        sb.append("\"); ");
         sb.append("SET @label := (select Label.label_id from Label where Label.label_name=\"");
         sb.append(label);
-        sb.append("\" limit 1);");
+        sb.append("\" limit 1); ");
         sb.append("SET @origin :=(select ");
         sb.append(origin);
         sb.append(".");
@@ -33,7 +33,7 @@ class ComplexInsertSentence extends SQLSentence {
         sb.append(origin);
         sb.append(" where ");
         sb.append(getConditions(origin, originProps));
-        sb.append(" limit 1) ;");
+        sb.append(" limit 1) ; ");
 
         sb.append("SET @destination :=(select ");
         sb.append(destinantion);
@@ -43,7 +43,7 @@ class ComplexInsertSentence extends SQLSentence {
         sb.append(destinantion);
         sb.append(" where ");
         sb.append(getConditions(destinantion, destinantionProps));
-        sb.append(" limit 1) ;");
+        sb.append(" limit 1) ; ");
         sb.append("INSERT INTO ");
         sb.append(joinTableName);
 
@@ -54,7 +54,7 @@ class ComplexInsertSentence extends SQLSentence {
         sb.append(".destination,");
         sb.append(joinTableName);
         sb.append(".label");
-        sb.append(" ) VALUES (@origin,@destination,@label);");
+        sb.append(" ) VALUES (@origin,@destination,@label); ");
         translation = sb.toString();
     }
 

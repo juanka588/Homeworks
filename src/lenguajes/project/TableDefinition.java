@@ -25,26 +25,25 @@ public class TableDefinition extends SQLSentence implements Comparable<TableDefi
         //add id
         String id = tableName.toLowerCase() + "_id";
         result.append(id);
-        result.append(" LONG NOT NULL AUTO_INCREMENT,");
+        result.append(" INT(11) auto_increment,");
         for (PropertyNeo4J property : properties) {
             result.append(property.getName());
             result.append(" ");
             result.append(property.getType());
-            result.append(",");
+
             if (property.isForeing()) {
-                result.append(" FOREIGN KEY (");
-                result.append(property.getName());
-                result.append(") REFERENCES ");
+                result.append(" REFERENCES ");
                 //trick
                 result.append(property.getValue());
                 result.append("(");
                 result.append(property.getValue().toLowerCase());
-                result.append("_id),");
+                result.append("_id)");
             }
+            result.append(",");
         }
         result.append(" PRIMARY KEY (");
         result.append(id);
-        result.append("));");
+        result.append(")); ");
         this.translation = result.toString();
     }
 
