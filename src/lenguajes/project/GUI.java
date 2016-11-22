@@ -62,11 +62,7 @@ public class GUI extends javax.swing.JFrame {
      * Creates new form GUI
      */
     public GUI() {
-        initComponents();
-        RSyntaxTextArea textArea = new RSyntaxTextArea(20, 60);
-        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
-        textArea.setCodeFoldingEnabled(true);
-        this.getRootPane().add(textArea);
+        initComponents();        
         output.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
         output.setCodeFoldingEnabled(true);
         setKeyBindings();
