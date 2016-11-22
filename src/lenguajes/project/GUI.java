@@ -67,8 +67,10 @@ public class GUI extends javax.swing.JFrame {
         textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
         textArea.setCodeFoldingEnabled(true);
         this.getRootPane().add(textArea);
+        output.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
+        output.setCodeFoldingEnabled(true);
         setKeyBindings();
-        System.setProperty("webdriver.gecko.driver", "D:\\Selenium\\Firefox driver\\geckodriver.exe");
+        System.setProperty("webdriver.gecko.driver", "/home/alejandro/Documents/Firefox Driver/geckodriver");
         driver = new FirefoxDriver();
         baseUrl = "http://localhost:7474";
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
@@ -77,7 +79,7 @@ public class GUI extends javax.swing.JFrame {
         WebElement element = wait.until(
                 ExpectedConditions.visibilityOfElementLocated(By.id("connect_password")));
         element.clear();
-        element.sendKeys("12345");
+        element.sendKeys("ale123");
         driver.findElement(By.id("connect_button")).click();
         drawComponents();
     }
@@ -97,7 +99,7 @@ public class GUI extends javax.swing.JFrame {
         scrollPane = new javax.swing.JScrollPane();
         jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        output = new javax.swing.JTextArea();
+        output = new RSyntaxTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Neo4J Translator");
@@ -261,14 +263,14 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea output;
+    private RSyntaxTextArea output;
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
-
+    private RSyntaxTextArea output2;
     private void drawComponents() {
         try {
             String property = System.getProperty("user.home");
-            imagePNG = ImageIO.read(new File(property + "\\Downloads\\graph.png"));
+            imagePNG = ImageIO.read(new File("/home/alejandro/Downloads/graph.png"));
 
         } catch (IOException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
