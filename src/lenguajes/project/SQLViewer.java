@@ -6,6 +6,9 @@
 package lenguajes.project;
 
 import java.sql.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -24,7 +27,13 @@ public class SQLViewer extends javax.swing.JFrame {
      * Creates new form Vistas
      */
     public SQLViewer() {
-        initComponents();
+        try {
+            initComponents();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(SQLViewer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(SQLViewer.class.getName()).log(Level.SEVERE, null, ex);
+        }
         jTable1.setEnabled(false);
     }
 
@@ -35,7 +44,7 @@ public class SQLViewer extends javax.swing.JFrame {
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
-    private void initComponents() {
+    private void initComponents() throws ClassNotFoundException, SQLException {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -51,13 +60,13 @@ public class SQLViewer extends javax.swing.JFrame {
         jTable1.setModel(model);
         jTable1.setCellSelectionEnabled(true);
         jTable1.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            Connection con = (Connection) DriverManager.getConnection(URL, USER, PASSWORD);
-            Statement stat = (Statement) con.createStatement();
-            ResultSet rs = null;
-            for (String split : query.split(";")) {
-                if (!split.isEmpty()) {
+        Class.forName("com.mysql.jdbc.Driver");
+        Connection con = (Connection) DriverManager.getConnection(URL, USER, PASSWORD);
+        Statement stat = (Statement) con.createStatement();
+        ResultSet rs = null;
+        for (String split : query.split(";")) {
+            if (!split.isEmpty()) {
+                try {
                     boolean execute = stat.execute(split);
                     if (execute) {
                         System.out.println("executed " + split);
@@ -75,14 +84,17 @@ public class SQLViewer extends javax.swing.JFrame {
                             model.addRow(row);
                         }
                     }
+                } catch (Exception e) {
+                    System.out.println(e);
+                    System.out.println("query " + query);
                 }
             }
-            rs.close();
-            con.close();
-        } catch (Exception e) {
-            System.out.println(e);
-            System.out.println("query " + query);
         }
+        if (rs != null) {
+            rs.close();
+        }
+        con.close();
+
         jScrollPane1.setViewportView(jTable1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
