@@ -15,16 +15,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -35,10 +35,12 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
 import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -57,17 +59,38 @@ public class GUI extends javax.swing.JFrame {
     private String baseUrl;
     private String translation;
     private double reductionRate;
+    private String property = System.getProperty("user.home");
 
     /**
      * Creates new form GUI
      */
     public GUI() {
-        initComponents();        
+        initComponents();
         output.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_SQL);
         output.setCodeFoldingEnabled(true);
+        input.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+        input.setCodeFoldingEnabled(true);
         setKeyBindings();
-        System.setProperty("webdriver.gecko.driver", "/home/alejandro/Documents/Firefox Driver/geckodriver");
-        driver = new FirefoxDriver();
+        System.setProperty("webdriver.gecko.driver",Config.WEB_DRIVER_PATH);
+        //Create object of FirefoxProfile in built class to access Its properties.
+        FirefoxProfile fprofile = new FirefoxProfile();
+        //Set Location to store files after downloading.
+        fprofile.setPreference("browser.download.dir", property + Config.DOWNLOAD_DIR);
+        fprofile.setPreference("browser.download.folderList", 2);
+        //Set Preference to not show file download confirmation dialogue using MIME types Of different file extension types.
+        fprofile.setPreference("browser.helperApps.neverAsk.saveToDisk",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;"//MIME types Of MS Excel File.
+                + "application/pdf;" //MIME types Of PDF File.
+                + "application/vnd.openxmlformats-officedocument.wordprocessingml.document;" //MIME types Of MS doc File.
+                + "text/plain;" //MIME types Of text File.
+                + "image/png;" //MIME types Of png Files.
+                + "text/csv"); //MIME types Of CSV File.
+        fprofile.setPreference("browser.download.manager.showWhenStarting", false);
+        fprofile.setPreference("pdfjs.disabled", true);
+        //Pass fprofile parameter In webdriver to use preferences to download file.
+        driver = new FirefoxDriver(fprofile);
+
+        driver = new FirefoxDriver(fprofile);
         baseUrl = "http://localhost:7474";
         driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
         driver.get(baseUrl + "/browser/");
@@ -75,7 +98,7 @@ public class GUI extends javax.swing.JFrame {
         WebElement element = wait.until(
                 ExpectedConditions.visibilityOfElementLocated(By.id("connect_password")));
         element.clear();
-        element.sendKeys("ale123");
+        element.sendKeys(Config.NEO4J_PASSWORD);
         driver.findElement(By.id("connect_button")).click();
         drawComponents();
     }
@@ -89,24 +112,24 @@ public class GUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        input = new javax.swing.JTextField();
+        input = new RSyntaxTextArea();
         jButton1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         scrollPane = new javax.swing.JScrollPane();
         jButton2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
+jScrollPane2 = new javax.swing.JScrollPane();
         output = new RSyntaxTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Neo4J Translator");
 
-        input.setText("create (n:Person{name:\"juan\"})");
-        input.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputActionPerformed(evt);
-            }
-        });
-
+        input.setText("match (n:Person{name:\"juan\"})");
+        input.setColumns(20);
+        input.setFont(new java.awt.Font("RomanD", 0, 14)); // NOI18N
+        input.setRows(5);
+        jScrollPane2.setViewportView(input);
+        
         jButton1.setLabel("Translate");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -142,7 +165,7 @@ public class GUI extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(scrollPane, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(input, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -155,7 +178,7 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(input, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
@@ -185,7 +208,6 @@ public class GUI extends javax.swing.JFrame {
         output.setText(translation.replaceAll(";", ";\n").replaceAll(",", ",\n"));
         openBrowser(cypherText);
         drawComponents();
-
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
@@ -205,7 +227,7 @@ public class GUI extends javax.swing.JFrame {
             reductionRate = MIN_RATE;
         } else {
             reductionRate -= ZOOM_POWER;
-            drawComponents();
+            refresh();
         }
     }
 
@@ -214,7 +236,7 @@ public class GUI extends javax.swing.JFrame {
             reductionRate = MAX_RATE;
         } else {
             reductionRate += ZOOM_POWER;
-            drawComponents();
+            refresh();
         }
     }
 
@@ -229,7 +251,7 @@ public class GUI extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -254,22 +276,39 @@ public class GUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField input;
+    private RSyntaxTextArea input;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private RSyntaxTextArea output;
     private javax.swing.JScrollPane scrollPane;
     // End of variables declaration//GEN-END:variables
-    private RSyntaxTextArea output2;
+
     private void drawComponents() {
+        File file = new File(property + Config.FILE_TEMP);
+        File dest = new File(property + Config.FILE_CACHE);
+        if (!file.exists()) {
+            System.out.println("file graph does not exist yet");
+            return;
+        }
         try {
-            String property = System.getProperty("user.home");
-            imagePNG = ImageIO.read(new File("/home/alejandro/Downloads/graph.png"));
+            copyFileUsingStream(file, dest);
+            imagePNG = ImageIO.read(dest);
 
         } catch (IOException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        refresh();
+        //delete file
+        file.delete();
+    }
+
+    public void refresh() {
+        if (imagePNG == null) {
+            System.out.println("No image loaded");
+            return;
         }
         int h = (int) (imagePNG.getHeight(null) * (1 - reductionRate));
         int w = (int) (imagePNG.getWidth(null) * (1 - reductionRate));
@@ -309,6 +348,23 @@ public class GUI extends javax.swing.JFrame {
         scrollPane.setViewportView(panel);
     }
 
+    private static void copyFileUsingStream(File source, File dest) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = new FileInputStream(source);
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            is.close();
+            os.close();
+        }
+    }
+
     private void setKeyBindings() {
         ActionMap actionMap = getRootPane().getActionMap();
         int condition = JComponent.WHEN_IN_FOCUSED_WINDOW;
@@ -336,15 +392,36 @@ public class GUI extends javax.swing.JFrame {
         System.out.println(child.toString());
         WebElement txArea = child.findElement(By.cssSelector("div > textarea"));
         System.out.println(txArea.toString());
-        System.out.println(txArea.getTagName()+" "+txArea.getAttribute("style") + " text: " + txArea.getText());
         txArea.clear();
-        txArea.sendKeys(Keys.HOME + cypherText + " return *");
-        /*    txArea.sendKeys(Keys.TAB);
-         txArea.sendKeys(cypherText);*/
-
+        String value;
+        if (cypherText.contains("return")) {
+            value = cypherText;
+        } else {
+            value = cypherText + " return *";
+        }
+        try {
+            ((JavascriptExecutor) driver)
+                    .executeScript("arguments[0].value='"
+                            + value + "'", txArea);
+        } catch (Exception e) {
+            System.out.println("weir exception but works");
+        }
+        System.out.println(txArea.getTagName() + " " + txArea.getAttribute("style") + " text: " + txArea.getText());
         driver.findElement(By.xpath("//div[@id='stream']/div/div/div/div/div/ul/li[6]/a")).click();
         driver.findElement(By.cssSelector("i.fa.fa-play")).click();
+
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        WebElement download = wait.until(
+                ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='editor']/div/ul/li[3]/a")));
+        download.click();
+        driver.findElement(By.xpath("//div[@id='stream']/div/div/div/div/div/ul/li[3]/a")).click();
+        driver.findElement(By.linkText("Export PNG")).click();
         driver.findElement(By.xpath("//div[@id='stream']/div/div/div/div/div/ul/li[6]/a")).click();
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private class KeyAction extends AbstractAction {

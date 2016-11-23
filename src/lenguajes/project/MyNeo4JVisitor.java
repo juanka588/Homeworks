@@ -256,7 +256,7 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
             return "VARCHAR(255)";
         }
         if (NUMBER_PATTERN.matcher(value).matches()) {
-            return "FLOAT(64)";
+            return "INT(11)";
         }
         System.out.println("value " + value);
         throw new IllegalStateException("type can not be infered");

@@ -14,7 +14,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class SQLViewer extends javax.swing.JFrame {
 
-    public static final String URL = "jdbc:mysql://localhost:3306/test?t?allowMultiQueries=true&amp;characterEncoding=UTF-8",
+    public static final String URL = "jdbc:mysql://localhost:3306/test?allowMultiQueries=true&amp;characterEncoding=UTF-8",
             USER = "root", PASSWORD = "12345";
 
     public static String query;
