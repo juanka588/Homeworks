@@ -60,6 +60,7 @@ public class GUI extends javax.swing.JFrame {
     private String translation;
     private double reductionRate;
     private String property = System.getProperty("user.home");
+    private boolean cond = true;
 
     /**
      * Creates new form GUI
@@ -71,35 +72,37 @@ public class GUI extends javax.swing.JFrame {
         input.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
         input.setCodeFoldingEnabled(true);
         setKeyBindings();
-        System.setProperty("webdriver.gecko.driver",Config.WEB_DRIVER_PATH);
-        //Create object of FirefoxProfile in built class to access Its properties.
-        FirefoxProfile fprofile = new FirefoxProfile();
-        //Set Location to store files after downloading.
-        fprofile.setPreference("browser.download.dir", property + Config.DOWNLOAD_DIR);
-        fprofile.setPreference("browser.download.folderList", 2);
-        //Set Preference to not show file download confirmation dialogue using MIME types Of different file extension types.
-        fprofile.setPreference("browser.helperApps.neverAsk.saveToDisk",
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;"//MIME types Of MS Excel File.
-                + "application/pdf;" //MIME types Of PDF File.
-                + "application/vnd.openxmlformats-officedocument.wordprocessingml.document;" //MIME types Of MS doc File.
-                + "text/plain;" //MIME types Of text File.
-                + "image/png;" //MIME types Of png Files.
-                + "text/csv"); //MIME types Of CSV File.
-        fprofile.setPreference("browser.download.manager.showWhenStarting", false);
-        fprofile.setPreference("pdfjs.disabled", true);
-        //Pass fprofile parameter In webdriver to use preferences to download file.
-        driver = new FirefoxDriver(fprofile);
+        if (cond) {
+            System.setProperty("webdriver.gecko.driver", Config.WEB_DRIVER_PATH);
+            //Create object of FirefoxProfile in built class to access Its properties.
+            FirefoxProfile fprofile = new FirefoxProfile();
+            //Set Location to store files after downloading.
+            fprofile.setPreference("browser.download.dir", property + Config.DOWNLOAD_DIR);
+            fprofile.setPreference("browser.download.folderList", 2);
+            //Set Preference to not show file download confirmation dialogue using MIME types Of different file extension types.
+            fprofile.setPreference("browser.helperApps.neverAsk.saveToDisk",
+                    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;"//MIME types Of MS Excel File.
+                    + "application/pdf;" //MIME types Of PDF File.
+                    + "application/vnd.openxmlformats-officedocument.wordprocessingml.document;" //MIME types Of MS doc File.
+                    + "text/plain;" //MIME types Of text File.
+                    + "image/png;" //MIME types Of png Files.
+                    + "text/csv"); //MIME types Of CSV File.
+            fprofile.setPreference("browser.download.manager.showWhenStarting", false);
+            fprofile.setPreference("pdfjs.disabled", true);
+            //Pass fprofile parameter In webdriver to use preferences to download file.
+            driver = new FirefoxDriver(fprofile);
 
-        driver = new FirefoxDriver(fprofile);
-        baseUrl = "http://localhost:7474";
-        driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
-        driver.get(baseUrl + "/browser/");
-        WebDriverWait wait = new WebDriverWait(driver, 10);
-        WebElement element = wait.until(
-                ExpectedConditions.visibilityOfElementLocated(By.id("connect_password")));
-        element.clear();
-        element.sendKeys(Config.NEO4J_PASSWORD);
-        driver.findElement(By.id("connect_button")).click();
+            driver = new FirefoxDriver(fprofile);
+            baseUrl = "http://localhost:7474";
+            driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS);
+            driver.get(baseUrl + "/browser/");
+            WebDriverWait wait = new WebDriverWait(driver, 10);
+            WebElement element = wait.until(
+                    ExpectedConditions.visibilityOfElementLocated(By.id("connect_password")));
+            element.clear();
+            element.sendKeys(Config.NEO4J_PASSWORD);
+            driver.findElement(By.id("connect_button")).click();
+        }
         drawComponents();
     }
 
@@ -206,7 +209,9 @@ jScrollPane2 = new javax.swing.JScrollPane();
         translation = (String) loader.visit(tree);
         System.out.println("translation " + translation);
         output.setText(translation.replaceAll(";", ";\n").replaceAll(",", ",\n"));
-        openBrowser(cypherText);
+        if (cond) {
+            openBrowser(cypherText);
+        }
         drawComponents();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -394,10 +399,11 @@ jScrollPane2 = new javax.swing.JScrollPane();
         System.out.println(txArea.toString());
         txArea.clear();
         String value;
+        cypherText = cypherText.replaceAll("\n", "");
         if (cypherText.contains("return")) {
             value = cypherText;
         } else {
-            value = cypherText + " return *";
+            value = cypherText.replaceAll(";", "") + " return *;";
         }
         try {
             ((JavascriptExecutor) driver)
@@ -407,7 +413,7 @@ jScrollPane2 = new javax.swing.JScrollPane();
             System.out.println("weir exception but works");
         }
         System.out.println(txArea.getTagName() + " " + txArea.getAttribute("style") + " text: " + txArea.getText());
-        driver.findElement(By.xpath("//div[@id='stream']/div/div/div/div/div/ul/li[6]/a")).click();
+        // driver.findElement(By.xpath("//div[@id='stream']/div/div/div/div/div/ul/li[6]/a")).click();
         driver.findElement(By.cssSelector("i.fa.fa-play")).click();
 
         WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -418,7 +424,7 @@ jScrollPane2 = new javax.swing.JScrollPane();
         driver.findElement(By.linkText("Export PNG")).click();
         driver.findElement(By.xpath("//div[@id='stream']/div/div/div/div/div/ul/li[6]/a")).click();
         try {
-            Thread.sleep(2000);
+            Thread.sleep(3000);
         } catch (InterruptedException ex) {
             Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
         }

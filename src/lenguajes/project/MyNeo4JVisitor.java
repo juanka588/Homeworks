@@ -160,24 +160,30 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
 
         SortedSet<PropertyNeo4J> originProps, destinantionProps;
         String tname1 = leftTable.get(0).getTableName(), tname2 = rightTable.get(0).getTableName();
-        String joinTableName, origin = tname1, destinantion = tname2;
+        String joinTableName, originReal = tname1, destinationReal = tname2, origin, destination;
         originProps = leftTable.get(0).getProperties();
         destinantionProps = rightTable.get(0).getProperties();
+        origin = "" + originReal;
+        destination = "" + destinationReal;
         if (tname1.compareToIgnoreCase(tname2) > 0) {
             origin = tname2;
-            destinantion = tname1;
+            destination = tname1;
             originProps = rightTable.get(0).getProperties();
             destinantionProps = leftTable.get(0).getProperties();
         }
-        joinTableName = origin + "_" + destinantion;
-
+        joinTableName = origin + "_" + destination;
         SortedSet<PropertyNeo4J> props = new TreeSet<>();
-        props.add(new PropertyNeo4J("origin", origin, "INT(11) NOT NULL", "=", true));
-        props.add(new PropertyNeo4J("destination", destinantion, "INT(11) NOT NULL", "=", true));
+        props.add(new PropertyNeo4J("origin", originReal, "INT(11) NOT NULL", "=", true));
+        props.add(new PropertyNeo4J("destination", destinationReal, "INT(11) NOT NULL", "=", true));
         props.add(new PropertyNeo4J("label", "Label", "INT(11) NOT NULL", "=", true));
         result.add(new TableDefinition("", joinTableName, props));
-        result.add(new ComplexInsertSentence(joinTableName, origin, destinantion,
-                originProps, destinantionProps, label));
+        if (origin.contains(originReal)) {
+            result.add(new ComplexInsertSentence(joinTableName, origin, destination,
+                    originProps, destinantionProps, label));
+        } else {
+            result.add(new ComplexInsertSentence(joinTableName, destination, origin,
+                    destinantionProps, originProps, label));
+        }
         return (T) result;
     }
 
@@ -358,14 +364,17 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
             total += conditions1;
             if (!conditions2.isEmpty()) {
                 total += " AND " + conditions2;
-            } else {
-                total += " AND ";
             }
+        } else if (!conditions2.isEmpty()) {
+            total = conditions2;
         }
-        String where2 = total + where;
+        String where2 = total;
+        if (!where.isEmpty()) {
+            where2 += " AND " + where;
+        }
         if (where2.isEmpty()) {
             where2 = labelCond;
-        } else {
+        } else if (!label.isEmpty()) {
             where2 += " AND " + labelCond;
         }
         if (!where2.isEmpty()) {

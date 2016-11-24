@@ -1,16 +1,16 @@
-create (n:Persona{name:"juan",age:23,sex:1,game:"megaman"})
-create (m:Persona{name:"carlos",age:20,sex:1,game:"zero"})
-create (q:Persona{name:"ana",age:15,sex:0,game:"crash"})
-create (l:Persona{name:"laura",age:26,sex:0,game:"braid"})
+create (n:Persona{name:"juan",age:23,sex:1,game:"megaman"});
+create (m:Persona{name:"carlos",age:20,sex:1,game:"zero"});
+create (q:Persona{name:"ana",age:15,sex:0,game:"crash"});
+create (l:Persona{name:"laura",age:26,sex:0,game:"braid"});
 
-create (x:Consola{name:"xbox",producer:"microsoft"})
-create (p:Consola{name:"playstation",producer:"sony"})
-create (n:Consola{name:"wii",producer:"nintendo"})
+create (x:Consola{name:"xbox",producer:"microsoft"});
+create (p:Consola{name:"playstation",producer:"sony"});
+create (n:Consola{name:"wii",producer:"nintendo"});
 
-create (p:Persona{name:"juan"})-[:PLAY_WITH]->(c:Consola{name:"playstation"})
-create (p2:Persona{name:"carlos"})-[:PLAY_WITH]->(c1:Consola{name:"xbox"})
-create (p3:Persona{name:"ana"})-[:PLAY_WITH]->(c2:Consola{name:"xbox",producer:"microsoft"})
-create (p4:Persona{name:"laura"})-[:PLAY_WITH]->(c3:Consola{name:"wii"})
+create (p1:Persona{name:"juan"})-[:PLAY_WITH]->(c4:Consola{name:"playstation"});
+create (p2:Persona{name:"carlos"})-[:PLAY_WITH]->(c1:Consola{name:"xbox"});
+create (p3:Persona{name:"ana"})-[:PLAY_WITH]->(c2:Consola{name:"xbox",producer:"microsoft"});
+create (p4:Persona{name:"laura"})-[:PLAY_WITH]->(c3:Consola{name:"wii"});
 
-match (n:Persona) where sex=1 return n
-match (p:Persona)-[:PLAY_WITH]->(c:Consola{name:"xbox"})
+match (n:Persona) where n.sex=1 return n;
+match (p:Persona)-[:PLAY_WITH]->(c:Consola{name:"xbox"}) return p,c;

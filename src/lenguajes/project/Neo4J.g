@@ -1,11 +1,11 @@
 grammar Neo4J;		
 init				:  (create)*|(select_sentence)*;
 
-select_sentence				: (MATCH basic_query)+ opt_where (RETURN|SET|DELETE) exp (TOKEN_COMA exp)* (TOKEN_FIN_LINEA|);
+select_sentence				: (MATCH basic_query)+ opt_where (RETURN|SET|DELETE) exp (TOKEN_COMA exp)* TOKEN_PYC;
 basic_query					: node_def (relation_type node_def)?;
 opt_where					: WHERE exp (TOKEN_COMA exp)*
 							|;
-create                      : CREATE opt_create (TOKEN_FIN_LINEA|);
+create                      : CREATE opt_create TOKEN_PYC;
 opt_create					: node_def (TOKEN_COMA node_def)*								#create_multiple
 							| relation_def (TOKEN_COMA relation_def)*						#create_relation;
 							//(n:Node{name:"mike"})-->(m:Node{name:"john"})

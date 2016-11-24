@@ -8,7 +8,6 @@ package lenguajes.project;
 import java.sql.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -64,10 +63,11 @@ public class SQLViewer extends javax.swing.JFrame {
         Connection con = (Connection) DriverManager.getConnection(URL, USER, PASSWORD);
         Statement stat = (Statement) con.createStatement();
         ResultSet rs = null;
+        query = query.trim();
         for (String split : query.split(";")) {
             if (!split.isEmpty()) {
                 try {
-                    boolean execute = stat.execute(split);
+                    boolean execute = stat.execute(split.trim());
                     if (execute) {
                         System.out.println("executed " + split);
                         rs = stat.getResultSet();

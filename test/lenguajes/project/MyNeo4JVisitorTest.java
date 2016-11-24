@@ -38,7 +38,7 @@ public class MyNeo4JVisitorTest {
 
     @Test
     public void testCreate1() throws FileNotFoundException, IOException {
-        ANTLRInputStream input = new ANTLRInputStream("create (h:Person{name:\"juan\",age:23})");
+        ANTLRInputStream input = new ANTLRInputStream("create (h:Person{name:\"juan\",age:23});");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -51,7 +51,7 @@ public class MyNeo4JVisitorTest {
 
     @Test
     public void testCreate2() throws FileNotFoundException, IOException {
-        ANTLRInputStream input = new ANTLRInputStream("create (h:Person)");
+        ANTLRInputStream input = new ANTLRInputStream("create (h:Person);");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -64,7 +64,7 @@ public class MyNeo4JVisitorTest {
     
     @Test
     public void testCreate3() throws FileNotFoundException, IOException {
-        ANTLRInputStream input = new ANTLRInputStream("create (h:Person{name:\"juan\",age:23})"
+        ANTLRInputStream input = new ANTLRInputStream("create (h:Person{name:\"juan\",age:23});"
                 + ",(d:Deparment{name:\"Sales\",chief:\"mike\"})");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -80,7 +80,7 @@ public class MyNeo4JVisitorTest {
     
     @Test
     public void testCreate4() throws FileNotFoundException, IOException {
-        ANTLRInputStream input = new ANTLRInputStream("create (h:Person{name:12345})-[:EMPLOYEE]->(h:Person{name:123})");
+        ANTLRInputStream input = new ANTLRInputStream("create (h:Person{name:12345})-[:EMPLOYEE]->(h:Person{name:123});");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -99,7 +99,7 @@ public class MyNeo4JVisitorTest {
     
     @Test
     public void testCreate5() throws FileNotFoundException, IOException {
-        ANTLRInputStream input = new ANTLRInputStream("create (h:Person{name:12345})-[:OWN]->(m:Pet{age:12})");
+        ANTLRInputStream input = new ANTLRInputStream("create (h:Person{name:12345})-[:OWN]->(m:Pet{age:12});");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -119,7 +119,7 @@ public class MyNeo4JVisitorTest {
     @Test
     public void testDelete1() throws FileNotFoundException, IOException {
         ANTLRInputStream input = new ANTLRInputStream("MATCH (p:Person { name: 'Alfred' })" 
-                + "DELETE");
+                + "DELETE p;");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -134,7 +134,7 @@ public class MyNeo4JVisitorTest {
     public void testDelete2() throws FileNotFoundException, IOException {
         ANTLRInputStream input = new ANTLRInputStream("MATCH (a { name: 'Andres' })" 
                 + "REMOVE a.age" 
-                + "RETURN a");
+                + "RETURN a;");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -148,7 +148,7 @@ public class MyNeo4JVisitorTest {
     @Test
     public void testSelect1() throws FileNotFoundException, IOException {
         ANTLRInputStream input = new ANTLRInputStream("MATCH (p:Person)" 
-                + "RETURN p.name");
+                + "RETURN p.name;");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -162,7 +162,7 @@ public class MyNeo4JVisitorTest {
     @Test
     public void testSelect2() throws FileNotFoundException, IOException {
         ANTLRInputStream input = new ANTLRInputStream("MATCH (p:Person)" 
-                + "RETURN p");
+                + "RETURN p;");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -177,7 +177,7 @@ public class MyNeo4JVisitorTest {
     public void testSelect3() throws FileNotFoundException, IOException {
         ANTLRInputStream input = new ANTLRInputStream("MATCH (p:Person)" 
                 + "WHERE p.name = \"Alejandro\"" 
-                + "RETURN p.name");
+                + "RETURN p.name;");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -191,7 +191,7 @@ public class MyNeo4JVisitorTest {
     @Test
     public void testSelectjoin() throws FileNotFoundException, IOException {
         ANTLRInputStream input = new ANTLRInputStream("match (p:Person{lastName=\"mango\", name<5*3})-[:KNOWS]->(x:Pet{id=15})   "
-                + "return p,x.age");
+                + "return p,x.age;");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -205,7 +205,7 @@ public class MyNeo4JVisitorTest {
     
     @Test
     public void testWorkshop1() throws FileNotFoundException, IOException {
-        ANTLRInputStream input = new ANTLRInputStream("match (p:Person) where p.born>=1965 return p");
+        ANTLRInputStream input = new ANTLRInputStream("match (p:Person) where p.born>=1965 return p;");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -218,7 +218,7 @@ public class MyNeo4JVisitorTest {
     
     @Test
     public void testWorkshop2() throws FileNotFoundException, IOException {
-        ANTLRInputStream input = new ANTLRInputStream("match (p:Person)-[:ACTED_IN]-( m: Movie{title:\"The Matrix\"}) return p");
+        ANTLRInputStream input = new ANTLRInputStream("match (p:Person)-[:ACTED_IN]-( m: Movie{title:\"The Matrix\"}) return p;");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -233,7 +233,7 @@ public class MyNeo4JVisitorTest {
     
     @Test
     public void testWorkshop3() throws FileNotFoundException, IOException {
-        ANTLRInputStream input = new ANTLRInputStream("match (p:Person)-[:ACTED_IN]-( m:Movie{title:\"The Matrix\"}),match (p2:Person)-[:DIRECTED]-( m:Movie{title:\"The Matrix\"}) return p,p2,m");
+        ANTLRInputStream input = new ANTLRInputStream("match (p:Person)-[:ACTED_IN]-( m:Movie{title:\"The Matrix\"}),match (p2:Person)-[:DIRECTED]-( m:Movie{title:\"The Matrix\"}) return p,p2,m;");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
@@ -251,7 +251,7 @@ public class MyNeo4JVisitorTest {
     
     @Test
     public void testWorkshop4() throws FileNotFoundException, IOException {
-        ANTLRInputStream input = new ANTLRInputStream("match (m:Movie{title:\"The Matrix\"}) set m.relased=\"1999\"");
+        ANTLRInputStream input = new ANTLRInputStream("match (m:Movie{title:\"The Matrix\"}) set m.relased=\"1999\";");
         Neo4JLexer lexer = new Neo4JLexer(input);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         Neo4JParser parser = new Neo4JParser(tokens);
