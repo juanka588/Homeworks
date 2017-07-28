@@ -29,10 +29,10 @@ public class SyntaticAnalyserTest {
     public static void tearDownClass() {
     }
 
-    @Test(expected = IllegalAccessError.class)
-    public void testAnalyser() throws IOException, FileNotFoundException, LexicalException {
-        SyntacticAnalyser sa = new SyntacticAnalyser("grammarTest.txt", "test1.txt", true);
-        String cad = sa.printGrammar();
-        assertEquals(cad + "2", cad);
-    }
+//    @Test(expected = IllegalAccessError.class)
+//    public void testAnalyser() throws IOException, FileNotFoundException, LexicalException {
+//        SyntacticAnalyser sa = new SyntacticAnalyser("grammarTest.txt", "test1.txt", true);
+//        String cad = sa.printGrammar();
+//        assertEquals(cad + "2", cad);
+//    }
 }

@@ -37,8 +37,6 @@ public class LexicalAnalyserTest {
      */
     @org.junit.Test
     public void testMain() throws Exception {
-        System.out.println("main");
-        System.out.println("main");
         File f = new File("./ejemplos/");
         File[] files = f.listFiles((File dir, String name) -> name.endsWith(".in"));
         for (File file : files) {

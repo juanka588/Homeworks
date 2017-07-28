@@ -282,7 +282,7 @@ public class MyNeo4JVisitor<T> extends Neo4JBaseVisitor<T> {
             result.append(tableCreation1.getAlias());
         }
         if (ctx.DELETE() != null) {
-            result.append("DELETE FROM ");
+            result.append("DELETE ");
             result.append(tableCreation1.getTableName());
             result.append(" AS ");
             result.append(tableCreation1.getAlias());

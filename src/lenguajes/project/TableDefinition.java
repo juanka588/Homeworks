@@ -25,7 +25,7 @@ public class TableDefinition extends SQLSentence implements Comparable<TableDefi
         //add id
         String id = tableName.toLowerCase() + "_id";
         result.append(id);
-        result.append(" INT(11) auto_increment,");
+        result.append(" INT(11) AUTO_INCREMENT,");
         for (PropertyNeo4J property : properties) {
             result.append(property.getName());
             result.append(" ");
